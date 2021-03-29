@@ -1,13 +1,13 @@
-package com.project.pago;
+package com.project.pagu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PagoApplication {
+public class PaguApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PagoApplication.class, args);
+        SpringApplication.run(PaguApplication.class, args);
     }
 
 }
