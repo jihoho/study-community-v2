@@ -1,4 +1,4 @@
-package com.project.pago;
+package com.project.pagu;
 
 /**
  * Created by IntelliJ IDEA
