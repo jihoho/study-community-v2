@@ -1,0 +1,47 @@
+.container{
+    padding: 1em;
+}
+.body-content{
+    padding: 10px;
+}
+.menu-title{
+    font-size: 1.5em;
+    font-weight: 700;
+}
+.detail-box ol li{
+    padding: 5px 0px 5px 5px;
+    margin-bottom: 5px;
+    font-size: 1em;
+
+}
+
+.detail-box{
+    background-color: #C4C4C4;
+    width: 100%;
+    height: 300px;
+    padding: 1em;
+    margin: 0.5em;
+}
+.list-box{
+    width: 100%;
+    height: 300px;
+    padding: 1em;
+    margin: 0.5em;
+}
+.list-field{
+    height: 100%;
+    font-size: 0.8em;
+}
+
+.list-group-small{
+    height: 30px;
+    padding: 3px;
+}
+
+.list-profile-img{
+    height: 0.8em;
+}
+
+.list-write-time{
+    color: #A8A8A8;
+}
