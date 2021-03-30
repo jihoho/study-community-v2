@@ -21,4 +21,11 @@ public class ViewController {
         System.out.println("main-body");
         return mav;
     }
+
+    @GetMapping("/board-list")
+    public ModelAndView boardList(){
+        ModelAndView mav=new ModelAndView("board-list");
+        return mav;
+    }
+
 }
