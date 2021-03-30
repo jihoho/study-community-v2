@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <style>
+      .navbar {
+        background-color: #70ab6b;
+      }
+      .navbar-form {
+        -webkit-flex-basis: 80%;
+        -moz-flex-basis: 80%;
+        -ms-flex-basis: 80%;
+        -o-flex-basis: 80%;
+        flex-basis: -moz-available;
+        flex-basis: 60%;
+      }
+      .input-group-search {
+        width: 100% !important;
+      }
+      nav .navbar-nav li a {
+        color: white !important;
+      }
+      .form-box {
+        height: auto;
+        width: 70%;
+        border: 1px solid white;
+        border-radius: 5px;
+      }
+    </style>
+</head>
+<body>
+    <!--todo: 타임리프 연동하여 로그인시 메뉴 상태 변경, 검색 기능 추가, fragment로 분리-->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <!-- 로고 -->
+        <a class="navbar-brand" href="#">PAGU</a>
+        <!-- 화면 줄어들었을 때 -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- 검색창 -->
+            <div class="form-box">
+                <form class="form-inline my-2 my-lg-0 navbar-form mr-auto">
+                    <div class="input-group input-group-search mx-auto">
+                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-button-addon" />
+                        <button class="btn btn-" type="submit" id="search-button-addon">&#128269;</button>
+                    </div>
+                </form>
+            </div>
+            <!-- 메뉴 -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">SignUp</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">MyPage</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
