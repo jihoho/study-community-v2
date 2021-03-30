@@ -118,6 +118,15 @@
   background-color: #ea4335;
 }
 
+.button-link {
+  color: white;
+}
+
+.button-link:hover {
+  color: black;
+  text-decoration:none;
+}
+
 /* Fallback for Edge
 -------------------------------------------------- */
 
