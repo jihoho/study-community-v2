@@ -1,0 +1,57 @@
+#header-txt-div{
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 30px;
+    text-align: center;
+}
+#header-txt{
+    font-size: 3rem;
+    font-weight: bold;
+}
+#board-form-body{
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+#time-table{
+    width: fit-content;
+    margin: 0 auto;
+}
+#time-table th{
+    padding: 0;
+}
+.day-butt{
+    border: 1px solid black;
+    width: 3em;
+    height: 3em;
+    font-weight: bold;
+}
+#time-table tr td {
+    width: 3em;
+}
+#time-table tr td span{
+    font-size: 0.8em;
+}
+#time-table tr td p{
+    margin: 0;
+    font-size: 0.7em;
+    text-align: center;
+}
+
+#recruitment-term-div{
+    text-align: center;
+}
+
+#study-term-div{
+    text-align: center;
+}
+
+.align-center{
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.dropdown{
+    text-align: center;
+}
+
