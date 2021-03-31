@@ -33,4 +33,10 @@ public class ViewController {
         ModelAndView mav= new ModelAndView("board-form");
         return mav;
     }
+
+    @GetMapping("/board-detail")
+    public ModelAndView boardDetail(){
+        ModelAndView mav=new ModelAndView("board-detail");
+        return mav;
+    }
 }

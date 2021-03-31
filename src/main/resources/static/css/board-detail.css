@@ -1,0 +1,91 @@
+#board-detail-wrapper {
+    width: 60%;
+    margin: 30px auto;
+    border: 1px solid black;
+}
+
+#board-detail-header {
+    width: 100%;
+    height: 100px;
+    background-color: #fffafa;
+    border: 1px solid black;
+}
+
+#board-detail-header table {
+    width: 100%;
+}
+#board-detail-header table th {
+    height: 100px;
+}
+.padding-left {
+    padding-left: 10%;
+}
+.padding-right {
+    padding-right: 5%;
+}
+#title-span {
+    font-size: 1.2em;
+}
+.align-right {
+    text-align: right;
+}
+
+#profile-img {
+    height: 20px;
+    width: 20px;
+}
+
+#reg-date-span {
+    color: #7e7d7d;
+}
+
+#board-detail-body {
+    margin: 3em 20%;
+}
+.board-info {
+    margin-top: 10px;
+}
+.board-info-field {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.board-info-value {
+    padding: 0.5em 1em;
+}
+.board-info-value textarea {
+    width: 90%;
+}
+.board-info-value img {
+    width: 90%;
+}
+
+#board-comment-wrapper {
+    width: 60%;
+    margin: 10px auto;
+}
+.board-comment-list {
+    border: 1px solid black;
+}
+.board-comment-header {
+    padding: 1em 2em;
+}
+.board-comment-img-div {
+    float: left;
+}
+.board-comment-nick-div {
+    padding: 0 4em;
+}
+.board-comment-body {
+    padding: 1em 5em;
+}
+.board-comment-p {
+    word-wrap: break-word;
+}
+.board-comment-write {
+    border: 1px solid black;
+}
+
+.board-comment-text {
+    width: 100%;
+}
