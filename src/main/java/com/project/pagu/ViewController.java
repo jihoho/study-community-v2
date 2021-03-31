@@ -28,4 +28,9 @@ public class ViewController {
         return mav;
     }
 
+    @GetMapping("/board-form")
+    public ModelAndView boardForm(){
+        ModelAndView mav= new ModelAndView("board-form");
+        return mav;
+    }
 }
