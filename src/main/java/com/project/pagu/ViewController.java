@@ -39,4 +39,9 @@ public class ViewController {
         ModelAndView mav=new ModelAndView("board-detail");
         return mav;
     }
+    @GetMapping("/board-update")
+    public ModelAndView boardUpdate(){
+        ModelAndView mav=new ModelAndView("board-update");
+        return mav;
+    }
 }
