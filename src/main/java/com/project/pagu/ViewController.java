@@ -15,13 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class ViewController {
 
-    @GetMapping("/main-body")
-    public ModelAndView mainBody(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView mav=new ModelAndView("main-body");
-        System.out.println("main-body");
-        return mav;
-    }
-
     @GetMapping("/board-list")
     public ModelAndView boardList(){
         ModelAndView mav=new ModelAndView("board-list");
