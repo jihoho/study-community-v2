@@ -1,0 +1,27 @@
+.navbar {
+  background-color: #70ab6b;
+}
+
+.navbar-form {
+  -webkit-flex-basis: 80%;
+  -moz-flex-basis: 80%;
+  -ms-flex-basis: 80%;
+  -o-flex-basis: 80%;
+  flex-basis: -moz-available;
+  flex-basis: 60%;
+}
+
+.input-group-search {
+  width: 100% !important;
+}
+
+.navbar-nav .nav-item .nav-link .navbar{
+  color: white !important;
+}
+
+.form-box {
+  height: auto;
+  width: 70%;
+  border: 1px solid white;
+  border-radius: 5px;
+}
