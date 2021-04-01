@@ -28,7 +28,7 @@ class BoardControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @DisplayName("메인페이지로 이동한다.")
+    @DisplayName("게시물 전체 페이지로 이동한다.")
     @Test
     void move_main_page() throws Exception {
         mockMvc.perform(get("/boards"))
@@ -46,7 +46,7 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시물 등록 페이지로 이동한다")
+    @DisplayName("게시물 등록 페이지로 이동한다.")
     @Test
     void boards_form() throws Exception {
         mockMvc.perform(get("/boards/form"))
