@@ -15,12 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class ViewController {
 
-    @GetMapping("/board-list")
-    public ModelAndView boardList(){
-        ModelAndView mav=new ModelAndView("board-list");
-        return mav;
-    }
-
     @GetMapping("/board-form")
     public ModelAndView boardForm(){
         ModelAndView mav= new ModelAndView("board-form");
