@@ -21,4 +21,12 @@ public class BoardController {
          */
         return "boards/board-list";
     }
+
+    @GetMapping("/form")
+    public String boardsFrom() {
+        /**
+         * todo : 로그인 상태, 게시물 등록 폼
+         */
+        return "boards/board-form";
+    }
 }
