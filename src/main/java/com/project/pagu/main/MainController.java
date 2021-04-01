@@ -27,4 +27,12 @@ public class MainController {
          */
         return "sign-up";
     }
+
+    @GetMapping("login")
+    public String login() {
+        /**
+         * todo : 로그인 폼
+         */
+        return "login";
+    }
 }

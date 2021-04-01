@@ -53,4 +53,19 @@ class MainControllerTest {
                 .andExpect(content().string(containsString("비밀번호")))
                 .andDo(print());
     }
+
+    @DisplayName("로그인 페이지로 이동한다.")
+    @Test
+    void login() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andExpect(content().string(containsString("이메일")))
+                .andExpect(content().string(containsString("비밀번호")))
+                .andExpect(content().string(containsString("로그인")))
+                .andExpect(content().string(containsString("구글 로그인")))
+                .andExpect(content().string(containsString("비밀번호 찾기")))
+                .andExpect(content().string(containsString("회원가입")))
+                .andDo(print());
+    }
 }
