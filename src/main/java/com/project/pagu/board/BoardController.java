@@ -2,6 +2,7 @@ package com.project.pagu.board;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -28,5 +29,13 @@ public class BoardController {
          * todo : 로그인 상태, 게시물 등록 폼
          */
         return "boards/board-form";
+    }
+
+    @GetMapping("/{id}")
+    public String getBoard(@PathVariable Long id) {
+        /**
+         * todo : 로그인 상태, 게시물 단건 조회
+         */
+        return "boards/board-detail";
     }
 }

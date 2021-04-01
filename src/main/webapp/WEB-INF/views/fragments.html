@@ -56,7 +56,7 @@
         <li class="list-group-item list-group-small">
             <div>
                 <div style="float: left;">
-                    <a href="">
+                    <a th:href="@{/boards/1}">
                         <span class="list-field">
                             여기는 스터디 제목~~~
                         </span>
@@ -78,7 +78,7 @@
     </div>
 
     <div th:fragment="boards-head-example">
-        <td><a href='#'><span>여기는 스터디 제목~~~~~~~</span></a></td>
+        <td><a th:href="@{/boards/1}"><span>여기는 스터디 제목~~~~~~~</span></a></td>
         <td><span>강남역 인근 ...</span></td>
         <td>nickname</td>
         <td>2021-03-21 12:30:00</td>

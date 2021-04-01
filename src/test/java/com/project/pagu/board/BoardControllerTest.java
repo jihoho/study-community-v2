@@ -62,4 +62,20 @@ class BoardControllerTest {
                 .andExpect(content().string(containsString("스터디 기간")))
                 .andDo(print());
     }
+
+    @DisplayName("게시물 단건 조회 페이지로 이동한다.")
+    @Test
+    void get_board() throws Exception {
+        mockMvc.perform(get("/boards/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(view().name("boards/board-detail"))
+                .andExpect(content().string(containsString("주제")))
+                .andExpect(content().string(containsString("기술")))
+                .andExpect(content().string(containsString("목표")))
+                .andExpect(content().string(containsString("장소")))
+                .andExpect(content().string(containsString("시간")))
+                .andExpect(content().string(containsString("모집 기간")))
+                .andExpect(content().string(containsString("스터디 기간")))
+                .andDo(print());
+    }
 }
