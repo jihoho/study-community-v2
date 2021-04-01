@@ -38,4 +38,12 @@ public class BoardController {
          */
         return "boards/board-detail";
     }
+
+    @GetMapping("/{id}/form")
+    public String getBoardForUpdate(@PathVariable Long id) {
+        /**
+         * todo : 로그인 상태, 게시물 수정 폼
+         */
+        return "boards/board-update";
+    }
 }

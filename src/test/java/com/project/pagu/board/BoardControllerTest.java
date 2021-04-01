@@ -78,4 +78,21 @@ class BoardControllerTest {
                 .andExpect(content().string(containsString("스터디 기간")))
                 .andDo(print());
     }
+
+    @DisplayName("게시물 수정페이지로 이동한다.")
+    @Test
+    void get_board_update_form() throws Exception {
+        mockMvc.perform(get("/boards/{id}/form", 1))
+                .andExpect(status().isOk())
+                .andExpect(view().name("boards/board-update"))
+                .andExpect(content().string(containsString("스터디 모집 공고 수정")))
+                .andExpect(content().string(containsString("제목")))
+                .andExpect(content().string(containsString("주제")))
+                .andExpect(content().string(containsString("목표")))
+                .andExpect(content().string(containsString("장소")))
+                .andExpect(content().string(containsString("시간")))
+                .andExpect(content().string(containsString("모집 상태")))
+                .andExpect(content().string(containsString("스터디 기간")))
+                .andDo(print());
+    }
 }
