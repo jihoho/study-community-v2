@@ -41,4 +41,16 @@ class MainControllerTest {
                 .andExpect(content().string(containsString("스터디 모집 공고 올리는 법")))
                 .andDo(print());
     }
+
+    @DisplayName("회원 가입 페이지로 이동한다.")
+    @Test
+    void sign_up() throws Exception {
+        mockMvc.perform(get("/sign-up"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("sign-up"))
+                .andExpect(content().string(containsString("이메일")))
+                .andExpect(content().string(containsString("닉네임")))
+                .andExpect(content().string(containsString("비밀번호")))
+                .andDo(print());
+    }
 }

@@ -19,4 +19,12 @@ public class MainController {
          */
         return "main-body";
     }
+
+    @GetMapping("sign-up")
+    public String signUp() {
+        /**
+         * todo : 회원가입 폼
+         */
+        return "sign-up";
+    }
 }
