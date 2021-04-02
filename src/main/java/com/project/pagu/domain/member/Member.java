@@ -1,5 +1,7 @@
 package com.project.pagu.domain.member;
 
+import com.project.pagu.domain.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +17,20 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Member {
+@IdClass(MemberId.class)
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "member_id")
-    private Long id;
+    private String memberId;
 
-    private String email;
+    @Id
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false,name = "member_type")
+    private MemberType memberType;
 
     private String nickname;
 
@@ -37,26 +44,25 @@ public class Member {
 
     private String career;
 
-    private LocalDateTime create_at;
-
-    private LocalDateTime update_at;
-
-    private LocalDateTime delete_at;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Builder
-    public Member(String nickname,String email,
+    public Member(String memberId,MemberType memberType,String nickname,
                   String imageURL,Role role){
+        this.memberId=memberId;
+        this.memberType=memberType;
         this.nickname=nickname;
-        this.email=email;
         this.imageURL=imageURL;
         this.role=role;
     }
 
     public String getRoleKey(){
         return this.role.getKey();
+    }
+
+    public String getMemberTypeKey(){
+        return this.memberType.getKey();
     }
 }
