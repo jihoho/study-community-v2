@@ -1,4 +1,4 @@
-package com.project.pagu.board;
+package com.project.pagu.web.board;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
