@@ -14,29 +14,29 @@
                         </a>
                         <div class="form-signin">
                             <!-- 회원가입 폼 -->
-                            <form>
+                            <form th:action="@{/members}" method="post" modelAttribute="memberSaveRequestDto">
                                 <!-- 이메일 -->
                                 <div class="form-label-group mt-5">
-                                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus />
+                                    <input type="email" id="inputEmail" name="memberId" class="form-control" placeholder="Email address" required autofocus />
                                     <label for="inputEmail">이메일을 입력해주세요</label>
                                     <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('eamil')}" th:errors="*{eamil}"> -->이미 존재하는 계정입니다</small>
                                 </div>
                                 <!-- 닉네임 -->
                                 <div class="form-label-group">
-                                    <input type="text" id="inputNickname" class="form-control" placeholder="nickname" required />
+                                    <input type="text" id="inputNickname" name="nickname" class="form-control" placeholder="nickname" required />
                                     <label for="inputNickname">2 ~ 8 글자 사이의 닉네임을 입력해주세요</label>
                                     <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->닉네임이 중복되었습니다</small>
                                     <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->2 ~ 8 글자 사이의 닉네임을 입력해주세요</small>
                                 </div>
                                 <!-- 비밀번호 -->
                                 <div class="form-label-group">
-                                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required />
+                                    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required />
                                     <label for="inputPassword"> 공백을 제외한 8 ~ 20자의 영문 대 소문자, 숫자, 특수문자를 포함해야합니다 </label>
                                     <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('password')}" th:errors="*{password}"> -->비밀번호 형식이 잘 못 되었습니다. 8 ~ 20자 영문 대 소문자, 숫자, 특수문자 포함</small>
                                 </div>
                                 <!-- 비밀번호 확인 -->
                                 <div class="form-label-group">
-                                    <input type="password" id="inputPasswordCheck" class="form-control" placeholder="Password-check" required />
+                                    <input type="password" id="inputPasswordCheck" name="password" class="form-control" placeholder="Password-check" required />
                                     <label for="inputPasswordCheck">비밀번호 확인을 위해 다시 한번 입력해주세요</label>
                                     <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}"> -->비밀번호가 일치하지 않습니다</small>
                                 </div>
