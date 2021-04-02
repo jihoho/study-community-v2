@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
@@ -29,7 +33,7 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,name = "member_type")
+    @Column(nullable = false, name = "member_type")
     private MemberType memberType;
 
     private String nickname;
@@ -49,20 +53,20 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public Member(String memberId,MemberType memberType,String nickname,
-                  String imageURL,Role role){
-        this.memberId=memberId;
-        this.memberType=memberType;
-        this.nickname=nickname;
-        this.imageURL=imageURL;
-        this.role=role;
+    public Member(String memberId, MemberType memberType, String nickname,
+                  String imageURL, Role role) {
+        this.memberId = memberId;
+        this.memberType = memberType;
+        this.nickname = nickname;
+        this.imageURL = imageURL;
+        this.role = role;
     }
 
-    public String getRoleKey(){
+    public String getRoleKey() {
         return this.role.getKey();
     }
 
-    public String getMemberTypeKey(){
+    public String getMemberTypeKey() {
         return this.memberType.getKey();
     }
 }
