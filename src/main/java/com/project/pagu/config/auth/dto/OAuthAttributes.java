@@ -13,6 +13,10 @@ import java.util.Map;
  * Date: 2021-04-01 Time: 오후 11:19
  */
 
+/**
+ * OAuth2UserService를 통해 가져온
+ * OAuth2User의 attribute를 담을 클래스
+ */
 @Getter
 public class OAuthAttributes {
     private Map<String,Object> attributes;
