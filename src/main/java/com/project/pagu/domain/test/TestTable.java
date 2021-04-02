@@ -12,9 +12,12 @@ import javax.persistence.Id;
  * Created by IntelliJ IDEA User: hojun Date: 2021-04-01 Time: 오후 7:58
  */
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class TestTable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
 

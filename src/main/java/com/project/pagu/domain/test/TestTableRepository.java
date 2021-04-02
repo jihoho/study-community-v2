@@ -10,16 +10,17 @@ import javax.persistence.PersistenceContext;
  */
 @Repository
 public class TestTableRepository {
+
     @PersistenceContext
     private EntityManager em;
 
-    public Long save(TestTable testTable){
+    public Long save(TestTable testTable) {
         em.persist(testTable);
         return testTable.getId();
     }
 
-    public TestTable find(Long id){
-        return em.find(TestTable.class,id);
+    public TestTable find(Long id) {
+        return em.find(TestTable.class, id);
     }
 
 }

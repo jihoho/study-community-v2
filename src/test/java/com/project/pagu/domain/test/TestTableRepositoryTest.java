@@ -13,27 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Created by IntelliJ IDEA
- * User: hojun
- * Date: 2021-04-02 Time: 오후 12:10
+ * Created by IntelliJ IDEA User: hojun Date: 2021-04-02 Time: 오후 12:10
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class TestTableRepositoryTest {
+
     @Autowired
     TestTableRepository testTableRepository;
 
     @Test
     @Transactional
     @DisplayName("JPA 연동 테스트")
-    public void testJpa() throws Exception{
+    public void testJpa() throws Exception {
         // given
-        TestTable testTable=new TestTable();
+        TestTable testTable = new TestTable();
         testTable.setUsername("testA");
         // when
-        Long savedId=testTableRepository.save(testTable);
+        Long savedId = testTableRepository.save(testTable);
         TestTable findTestTable = testTableRepository.find(savedId);
-
 
         // then
         Assertions.assertThat(findTestTable.getId()).isEqualTo(testTable.getId());

@@ -9,24 +9,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- * Created by IntelliJ IDEA
- * User: yhh1056@naver.com
- * Date: 2021/03/31 Time: 5:45 오후
+ * Created by IntelliJ IDEA User: yhh1056@naver.com Date: 2021/03/31 Time: 5:45 오후
  */
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /** 임시적으로 모든 요청 허용*/
         http.authorizeRequests().anyRequest().permitAll()
-        .and()
-            .oauth2Login().loginPage("/oauth-login")
+                .and()
+                .oauth2Login().loginPage("/oauth-login")
                 .userInfoEndpoint()
-                    .userService(customOAuth2UserService);
+                .userService(customOAuth2UserService);
     }
 
 }
