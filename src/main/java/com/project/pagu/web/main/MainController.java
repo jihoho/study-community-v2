@@ -1,5 +1,6 @@
 package com.project.pagu.web.main;
 
+import com.project.pagu.web.dto.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -33,10 +34,8 @@ public class MainController {
     }
 
     @GetMapping("sign-up")
-    public String signUp() {
-        /**
-         * todo : 회원가입 폼
-         */
+    public String signUp(Model model) {
+        model.addAttribute(new MemberSaveRequestDto());
         return "sign-up";
     }
 

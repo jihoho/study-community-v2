@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Data
 public class MemberId implements Serializable {
-    private String memberId;
+    private String email;
     private MemberType memberType;
 
 }

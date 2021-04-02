@@ -14,19 +14,19 @@
                         </a>
                         <div class="form-signin">
                             <!-- 회원가입 폼 -->
-                            <form th:action="@{/members}" method="post" modelAttribute="memberSaveRequestDto">
+                            <form th:action="@{/members}" method="post" th:object = "${memberSaveRequestDto}">
                                 <!-- 이메일 -->
                                 <div class="form-label-group mt-5">
-                                    <input type="email" id="inputEmail" name="memberId" class="form-control" placeholder="Email address" required autofocus />
+                                    <input type="email" id="inputEmail" name="memberId" class="form-control" th:field ="*{memberId}"placeholder="Email address" required autofocus />
                                     <label for="inputEmail">이메일을 입력해주세요</label>
-                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('eamil')}" th:errors="*{eamil}"> -->이미 존재하는 계정입니다</small>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('memberId')}" th:errors="*{email}"> 이미 존재하는 계정입니다</small>
                                 </div>
                                 <!-- 닉네임 -->
                                 <div class="form-label-group">
                                     <input type="text" id="inputNickname" name="nickname" class="form-control" placeholder="nickname" required />
                                     <label for="inputNickname">2 ~ 8 글자 사이의 닉네임을 입력해주세요</label>
-                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->닉네임이 중복되었습니다</small>
-                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->2 ~ 8 글자 사이의 닉네임을 입력해주세요</small>
+                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}"-->  닉네임이 중복되었습니다</small>
+                                    <small class="form-text text-danger"  > 2 ~ 8 글자 사이의 닉네임을 입력해주세요</small>
                                 </div>
                                 <!-- 비밀번호 -->
                                 <div class="form-label-group">

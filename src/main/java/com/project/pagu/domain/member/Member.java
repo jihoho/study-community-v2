@@ -27,9 +27,8 @@ import java.time.LocalDateTime;
 public class Member extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "member_id")
-    private String memberId;
+    @Column(name = "email")
+    private String email;
 
     @Id
     @Enumerated(EnumType.STRING)
@@ -53,9 +52,9 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public Member(String memberId, MemberType memberType, String nickname,
+    public Member(String email, MemberType memberType, String nickname,
                   String imageURL, Role role) {
-        this.memberId = memberId;
+        this.email = email;
         this.memberType = memberType;
         this.nickname = nickname;
         this.imageURL = imageURL;

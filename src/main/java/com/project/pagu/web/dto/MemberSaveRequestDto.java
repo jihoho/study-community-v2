@@ -2,6 +2,7 @@ package com.project.pagu.web.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Size;
  * Date: 2021-04-02 Time: 오후 5:44
  */
 @Getter
+@Setter
 @NoArgsConstructor
 public class MemberSaveRequestDto {
 

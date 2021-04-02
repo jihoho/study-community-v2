@@ -54,7 +54,7 @@ public class OAuthAttributes {
      */
     public Member toEntity() {
         return Member.builder()
-                .memberId(email)
+                .email(email)
                 .memberType(MemberType.GOOGLE)
                 .nickname(name)
                 .role(Role.GUEST)
