@@ -1,5 +1,7 @@
 package com.project.pagu.domain.member;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -9,8 +11,9 @@ import java.io.Serializable;
  */
 
 
+@Data
 public class MemberId implements Serializable {
-    private String meberId;
+    private String memberId;
     private MemberType memberType;
 
 }

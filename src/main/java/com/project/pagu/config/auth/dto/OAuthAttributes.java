@@ -1,6 +1,7 @@
 package com.project.pagu.config.auth.dto;
 
 import com.project.pagu.domain.member.Member;
+import com.project.pagu.domain.member.MemberType;
 import com.project.pagu.domain.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,8 +54,9 @@ public class OAuthAttributes {
      */
     public Member toEntity() {
         return Member.builder()
+                .memberId(email)
+                .memberType(MemberType.GOOGLE)
                 .nickname(name)
-                .email(email)
                 .role(Role.GUEST)
                 .build();
     }
