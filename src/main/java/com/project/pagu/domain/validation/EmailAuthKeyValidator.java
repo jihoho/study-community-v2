@@ -1,7 +1,7 @@
 package com.project.pagu.domain.validation;
 
-import com.project.pagu.domain.email.AuthMail;
-import com.project.pagu.service.email.AuthMailService;
+import com.project.pagu.domain.email.EmailAuthKey;
+import com.project.pagu.service.email.EmailAuthKeyService;
 import com.project.pagu.web.dto.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,8 +20,8 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-public class AuthEmailValidator implements Validator {
-    private final AuthMailService authMailService;
+public class EmailAuthKeyValidator implements Validator {
+    private final EmailAuthKeyService emailAuthKeyService;
     private final PasswordEncoder authKeyEncoder;
 
     @Override
@@ -34,20 +34,19 @@ public class AuthEmailValidator implements Validator {
         MemberSaveRequestDto memberSaveRequestDto=(MemberSaveRequestDto) target;
         String email=memberSaveRequestDto.getEmail();
         String authKey=memberSaveRequestDto.getAuthKey();
-        Optional<AuthMail> optional=authMailService.findById(email);
+        Optional<EmailAuthKey> optional= emailAuthKeyService.findById(email);
         try {
             if(optional.isPresent()){
-                AuthMail authMail=optional.get();
+                EmailAuthKey emailAuthKey =optional.get();
                 LocalDateTime now =LocalDateTime.now();
-                LocalDateTime modifiedDate=authMail.getModifiedDate();
+                LocalDateTime modifiedDate= emailAuthKey.getModifiedDate();
                 if(now.isBefore(modifiedDate)){
                     throw new Exception("AuthMail.modifiedDate invalid Exception");
                 }
-                if(ChronoUnit.MINUTES.between(now,modifiedDate)>30){
-                    errors.rejectValue("email-check","invalid.authkey.timeout","인증 시간 30분이 초과 되었습니다. 재인증 해주세요.");
-                }else if(!authKeyEncoder.matches(authKey,authMail.getAuthKey())){
-                    errors.rejectValue("email-check","invalid.authkey.missmatch","인증 번호가 다릅니다.");
-
+                if(ChronoUnit.MINUTES.between(modifiedDate,now)>30){
+                    errors.rejectValue("authKey","invalid.authkey.timeout","인증 시간 30분이 초과 되었습니다. 재인증 해주세요.");
+                }else if(!authKeyEncoder.matches(authKey, emailAuthKey.getAuthKey())){
+                    errors.rejectValue("authKey","invalid.authkey.missmatch","인증 번호가 다릅니다.");
                 }
             }
         }catch (Exception e){

@@ -13,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class AuthMailSaveDto {
+public class EmailAuthKeyDto {
     String email;
     String authKey;
 }

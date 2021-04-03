@@ -19,14 +19,14 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @Entity
-public class AuthMail extends BaseTimeEntity {
+public class EmailAuthKey extends BaseTimeEntity {
     @Id
     private String email;
 
     private String authKey;
 
     @Builder
-    public AuthMail(String email, String authKey) {
+    public EmailAuthKey(String email, String authKey) {
         this.email = email;
         this.authKey = authKey;
     }

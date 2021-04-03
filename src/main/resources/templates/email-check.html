@@ -28,20 +28,17 @@
                     </a>
                     <div class="mt-4">
                         <span>가입하신 </span>
-                        <span th:text="${memberSaveRequestDto.email}">{email}</span>
+                        <span th:text="${session.memberInfo.email}">{email}</span>
                         <span>로 인증번호를 전송하였습니다.</span>
                     </div>
                     <div class="form-signin">
-                        <form th:action="@{/members/email-auth}" method="post" th:object="${memberSaveRequestDto}">
-                            <input type="hidden">
+                        <form th:action="@{/members/email-check}" method="post" th:object="${memberSaveRequestDto}">
                             <!-- 인증번호 입력-->
                             <div class="form-label-group mt-5">
-                                <input type="email" id="inputEmailCheck" class="form-control"
-                                       placeholder="Email address" required autofocus/>
+                                <input type="number" id="inputEmailCheck" class="form-control" th:name="authKey"
+                                       placeholder="인증번호 입력해주세요." required autofocus/>
                                 <label for="inputEmailCheck">인증번호를 입력해주세요</label>
-                                <small class="form-text text-danger">
-                                    <!--th:if="${#fields.hasErrors('eamil')}" th:errors="*{eamil}"> -->인증번호가 일치하지
-                                    않습니다.</small>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('authKey')}" th:errors="*{authKey}"></small>
                             </div>
                             <button class="btn btn-lg btn-sign-in btn-block mt-5" type="submit">
                                 가입 완료

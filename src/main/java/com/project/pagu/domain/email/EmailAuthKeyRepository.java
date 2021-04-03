@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * User: hojun
  * Date: 2021-04-03 Time: 오후 3:37
  */
-public interface AuthMailRepository extends JpaRepository<AuthMail,String> {
+public interface EmailAuthKeyRepository extends JpaRepository<EmailAuthKey,String> {
 }

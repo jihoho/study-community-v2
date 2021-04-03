@@ -1,15 +1,12 @@
 package com.project.pagu.service.email;
 
-import com.project.pagu.domain.email.AuthMail;
-import com.project.pagu.domain.email.AuthMailRepository;
-import com.project.pagu.web.dto.AuthMailSaveDto;
+import com.project.pagu.domain.email.EmailAuthKey;
+import com.project.pagu.domain.email.EmailAuthKeyRepository;
+import com.project.pagu.web.dto.EmailAuthKeyDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +22,9 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class AuthMailService {
+public class EmailAuthKeyService {
     private final JavaMailSender emailSender;
-    private final AuthMailRepository authMailRepository;
+    private final EmailAuthKeyRepository emailAuthKeyRepository;
 
     private final PasswordEncoder authKeyEncoder;
 
@@ -64,20 +61,19 @@ public class AuthMailService {
     }
 
     @Transactional
-    public String save(AuthMailSaveDto authMailSaveDto) {
-        String email = authMailSaveDto.getEmail();
-        String authKey = authKeyEncoder.encode(authMailSaveDto.getAuthKey());
+    public String save(EmailAuthKeyDto emailAuthKeyDto) {
+        String email = emailAuthKeyDto.getEmail();
+        String authKey = authKeyEncoder.encode(emailAuthKeyDto.getAuthKey());
         System.out.println("encoding auth key: " + authKey);
-        AuthMail authMail = AuthMail.builder().email(email).authKey(authKey).build();
-        authMailRepository.save(authMail);
+        EmailAuthKey emailAuthKey = EmailAuthKey.builder().email(email).authKey(authKey).build();
+        emailAuthKeyRepository.save(emailAuthKey);
         return email;
     }
 
-    public Optional<AuthMail> findById(String email){
-        return authMailRepository.findById(email);
+    @Transactional
+    public Optional<EmailAuthKey> findById(String email) {
+        return emailAuthKeyRepository.findById(email);
     }
-
-
 
 
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MembersService implements UserDetailsService {
     private final MembersRespository membersRespository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public boolean existsById(MemberId memberId) {
@@ -35,6 +37,11 @@ public class MembersService implements UserDetailsService {
     public MemberId save(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = (Member) membersRespository.save(memberSaveRequestDto.toEntity());
         return new MemberId(member.getEmail(), member.getMemberType());
+    }
+
+    @Transactional
+    public MemberSaveRequestDto encryptPassword(MemberSaveRequestDto memberSaveRequestDto){
+        return null;
     }
 
     @Override

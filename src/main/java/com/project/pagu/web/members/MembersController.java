@@ -1,10 +1,10 @@
 package com.project.pagu.web.members;
 
-import com.project.pagu.domain.member.MemberId;
+import com.project.pagu.domain.validation.EmailAuthKeyValidator;
 import com.project.pagu.domain.validation.MemberFormValidator;
-import com.project.pagu.service.email.AuthMailService;
+import com.project.pagu.service.email.EmailAuthKeyService;
 import com.project.pagu.service.members.MembersService;
-import com.project.pagu.web.dto.AuthMailSaveDto;
+import com.project.pagu.web.dto.EmailAuthKeyDto;
 import com.project.pagu.web.dto.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -25,8 +28,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MembersController {
     private final MemberFormValidator memberFormValidator;
+    private final EmailAuthKeyValidator emailAuthKeyValidator;
     private final MembersService membersService;
-    private final AuthMailService authMailService;
+    private final EmailAuthKeyService emailAuthKeyService;
 
     @GetMapping("profile")
     public String profile(/* @AuthenticationPrincipal Member member */) {
@@ -37,33 +41,42 @@ public class MembersController {
     }
 
     @PostMapping("/members/valid")
-    public String validMember(@Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult result, Model model) {
+    public String validMemberSaveForm(@Valid MemberSaveRequestDto memberSaveRequestDto,
+                                      BindingResult result, Model model, HttpServletRequest request) {
         memberFormValidator.validate(memberSaveRequestDto, result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";
         }
         String email = memberSaveRequestDto.getEmail();
-        String authKey = authMailService.sendMessage(email);
-        AuthMailSaveDto authMailSaveDto
-                = AuthMailSaveDto.builder().email(email).authKey(authKey).build();
-        authMailService.save(authMailSaveDto);
-        model.addAttribute(memberSaveRequestDto);
+        String authKey = emailAuthKeyService.sendMessage(email);
+        EmailAuthKeyDto emailAuthKeyDto
+                = EmailAuthKeyDto.builder().email(email).authKey(authKey).build();
+        emailAuthKeyService.save(emailAuthKeyDto);
+
+        // save member info in session
+        HttpSession session = request.getSession();
+        session.setAttribute("memberInfo", memberSaveRequestDto);
+
+//        model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }
 
     @PostMapping("/members/email-check")
-    public String emailCheckAndSaveMember(MemberSaveRequestDto memberSaveRequestDto, BindingResult result) {
+    public String emailCheckAndSaveMember(EmailAuthKeyDto emailAuthKeyDto, BindingResult result, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) session.getAttribute("memberInfo");
 
-        System.out.println(memberSaveRequestDto.toString());
-        memberFormValidator.validate(memberSaveRequestDto, result);
+        System.out.println("member data: " + memberSaveRequestDto.toString());
+        emailAuthKeyValidator.validate(memberSaveRequestDto, result);
+        System.out.println(result);
         if (result.hasErrors()) {
             System.out.println(result);
-            return "sign-up";
+            return "email-check";
         }
-        MemberId memberId = membersService.save(memberSaveRequestDto);
+        //        MemberId memberId = membersService.save(memberSaveRequestDto);
 
-        return "email-check";
+        return "profile";
     }
 
 }
