@@ -3,10 +3,7 @@ package com.project.pagu.web.dto;
 import com.project.pagu.domain.member.Member;
 import com.project.pagu.domain.member.MemberType;
 import com.project.pagu.domain.member.Role;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
@@ -19,6 +16,8 @@ import javax.validation.constraints.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemberSaveRequestDto {
 
     @NotBlank
