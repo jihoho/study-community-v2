@@ -40,8 +40,10 @@ public class MembersService implements UserDetailsService {
     }
 
     @Transactional
-    public MemberSaveRequestDto encryptPassword(MemberSaveRequestDto memberSaveRequestDto){
-        return null;
+    public void encryptPassword(MemberSaveRequestDto memberSaveRequestDto){
+        String password=memberSaveRequestDto.getPassword();
+        memberSaveRequestDto.setPassword(passwordEncoder.encode(password));
+        memberSaveRequestDto.setPasswordCheck(passwordEncoder.encode(password));
     }
 
     @Override

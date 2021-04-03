@@ -2,6 +2,7 @@ package com.project.pagu.domain.validation;
 
 import com.project.pagu.domain.email.EmailAuthKey;
 import com.project.pagu.service.email.EmailAuthKeyService;
+import com.project.pagu.web.dto.EmailAuthKeyDto;
 import com.project.pagu.web.dto.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +32,10 @@ public class EmailAuthKeyValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        MemberSaveRequestDto memberSaveRequestDto=(MemberSaveRequestDto) target;
-        String email=memberSaveRequestDto.getEmail();
-        String authKey=memberSaveRequestDto.getAuthKey();
+
+        EmailAuthKeyDto emailAuthKeyDto=(EmailAuthKeyDto) target;
+        String email=emailAuthKeyDto.getEmail();
+        String authKey=emailAuthKeyDto.getAuthKey();
         Optional<EmailAuthKey> optional= emailAuthKeyService.findById(email);
         try {
             if(optional.isPresent()){

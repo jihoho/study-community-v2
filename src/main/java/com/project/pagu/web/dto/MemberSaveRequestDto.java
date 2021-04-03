@@ -38,8 +38,6 @@ public class MemberSaveRequestDto {
     @NotBlank
     String passwordCheck;
 
-    String authKey;
-
     public Member toEntity() {
         return Member.builder()
                 .email(email)
