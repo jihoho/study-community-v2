@@ -51,7 +51,7 @@ public class AuthMailService {
         return buffer.toString();
     }
 
-
+    @Transactional
     public String sendMessage(String to) {
         String authKey = getKey(6);
         SimpleMailMessage message = new SimpleMailMessage();
@@ -64,13 +64,16 @@ public class AuthMailService {
     }
 
     @Transactional
-    public String save(AuthMailSaveDto authMailSaveDto){
-        String email=authMailSaveDto.getEmail();
-        String authKey=authKeyEncoder.encode(authMailSaveDto.getAuthKey());
-        System.out.println("encoding auth key: "+authKey);
-        AuthMail authMail=AuthMail.builder().email(email).authKey(authKey).build();
+    public String save(AuthMailSaveDto authMailSaveDto) {
+        String email = authMailSaveDto.getEmail();
+        String authKey = authKeyEncoder.encode(authMailSaveDto.getAuthKey());
+        System.out.println("encoding auth key: " + authKey);
+        AuthMail authMail = AuthMail.builder().email(email).authKey(authKey).build();
         authMailRepository.save(authMail);
         return email;
     }
+
+
+
 
 }
