@@ -1,4 +1,4 @@
-package com.project.pagu.domain.validation;
+package com.project.pagu.validation;
 
 import com.project.pagu.domain.email.EmailAuthKey;
 import com.project.pagu.service.email.EmailAuthKeyService;

@@ -1,5 +1,8 @@
 package com.project.pagu.web.dto;
 
+import com.project.pagu.annotation.FieldsValueMatch;
+import com.project.pagu.annotation.UniqueEmail;
+import com.project.pagu.annotation.UniqueNickname;
 import com.project.pagu.domain.member.Member;
 import com.project.pagu.domain.member.MemberType;
 import com.project.pagu.domain.member.Role;
@@ -18,15 +21,23 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "password",
+                fieldMatch = "passwordCheck",
+                message = "비밀번호가 다릅니다.")
+})
 public class MemberSaveRequestDto {
 
     @NotBlank
     @Email(message = "이메일 형식을 맞춰주세요.")
+    @UniqueEmail(message = "이미 존재하는 이메일입니다.")
     String email;
 
     @NotBlank
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
             message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
+    @UniqueNickname(message = "이미 존재하는 닉네임입니다.")
     String nickname;
 
     @NotBlank

@@ -1,8 +1,7 @@
 package com.project.pagu.web.members;
 
 import com.project.pagu.domain.member.MemberId;
-import com.project.pagu.domain.validation.EmailAuthKeyValidator;
-import com.project.pagu.domain.validation.MemberFormValidator;
+import com.project.pagu.validation.EmailAuthKeyValidator;
 import com.project.pagu.service.email.EmailAuthKeyService;
 import com.project.pagu.service.members.MembersService;
 import com.project.pagu.web.dto.EmailAuthKeyDto;
@@ -26,7 +25,6 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 public class MembersController {
-    private final MemberFormValidator memberFormValidator;
     private final EmailAuthKeyValidator emailAuthKeyValidator;
     private final MembersService membersService;
     private final EmailAuthKeyService emailAuthKeyService;
@@ -43,7 +41,6 @@ public class MembersController {
     public String validMemberSaveForm(@ModelAttribute @Valid MemberSaveRequestDto memberSaveRequestDto,
                                       BindingResult result, HttpServletRequest request, Model model) {
         System.out.println(memberSaveRequestDto.toString());
-        memberFormValidator.validate(memberSaveRequestDto, result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";

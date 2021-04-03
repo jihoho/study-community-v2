@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -19,6 +20,7 @@ import org.springframework.asm.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,7 +34,7 @@ import java.util.Map;
  * Date: 2021/04/01 Time: 3:07 오후
  */
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 class MembersControllerTest {
 
@@ -58,13 +60,13 @@ class MembersControllerTest {
 
 
     @Test
-    @DisplayName("회원가입 Form validation 실패 테스트")
-    void formValidationFailTest() throws Exception {
+    @DisplayName("비밀번호 패턴 validation 실패 테스트")
+    void passwordPatternFailTest() throws Exception {
         // given: 비밀번호 특수문자 미포함 invalid
         MemberSaveRequestDto dto =
                 MemberSaveRequestDto.builder()
                         .email("123@naver.com")
-                        .nickname("jihoho")
+                        .nickname("nick")
                         .password("123123")
                         .passwordCheck("123123")
                         .build();
@@ -73,8 +75,32 @@ class MembersControllerTest {
         mockMvc.perform(post("/members/valid").with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto","password","Pattern"))
                 .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
+
+
     }
+    
+    @Test
+    @DisplayName("비밀번호 확인 validation 실패 테스트")
+    void passwordCheckFailTest () throws Exception{
+        MemberSaveRequestDto dto =
+                MemberSaveRequestDto.builder()
+                        .email("123@naver.com")
+                        .nickname("nick")
+                        .password("abcde1234!")
+                        .passwordCheck("123123")
+                        .build();
+
+        MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
+        mockMvc.perform(post("/members/valid").with(csrf())
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto","passwordCheck","FieldsValueMatch"))
+                .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
+
+    }
+    
 
     @Test
     @DisplayName("회원가입 Form validation 성공 테스트")
@@ -83,7 +109,7 @@ class MembersControllerTest {
         MemberSaveRequestDto dto =
                 MemberSaveRequestDto.builder()
                         .email("123@naver.com")
-                        .nickname("jihoho")
+                        .nickname("nick")
                         .password("ab123456!")
                         .passwordCheck("ab123456!")
                         .build();
