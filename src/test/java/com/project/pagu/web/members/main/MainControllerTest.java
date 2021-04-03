@@ -1,4 +1,4 @@
-package com.project.pagu.web.member.main;
+package com.project.pagu.web.members.main;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

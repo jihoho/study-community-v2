@@ -35,6 +35,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, name = "member_type")
     private MemberType memberType;
 
+    @Column(unique = true)
     private String nickname;
 
     private String password;
@@ -43,6 +44,7 @@ public class Member extends BaseTimeEntity {
 
     private String link;
 
+    @Lob
     private String info;
 
     private String career;
@@ -53,12 +55,23 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String email, MemberType memberType, String nickname,
-                  String imageURL, Role role) {
+                  String password, String imageURL, Role role) {
         this.email = email;
         this.memberType = memberType;
+        this.password = password;
         this.nickname = nickname;
         this.imageURL = imageURL;
         this.role = role;
+    }
+
+    @Builder
+    public Member(String email,MemberType memberType,String nickname,
+                  String password,Role role){
+        this.email=email;
+        this.memberType=memberType;
+        this.nickname=nickname;
+        this.password=password;
+        this.role=role;
     }
 
     public String getRoleKey() {

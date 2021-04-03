@@ -1,4 +1,4 @@
-package com.project.pagu.web.member;
+package com.project.pagu.web.members;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MemberControllerTest {
+class MembersControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
