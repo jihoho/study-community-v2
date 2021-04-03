@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.service.util.MultiValueMapConverter;
+import com.project.pagu.web.dto.EmailAuthKeyDto;
 import com.project.pagu.web.dto.MemberSaveRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,37 +56,45 @@ class MembersControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName()
-    @Test
-    void () throws Exception{
-        // given
-
-        // when
-
-        // then
-    }
 
     @Test
     @DisplayName("회원가입 Form validation 실패 테스트")
-    void validmemberSaveFormTest() throws Exception {
-        /*
-        *  given: 비밀번호 특수문자 미포함 invalid
-        * */
+    void formValidationFailTest() throws Exception {
+        // given: 비밀번호 특수문자 미포함 invalid
         MemberSaveRequestDto dto =
                 MemberSaveRequestDto.builder()
-                        .email("xkftn94@naver.com")
+                        .email("123@naver.com")
                         .nickname("jihoho")
                         .password("123123")
                         .passwordCheck("123123")
                         .build();
-        
+
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
         mockMvc.perform(post("/members/valid").with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
-
     }
+
+    @Test
+    @DisplayName("회원가입 Form validation 성공 테스트")
+    void formValidationSuccessTest() throws Exception {
+        // given: 모든 필드 valid
+        MemberSaveRequestDto dto =
+                MemberSaveRequestDto.builder()
+                        .email("123@naver.com")
+                        .nickname("jihoho")
+                        .password("ab123456!")
+                        .passwordCheck("ab123456!")
+                        .build();
+
+        MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
+        mockMvc.perform(post("/members/valid").with(csrf())
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(view().name("email-check")); // 다시 가입창으로 이동
+    }
+
 
 
 }
