@@ -73,6 +73,10 @@ public class AuthMailService {
         return email;
     }
 
+    public Optional<AuthMail> findById(String email){
+        return authMailRepository.findById(email);
+    }
+
 
 
 
