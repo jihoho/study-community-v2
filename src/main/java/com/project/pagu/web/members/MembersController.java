@@ -1,7 +1,7 @@
 package com.project.pagu.web.members;
 
 import com.project.pagu.domain.member.MemberId;
-import com.project.pagu.domain.validation.MemberSaveValidator;
+import com.project.pagu.domain.validation.MemberFormValidator;
 import com.project.pagu.service.email.AuthMailService;
 import com.project.pagu.service.members.MembersService;
 import com.project.pagu.web.dto.AuthMailSaveDto;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 public class MembersController {
-    private final MemberSaveValidator memberSaveValidator;
+    private final MemberFormValidator memberFormValidator;
     private final MembersService membersService;
     private final AuthMailService authMailService;
 
@@ -38,7 +38,7 @@ public class MembersController {
 
     @PostMapping("/members/valid")
     public String validMember(@Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult result, Model model) {
-        memberSaveValidator.validate(memberSaveRequestDto, result);
+        memberFormValidator.validate(memberSaveRequestDto, result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";
@@ -53,10 +53,10 @@ public class MembersController {
     }
 
     @PostMapping("/members/email-check")
-    public String addMember(MemberSaveRequestDto memberSaveRequestDto, BindingResult result) {
+    public String emailCheckAndSaveMember(MemberSaveRequestDto memberSaveRequestDto, BindingResult result) {
 
         System.out.println(memberSaveRequestDto.toString());
-        memberSaveValidator.validate(memberSaveRequestDto, result);
+        memberFormValidator.validate(memberSaveRequestDto, result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";

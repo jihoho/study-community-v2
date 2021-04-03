@@ -16,7 +16,7 @@ import org.springframework.validation.Validator;
  */
 @Component
 @RequiredArgsConstructor
-public class MemberSaveValidator implements Validator {
+public class MemberFormValidator implements Validator {
     private final MembersService membersService;
 
     @Override
