@@ -39,15 +39,15 @@ public class MembersController {
     @PostMapping("/members/valid")
     public String validMember(@Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult result, Model model) {
         memberSaveValidator.validate(memberSaveRequestDto, result);
-
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";
         }
         String email = memberSaveRequestDto.getEmail();
         String authKey = authMailService.sendMessage(email);
-        AuthMailSaveDto authMailSaveDto = AuthMailSaveDto.builder().email(email).authKey(authKey).build();
-        authMailService.saveOrUpdate(authMailSaveDto);
+        AuthMailSaveDto authMailSaveDto
+                = AuthMailSaveDto.builder().email(email).authKey(authKey).build();
+        authMailService.save(authMailSaveDto);
         model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }

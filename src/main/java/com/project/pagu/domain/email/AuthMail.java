@@ -4,6 +4,7 @@ import com.project.pagu.domain.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
  * Date: 2021-04-03 Time: 오후 3:27
  */
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class AuthMail extends BaseTimeEntity {

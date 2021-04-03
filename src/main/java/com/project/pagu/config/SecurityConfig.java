@@ -3,10 +3,13 @@ package com.project.pagu.config;
 import com.project.pagu.config.auth.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
@@ -29,6 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login().loginPage("/oauth-login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
+    }
+
+    @Bean
+    public PasswordEncoder authKeyEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 }

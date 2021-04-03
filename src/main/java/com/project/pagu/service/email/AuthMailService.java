@@ -4,13 +4,16 @@ import com.project.pagu.domain.email.AuthMail;
 import com.project.pagu.domain.email.AuthMailRepository;
 import com.project.pagu.web.dto.AuthMailSaveDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -25,7 +28,8 @@ import java.util.Random;
 public class AuthMailService {
     private final JavaMailSender emailSender;
     private final AuthMailRepository authMailRepository;
-    private final BCryptPasswordEncoder authKeyEncoder;
+
+    private final PasswordEncoder authKeyEncoder;
 
 
     private static final String MAIL_SUBJECT = "PAGU 인증 이메일 입니다.";
@@ -60,15 +64,13 @@ public class AuthMailService {
     }
 
     @Transactional
-    public String saveOrUpdate(AuthMailSaveDto authMailSaveDto){
+    public String save(AuthMailSaveDto authMailSaveDto){
         String email=authMailSaveDto.getEmail();
         String authKey=authKeyEncoder.encode(authMailSaveDto.getAuthKey());
         System.out.println("encoding auth key: "+authKey);
         AuthMail authMail=AuthMail.builder().email(email).authKey(authKey).build();
-        if(authMailRepository.existsById(email)){
-
-        }
-        return null;
+        authMailRepository.save(authMail);
+        return email;
     }
 
 }
