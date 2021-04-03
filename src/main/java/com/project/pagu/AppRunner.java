@@ -19,7 +19,7 @@ public class AppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String authkey= mailService.sendMessage("xkftn94@naver.com");
-        System.out.println("authkey :"+authkey);
+//        String authkey= mailService.sendMessage("xkftn94@naver.com");
+//        System.out.println("authkey :"+authkey);
     }
 }

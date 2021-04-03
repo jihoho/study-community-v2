@@ -33,25 +33,25 @@ public class EmailAuthKeyValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        EmailAuthKeyDto emailAuthKeyDto=(EmailAuthKeyDto) target;
-        String email=emailAuthKeyDto.getEmail();
-        String authKey=emailAuthKeyDto.getAuthKey();
-        Optional<EmailAuthKey> optional= emailAuthKeyService.findById(email);
+        EmailAuthKeyDto emailAuthKeyDto = (EmailAuthKeyDto) target;
+        String email = emailAuthKeyDto.getEmail();
+        String authKey = emailAuthKeyDto.getAuthKey();
+        Optional<EmailAuthKey> optional = emailAuthKeyService.findById(email);
         try {
-            if(optional.isPresent()){
-                EmailAuthKey emailAuthKey =optional.get();
-                LocalDateTime now =LocalDateTime.now();
-                LocalDateTime modifiedDate= emailAuthKey.getModifiedDate();
-                if(now.isBefore(modifiedDate)){
+            if (optional.isPresent()) {
+                EmailAuthKey emailAuthKey = optional.get();
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime modifiedDate = emailAuthKey.getModifiedDate();
+                if (now.isBefore(modifiedDate)) {
                     throw new Exception("AuthMail.modifiedDate invalid Exception");
                 }
-                if(ChronoUnit.MINUTES.between(modifiedDate,now)>30){
-                    errors.rejectValue("authKey","invalid.authkey.timeout","인증 시간 30분이 초과 되었습니다. 재인증 해주세요.");
-                }else if(!authKeyEncoder.matches(authKey, emailAuthKey.getAuthKey())){
-                    errors.rejectValue("authKey","invalid.authkey.missmatch","인증 번호가 다릅니다.");
+                if (ChronoUnit.MINUTES.between(modifiedDate, now) > 30) {
+                    errors.rejectValue("authKey", "invalid.authkey.timeout", "인증 시간 30분이 초과 되었습니다. 재인증 해주세요.");
+                } else if (!authKeyEncoder.matches(authKey, emailAuthKey.getAuthKey())) {
+                    errors.rejectValue("authKey", "invalid.authkey.missmatch", "인증 번호가 다릅니다.");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

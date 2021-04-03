@@ -1,5 +1,6 @@
 package com.project.pagu.web.members;
 
+import com.project.pagu.domain.member.MemberId;
 import com.project.pagu.domain.validation.EmailAuthKeyValidator;
 import com.project.pagu.domain.validation.MemberFormValidator;
 import com.project.pagu.service.email.EmailAuthKeyService;
@@ -70,15 +71,13 @@ public class MembersController {
         HttpSession session = request.getSession();
         MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) session.getAttribute("memberInfo");
 
-        System.out.println("member data: " + memberSaveRequestDto.toString());
-        System.out.println(emailAuthKeyDto.toString());
         emailAuthKeyValidator.validate(emailAuthKeyDto, result);
         System.out.println(result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "email-check";
         }
-        //        MemberId memberId = membersService.save(memberSaveRequestDto);
+        MemberId memberId = membersService.save(memberSaveRequestDto);
 
         return "profile";
     }

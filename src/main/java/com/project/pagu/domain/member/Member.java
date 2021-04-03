@@ -65,13 +65,13 @@ public class Member extends BaseTimeEntity {
     }
 
     @Builder
-    public Member(String email,MemberType memberType,String nickname,
-                  String password,Role role){
-        this.email=email;
-        this.memberType=memberType;
-        this.nickname=nickname;
-        this.password=password;
-        this.role=role;
+    public Member(String email, MemberType memberType, String nickname,
+                  String password, Role role) {
+        this.email = email;
+        this.memberType = memberType;
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
     }
 
     public String getRoleKey() {

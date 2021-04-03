@@ -26,17 +26,17 @@ public class MemberFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        MemberSaveRequestDto memberSaveRequestDto=(MemberSaveRequestDto) target;
-        if(membersService.existsById(new MemberId(memberSaveRequestDto.getEmail(), MemberType.NORMAL))){
-            errors.rejectValue("email","invalid.email","이미 사용중인 이메일 입니다.");
-        }
-        
-        if(membersService.existsByNickname(memberSaveRequestDto.getNickname())){
-            errors.rejectValue("nickname","invalid.nickname","이미 사용중인 닉네임 입니다.");
+        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) target;
+        if (membersService.existsById(new MemberId(memberSaveRequestDto.getEmail(), MemberType.NORMAL))) {
+            errors.rejectValue("email", "invalid.email", "이미 사용중인 이메일 입니다.");
         }
 
-        if(!memberSaveRequestDto.getPassword().equals(memberSaveRequestDto.getPasswordCheck())){
-            errors.rejectValue("passwordCheck","invalid.passwordCheck","비밀 번호가 다릅니다.");
+        if (membersService.existsByNickname(memberSaveRequestDto.getNickname())) {
+            errors.rejectValue("nickname", "invalid.nickname", "이미 사용중인 닉네임 입니다.");
+        }
+
+        if (!memberSaveRequestDto.getPassword().equals(memberSaveRequestDto.getPasswordCheck())) {
+            errors.rejectValue("passwordCheck", "invalid.passwordCheck", "비밀 번호가 다릅니다.");
         }
     }
 }

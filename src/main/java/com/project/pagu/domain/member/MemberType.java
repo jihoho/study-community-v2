@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MemberType {
-    NORMAL("TYPE_NORMAL","일반 계정"),
-    GOOGLE("TYPE_GOOGLE","구글 계정");
+    NORMAL("TYPE_NORMAL", "일반 계정"),
+    GOOGLE("TYPE_GOOGLE", "구글 계정");
 
     private final String key;
     private final String title;
