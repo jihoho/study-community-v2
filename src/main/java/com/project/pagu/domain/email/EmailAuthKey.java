@@ -1,6 +1,8 @@
 package com.project.pagu.domain.email;
 
 import com.project.pagu.domain.common.BaseTimeEntity;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +19,11 @@ import javax.persistence.Id;
  */
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 @Entity
+@NoArgsConstructor
 public class EmailAuthKey extends BaseTimeEntity {
+
     @Id
     private String email;
 
@@ -30,4 +34,5 @@ public class EmailAuthKey extends BaseTimeEntity {
         this.email = email;
         this.authKey = authKey;
     }
+
 }

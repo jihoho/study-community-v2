@@ -4,6 +4,7 @@ import com.project.pagu.service.email.EmailAuthKeyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,12 +15,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppRunner implements ApplicationRunner {
+
     @Autowired
-    EmailAuthKeyService mailService;
+    private PasswordEncoder authKeyEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-//        String authkey= mailService.sendMessage("xkftn94@naver.com");
-//        System.out.println("authkey :"+authkey);
     }
 }
