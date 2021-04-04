@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.asm.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
@@ -36,6 +37,7 @@ import java.util.Map;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+//@WebMvcTest
 class MembersControllerTest {
 
     @Autowired
@@ -98,7 +100,25 @@ class MembersControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto","passwordCheck","FieldsValueMatch"))
                 .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
+    }
 
+    @Test
+    @DisplayName("닉네임 패턴 validation 실패 테스트")
+    void nicknamePatternFailTest () throws Exception{
+        MemberSaveRequestDto dto =
+                MemberSaveRequestDto.builder()
+                        .email("123@naver.com")
+                        .nickname("nick")
+                        .password("abcde1234!")
+                        .passwordCheck("123123")
+                        .build();
+
+        MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
+        mockMvc.perform(post("/members/valid").with(csrf())
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto","nickname","FieldsValueMatch"))
+                .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
     }
     
 
@@ -108,7 +128,7 @@ class MembersControllerTest {
         // given: 모든 필드 valid
         MemberSaveRequestDto dto =
                 MemberSaveRequestDto.builder()
-                        .email("123@naver.com")
+                        .email("email@email.com")
                         .nickname("nick")
                         .password("ab123456!")
                         .passwordCheck("ab123456!")

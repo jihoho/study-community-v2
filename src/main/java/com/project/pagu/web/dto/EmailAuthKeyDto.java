@@ -1,5 +1,6 @@
 package com.project.pagu.web.dto;
 
+import com.project.pagu.annotation.ValidAuthKey;
 import lombok.*;
 
 /**
@@ -14,7 +15,12 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
+@ValidAuthKey(
+        idField = "email",
+        authKeyField = "authKey"
+)
 public class EmailAuthKeyDto {
+
     String email;
     String authKey;
 }

@@ -1,7 +1,6 @@
 package com.project.pagu.web.members;
 
 import com.project.pagu.domain.member.MemberId;
-import com.project.pagu.validation.EmailAuthKeyValidator;
 import com.project.pagu.service.email.EmailAuthKeyService;
 import com.project.pagu.service.members.MembersService;
 import com.project.pagu.web.dto.EmailAuthKeyDto;
@@ -25,7 +24,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 public class MembersController {
-    private final EmailAuthKeyValidator emailAuthKeyValidator;
+
     private final MembersService membersService;
     private final EmailAuthKeyService emailAuthKeyService;
 
@@ -38,9 +37,10 @@ public class MembersController {
     }
 
     @PostMapping("/members/valid")
-    public String validMemberSaveForm(@ModelAttribute @Valid MemberSaveRequestDto memberSaveRequestDto,
-                                      BindingResult result, HttpServletRequest request, Model model) {
-        System.out.println(memberSaveRequestDto.toString());
+    public String validMemberSaveForm(
+            @ModelAttribute @Valid MemberSaveRequestDto memberSaveRequestDto,
+            BindingResult result, HttpServletRequest request, Model model) {
+
         if (result.hasErrors()) {
             System.out.println(result);
             return "sign-up";
@@ -61,13 +61,12 @@ public class MembersController {
     }
 
     @PostMapping("/members/email-check")
-    public String emailCheckAndSaveMember(@ModelAttribute EmailAuthKeyDto emailAuthKeyDto,
-                                          BindingResult result, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) session.getAttribute("memberInfo");
+    public String emailCheckAndSaveMember(@Valid EmailAuthKeyDto emailAuthKeyDto,
+            BindingResult result, HttpServletRequest request) {
 
-        emailAuthKeyValidator.validate(emailAuthKeyDto, result);
-        System.out.println(result);
+        HttpSession session = request.getSession();
+        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) session
+                .getAttribute("memberInfo");
         if (result.hasErrors()) {
             System.out.println(result);
             return "email-check";
