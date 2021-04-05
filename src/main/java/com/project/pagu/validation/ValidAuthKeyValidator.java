@@ -40,37 +40,42 @@ public class ValidAuthKeyValidator implements ConstraintValidator<ValidAuthKey, 
             String idFieldValue = (String) getFieldValue(object, idField);
             String authKeyFieldValue = (String) getFieldValue(object, authKeyField);
             Optional<EmailAuthKey> optional = emailAuthKeyService.findById(idFieldValue);
-            if (optional.isPresent()) {
-                EmailAuthKey emailAuthKey = optional.get();
-                LocalDateTime now = LocalDateTime.now();
-                LocalDateTime modifiedDate = emailAuthKey.getModifiedDate();
-                if (now.isBefore(modifiedDate)) {
-                    throw new Exception("AuthMail.modifiedDate invalid Exception");
-                }
-                if (ChronoUnit.MINUTES.between(modifiedDate, now) > 30) {
-                    context.buildConstraintViolationWithTemplate("인증 시간 30분이 초과 되었습니다. 재인증 해주세요.")
-                            .addPropertyNode(authKeyField)
-                            .addConstraintViolation()
-                            .disableDefaultConstraintViolation();
-                    return false;
-                } else if (!authKeyEncoder.matches(authKeyFieldValue, emailAuthKey.getAuthKey())) {
-                    context.buildConstraintViolationWithTemplate("인증 번호가 다릅니다.")
-                            .addPropertyNode(authKeyField)
-                            .addConstraintViolation()
-                            .disableDefaultConstraintViolation();
-                    return false;
-                }
-            } else {
-                context.buildConstraintViolationWithTemplate("재인증 해주세요.")
-                        .addPropertyNode(authKeyField)
-                        .addConstraintViolation()
-                        .disableDefaultConstraintViolation();
-                return false;
-            }
+            boolean valid = isValidAuthKey(optional, authKeyFieldValue, context);
+            return valid;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private boolean isValidAuthKey(Optional<EmailAuthKey> optional, String emailToken,
+            ConstraintValidatorContext context) throws Exception {
+        if (optional.isPresent()) {
+            EmailAuthKey emailAuthKey = optional.get();
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime modifiedDate = emailAuthKey.getModifiedDate();
+            if (now.isBefore(modifiedDate)) {
+                throw new Exception("AuthMail.modifiedDate invalid Exception");
+            }
+            if (ChronoUnit.MINUTES.between(modifiedDate, now) > 30) {
+                setConstraintValidatorContext(context, "인증 시간 30분이 초과 되었습니다. 재인증 해주세요.");
+                return false;
+            } else if (!authKeyEncoder.matches(emailToken, emailAuthKey.getAuthKey())) {
+                setConstraintValidatorContext(context, "인증 번호가 다릅니다.");
+                return false;
+            }
+        } else {
+            setConstraintValidatorContext(context, "재인증 해주세요.");
+            return false;
+        }
+        return true;
+    }
+
+    private void setConstraintValidatorContext(ConstraintValidatorContext context, String message) {
+        context.buildConstraintViolationWithTemplate(message)
+                .addPropertyNode(authKeyField)
+                .addConstraintViolation()
+                .disableDefaultConstraintViolation();
     }
 
     private Object getFieldValue(Object object, String fieldName) throws Exception {
