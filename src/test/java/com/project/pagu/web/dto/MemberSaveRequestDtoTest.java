@@ -44,7 +44,7 @@ class MemberSaveRequestDtoTest {
     @DisplayName("MeberSaveRequestDto 유효한 데이터 초기 세팅")
     void beforeEach() {
         dto = MemberSaveRequestDto.builder()
-                .email("123@naver.com")
+                .email("123@email.com")
                 .nickname("nick")
                 .password("abcde1234!")
                 .passwordCheck("abcde1234!")
