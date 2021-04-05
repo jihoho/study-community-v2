@@ -1,26 +1,26 @@
 package com.project.pagu.web.dto;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.project.pagu.service.members.MembersService;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 /**
  * Created by IntelliJ IDEA
@@ -29,63 +29,91 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
  */
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class MemberSaveRequestDtoTest {
 
-    private static ValidatorFactory validatorFactory;
-    private static Validator validatorFromFactory;
-    private static final Logger logger= LoggerFactory.getLogger(MemberSaveRequestDtoTest.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(MemberSaveRequestDtoTest.class);
+    private MemberSaveRequestDto dto;
     @Autowired
     private Validator validator;
 
-    @BeforeAll
-    public static void init() {
-        validatorFactory = Validation.buildDefaultValidatorFactory();
-        validatorFromFactory = validatorFactory.getValidator();
+    @MockBean
+    MembersService membersService;
+
+    @BeforeEach
+    @DisplayName("MeberSaveRequestDto 유효한 데이터 초기 세팅")
+    void beforeEach() {
+        dto = MemberSaveRequestDto.builder()
+                .email("123@naver.com")
+                .nickname("nick")
+                .password("abcde1234!")
+                .passwordCheck("abcde1234!")
+                .build();
     }
 
-    @AfterAll
-    public static void close() {
-        validatorFactory.close();
-    }
-    
     @Test
-    @DisplayName("회원가입 FORM validation 성공 테스트")
-    void memberFormValidationSuccessTest() throws Exception{
-        // given
-        MemberSaveRequestDto dto =
-                MemberSaveRequestDto.builder()
-                        .email("123@naver.com")
-                        .nickname("nick")
-                        .password("abcd1234!")
-                        .passwordCheck("abcd1234!")
-                        .build();
+    @DisplayName("회원가입 Form validation 성공 테스트")
+    void memberFormValidationSuccessTest() throws Exception {
         // when
+        when(membersService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(membersService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
+        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        // then
+        assertEquals(0, violations.size());
+    }
+
+    @Test
+    @DisplayName("회원 이메일 중복 체크 실패 테스트")
+    void uniqueEmailValidationFailTest() {
+        // when
+        when(membersService.existsById(any())).thenReturn(true); // 이메일 중복
+        when(membersService.existsByNickname(any())).thenReturn(false); //닉네임 unique
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 
         // then
-        assertTrue(violations.isEmpty());
+        ConstraintViolation<MemberSaveRequestDto> violation = violations.iterator().next();
+        assertAll(
+                () -> assertEquals(1, violations.size()),
+                () -> assertEquals("email", violation.getPropertyPath().toString()),
+                () -> assertEquals("123@naver.com", violation.getInvalidValue())
+        );
+        logger.info("violation error message : {}", violation.getMessage());
     }
-    
-    @Test
-    @DisplayName("validator 테스트")
-    void test_should_fail() {
-        // Given
-        MemberSaveRequestDto dto =
-                MemberSaveRequestDto.builder()
-                        .email("123@naver.com")
-                        .nickname("nick")
-                        .password("123123")
-                        .passwordCheck("123123")
-                        .build();
-        // When
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 
-        // Then
-        assertNotNull(violations);
-        for(ConstraintViolation<MemberSaveRequestDto> constraintViolation : violations){
-            logger.debug("violation error message : {}", constraintViolation.getMessage());
-        }
+    @Test
+    @DisplayName("회원 닉네임 Pattern Validation 실패 테스트")
+    void nicknamePatternVaildationFailTest() {
+        // when
+        when(membersService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(membersService.existsByNickname(any())).thenReturn(false); //닉네임 unique
+        dto.setNickname("nick*"); // 닉네임에 * 특수문자
+        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        ConstraintViolation<MemberSaveRequestDto> violation = violations.iterator().next();
+        // then
+        assertAll(
+                () -> assertEquals(1, violations.size()),
+                () -> assertEquals("nickname", violation.getPropertyPath().toString()),
+                () -> assertEquals("nick*", violation.getInvalidValue())
+        );
+        logger.info("violation error message : {}", violation.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 비밀번호 확인 Validation 실패 테스트")
+    void passwordCheckVaildationFailTest() {
+        // when
+        when(membersService.existsById(any())).thenReturn(false);
+        when(membersService.existsByNickname(any())).thenReturn(false);
+        dto.setPasswordCheck("123"); // 비밀번호(abcde1234!) 값과 불일치
+        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        ConstraintViolation<MemberSaveRequestDto> violation = violations.iterator().next();
+        // then
+        assertAll(
+                () -> assertEquals(1, violations.size()),
+                () -> assertEquals("passwordCheck", violation.getPropertyPath().toString()),
+                () -> assertEquals(dto, violation.getInvalidValue())
+        );
+        logger.info("violation error message : {}", violation.getMessage());
     }
 
 

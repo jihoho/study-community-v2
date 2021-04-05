@@ -14,12 +14,12 @@ import lombok.RequiredArgsConstructor;
  * Date: 2021-04-04 Time: 오전 2:27
  */
 @RequiredArgsConstructor
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,String> {
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+
     private final MembersService membersService;
 
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
-
     }
 
     @Override
