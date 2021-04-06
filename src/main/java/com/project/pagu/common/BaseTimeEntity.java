@@ -1,4 +1,4 @@
-package com.project.pagu.signup.domain;
+package com.project.pagu.common;
 
 import lombok.Getter;
 import lombok.Setter;

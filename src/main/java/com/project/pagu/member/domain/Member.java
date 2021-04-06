@@ -1,6 +1,6 @@
 package com.project.pagu.member.domain;
 
-import com.project.pagu.signup.domain.BaseTimeEntity;
+import com.project.pagu.common.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
