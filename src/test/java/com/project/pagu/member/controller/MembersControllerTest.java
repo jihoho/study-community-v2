@@ -106,20 +106,22 @@ class MembersControllerTest {
     }
 
     @Test
-    @DisplayName("회원 닉네임 중복 체크 실패 테스트")
+    @DisplayName("가입하는 닉네임이 중복일 경우 다시 가입창으로 이동한다.")
     void uniqueNicknameValidationFailTest() throws Exception {
         // given
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
+
         // when
         when(memberService.existsByNickname(any())).thenReturn(true);
+
         // then
-        mockMvc.perform(post("/members/valid").with(csrf())
+        mockMvc.perform(post("/members/valid")
+                .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto", "nickname",
-                        "UniqueNickname"))
-                .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
-
+                .andExpect(model().hasErrors())
+                .andExpect(content().string(containsString("이미 존재하는 닉네임입니다.")))
+                .andExpect(view().name("sign-up"));
     }
 
 

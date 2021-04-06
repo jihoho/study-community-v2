@@ -1,7 +1,6 @@
 package com.project.pagu.member.model;
 
 import com.project.pagu.annotation.FieldsValueMatch;
-import com.project.pagu.annotation.UniqueNickname;
 import com.project.pagu.annotation.ValidAuthKey;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
@@ -40,7 +39,6 @@ public class MemberSaveRequestDto {
     @NotBlank
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
             message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
-    @UniqueNickname(message = "이미 존재하는 닉네임입니다.")
     String nickname;
 
     @NotBlank

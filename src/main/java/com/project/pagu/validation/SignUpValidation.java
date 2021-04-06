@@ -28,11 +28,18 @@ public class SignUpValidation implements Validator {
     public void validate(Object target, Errors errors) {
         MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) target;
         isExistedEmail(memberSaveRequestDto.getEmail(), errors);
+        isExistedNickname(memberSaveRequestDto.getNickname(), errors);
     }
 
     private void isExistedEmail(String email, Errors errors) {
         if (memberService.existsByEmail(email)) {
             errors.rejectValue("email", "UniqueEmail", "이미 존재하는 이메일입니다.");
+        }
+    }
+
+    private void isExistedNickname(String nickname, Errors errors) {
+        if (memberService.existsByNickname(nickname)) {
+            errors.rejectValue("nickname", "UniqueNickname", "이미 존재하는 닉네임입니다.");
         }
     }
 }
