@@ -27,7 +27,7 @@ public @interface ValidAuthKey {
 
     Class<? extends Payload>[] payload() default {};
 
-    String idField();
-
     String authKeyField();
+
+    String authKeyInputField();
 }
