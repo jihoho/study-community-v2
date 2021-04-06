@@ -13,16 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.pagu.signup.domain.EmailAuthKey;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
-import com.project.pagu.signup.service.EmailAuthKeyService;
+import com.project.pagu.email.service.EmailService;
 import com.project.pagu.member.service.MembersService;
 import com.project.pagu.util.MultiValueMapConverter;
-import com.project.pagu.signup.model.EmailAuthKeyDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +52,7 @@ class MembersControllerTest {
     @MockBean
     private MembersService membersService;
     @MockBean
-    private EmailAuthKeyService emailAuthKeyService;
+    private EmailService emailService;
 
     private MockHttpSession httpSession = new MockHttpSession();
     private MemberSaveRequestDto dto;
@@ -84,6 +80,8 @@ class MembersControllerTest {
                 .nickname("nick")
                 .password("abcde1234!")
                 .passwordCheck("abcde1234!")
+                .authKey("123456")
+                .authKeyInput("123456")
                 .build();
     }
 
@@ -180,92 +178,45 @@ class MembersControllerTest {
         // when
         when(membersService.save(any()))
                 .thenReturn(new MemberId(dto.getEmail(), MemberType.NORMAL));
-        when(emailAuthKeyService.save(any())).thenReturn(dto.getEmail());
 
         mockMvc.perform(post("/members/valid").with(csrf())
                 .params(params))
-                .andExpect(status().isOk())
+                .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("email-check")); // email-check 페이지 이동
+                .andExpect(view().name("redirect:/email-check")); // email-check 페이지 이동
     }
 
 
     @Test
     @DisplayName("이메일 인증 불일치 테스트")
     void emailCheckFailTest() throws Exception {
-        // given
-        EmailAuthKeyDto emailAuthKeyDto = EmailAuthKeyDto.builder().email("123@naver.com")
-                .authKey("123456").build();
-        MultiValueMap<String, String> params = MultiValueMapConverter
-                .convert(objectMapper, emailAuthKeyDto);
         // when
-        EmailAuthKey emailAuthKey = EmailAuthKey.builder()
-                .email(emailAuthKeyDto.getEmail())
-                .authKey("diff-auth-key-123asd123asd")
-                .build();
-        emailAuthKey.setModifiedDate(LocalDateTime.now());
-        when(emailAuthKeyService.findById(any())).thenReturn(Optional.of(emailAuthKey));
-        httpSession.setAttribute("memberInfo", dto);
-
+        dto.setAuthKeyInput("123123"); // 발급된 인증번호('123456')과 다른 user input 값
+        MultiValueMap<String, String> params = MultiValueMapConverter
+                .convert(objectMapper, dto);
         // then
         mockMvc.perform(post("/members/email-check").with(csrf())
-                .params(params).session(httpSession))
+                .params(params))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("emailAuthKeyDto", "authKey",
-                        "ValidAuthKey"))
+                .andExpect(
+                        model().attributeHasFieldErrorCode("memberSaveRequestDto", "authKeyInput",
+                                "ValidAuthKey"))
                 .andExpect(view().name("email-check")); // 다시 email-check 페이지 이동
 
-    }
-
-    @Test
-    @DisplayName("이메일 인증 시간 초과 테스트")
-    void emailCheckTimeoutTest() throws Exception {
-        // given
-        EmailAuthKeyDto emailAuthKeyDto = EmailAuthKeyDto.builder().email("123@naver.com")
-                .authKey("123456").build();
-        MultiValueMap<String, String> params = MultiValueMapConverter
-                .convert(objectMapper, emailAuthKeyDto);
-        // when
-        EmailAuthKey emailAuthKey = EmailAuthKey.builder()
-                .email(emailAuthKeyDto.getEmail())
-                .authKey("$2a$10$7rOasVCj2XtH4x9MD7HzTONunx7qwDU/Rx0ZBgY0H6ueQ3tyyBtzK")
-                .build();
-        emailAuthKey.setModifiedDate(LocalDateTime.now().minusMinutes(31)); // 발급 시간 30분 초과
-        when(emailAuthKeyService.findById(any())).thenReturn(Optional.of(emailAuthKey));
-        httpSession.setAttribute("memberInfo", dto);
-
-        // then
-        mockMvc.perform(post("/members/email-check").with(csrf())
-                .params(params).session(httpSession))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("emailAuthKeyDto", "authKey",
-                        "ValidAuthKey"))
-                .andExpect(view().name("email-check")); // 다시 email-check 페이지 이동
     }
 
     @Test
     @DisplayName("이메일 인증 성공 테스트")
     void emailCheckSuccessTest() throws Exception {
-        // given
-        EmailAuthKeyDto emailAuthKeyDto = EmailAuthKeyDto.builder().email("123@naver.com")
-                .authKey("123456").build();
-        MultiValueMap<String, String> params = MultiValueMapConverter
-                .convert(objectMapper, emailAuthKeyDto);
         // when
-        EmailAuthKey emailAuthKey = EmailAuthKey.builder()
-                .email(emailAuthKeyDto.getEmail())
-                .authKey("$2a$10$7rOasVCj2XtH4x9MD7HzTONunx7qwDU/Rx0ZBgY0H6ueQ3tyyBtzK")
-                .build();
-        emailAuthKey.setModifiedDate(LocalDateTime.now().minusMinutes(10)); // 발급 시간 유효
-        when(emailAuthKeyService.findById(any())).thenReturn(Optional.of(emailAuthKey));
-        httpSession.setAttribute("memberInfo", dto);
-
+        MultiValueMap<String, String> params = MultiValueMapConverter
+                .convert(objectMapper, dto);
         // then
         mockMvc.perform(post("/members/email-check").with(csrf())
-                .params(params).session(httpSession))
-                .andExpect(status().isOk())
+                .params(params))
+                .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("profile")); // 이메일 인증 성공 후 profile 페이지로 이동
+                .andExpect(view().name("redirect:/sign-up-success")); // 이메일 인증 성공 후 profile 페이지로 이동
     }
 
 }
