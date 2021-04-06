@@ -1,7 +1,6 @@
 package com.project.pagu.member.model;
 
 import com.project.pagu.annotation.FieldsValueMatch;
-import com.project.pagu.annotation.UniqueEmail;
 import com.project.pagu.annotation.UniqueNickname;
 import com.project.pagu.annotation.ValidAuthKey;
 import com.project.pagu.member.domain.Member;
@@ -36,7 +35,6 @@ public class MemberSaveRequestDto {
 
     @NotBlank
     @Email(message = "이메일 형식을 맞춰주세요.")
-    @UniqueEmail(message = "이미 존재하는 이메일입니다.")
     String email;
 
     @NotBlank

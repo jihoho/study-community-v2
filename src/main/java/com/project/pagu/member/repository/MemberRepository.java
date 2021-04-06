@@ -10,5 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Date: 2021-04-02 Time: 오후 9:18
  */
 public interface MemberRepository extends JpaRepository<Member, MemberId> {
+
     boolean existsByNickname(String nickname);
+
+    boolean existsByEmail(String email);
 }

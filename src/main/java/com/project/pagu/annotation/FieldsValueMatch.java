@@ -1,7 +1,6 @@
 package com.project.pagu.annotation;
 
 import com.project.pagu.validation.FieldsValueMatchValidator;
-import com.project.pagu.validation.UniqueEmailValidator;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

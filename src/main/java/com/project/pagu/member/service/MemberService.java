@@ -33,6 +33,10 @@ public class MemberService implements UserDetailsService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
     @Transactional
     public MemberId save(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = (Member) memberRepository.save(memberSaveRequestDto.toEntity());

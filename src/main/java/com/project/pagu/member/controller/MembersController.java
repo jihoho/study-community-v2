@@ -4,10 +4,12 @@ import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.email.service.EmailService;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.model.MemberSaveRequestDto;
+import com.project.pagu.validation.SignUpValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +27,12 @@ public class MembersController {
 
     private final MemberService memberService;
     private final EmailService emailService;
+    private final SignUpValidation signUpValidation;
+
+    @InitBinder("memberSaveRequestDto")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(signUpValidation);
+    }
 
     @GetMapping("profile")
     public String profile(/* @AuthenticationPrincipal Member member */) {

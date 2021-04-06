@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.pagu.member.repository.MemberRepository;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.email.service.EmailService;
@@ -86,20 +87,22 @@ class MembersControllerTest {
     }
 
     @Test
-    @DisplayName("회원 이메일 중복 체크 실패 테스트")
+    @DisplayName("가입하는 이메일이 중복일 경우 다시 가입창으로 이동한다.")
     void uniqueEmailValidationFailTest() throws Exception {
         // given
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
+
         // when
-        when(memberService.existsById(any())).thenReturn(true);
+        when(memberService.existsByEmail(any())).thenReturn(true);
+
         // then
-        mockMvc.perform(post("/members/valid").with(csrf())
+        mockMvc.perform(post("/members/valid")
+                .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("memberSaveRequestDto", "email",
-                        "UniqueEmail"))
-                .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
-
+                .andExpect(model().hasErrors())
+                .andExpect(content().string(containsString("이미 존재하는 이메일입니다.")))
+                .andExpect(view().name("sign-up"));
     }
 
     @Test
