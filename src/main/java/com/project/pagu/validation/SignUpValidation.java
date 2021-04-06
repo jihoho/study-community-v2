@@ -30,6 +30,7 @@ public class SignUpValidation implements Validator {
         isExistedEmail(memberSaveRequestDto.getEmail(), errors);
         isExistedNickname(memberSaveRequestDto.getNickname(), errors);
         isNotEqualToPassword(memberSaveRequestDto.getPassword(), memberSaveRequestDto.getPasswordCheck(), errors);
+        isNotEqualToEmailAuthKey(memberSaveRequestDto.getAuthKey(), memberSaveRequestDto.getAuthKeyInput(), errors);
     }
 
     private void isExistedEmail(String email, Errors errors) {
@@ -47,6 +48,12 @@ public class SignUpValidation implements Validator {
     private void isNotEqualToPassword(String password, String passwordCheck, Errors errors) {
         if (password != null && !password.equals(passwordCheck)) {
             errors.rejectValue("passwordCheck", "NotEqualsPassword", "비밀번호가 다릅니다.");
+        }
+    }
+
+    private void isNotEqualToEmailAuthKey(String authKey, String authKeyInput, Errors errors) {
+        if (authKey != null && !authKey.equals(authKeyInput)) {
+            errors.rejectValue("authKeyInput", "NotEqualsAuthKeyInput", "인증번호가 다릅니다.");
         }
     }
 }

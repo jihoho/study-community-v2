@@ -19,10 +19,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ValidAuthKey(
-        authKeyField = "authKey",
-        authKeyInputField = "authKeyInput"
-)
 public class MemberSaveRequestDto {
 
     @NotBlank

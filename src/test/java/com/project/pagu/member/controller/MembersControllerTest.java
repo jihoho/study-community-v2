@@ -193,21 +193,19 @@ class MembersControllerTest {
 
 
     @Test
-    @DisplayName("이메일 인증 불일치 테스트")
+    @DisplayName("이메일 인증이 실패하는 경우 페이지가 유지된다.")
     void emailCheckFailTest() throws Exception {
-        // when
-        dto.setAuthKeyInput("123123"); // 발급된 인증번호('123456')과 다른 user input 값
+        // given
+        dto.setAuthKeyInput("123123");
         MultiValueMap<String, String> params = MultiValueMapConverter
                 .convert(objectMapper, dto);
-        // then
-        mockMvc.perform(post("/members/email-check").with(csrf())
+
+        mockMvc.perform(post("/members/email-check")
+                .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(
-                        model().attributeHasFieldErrorCode("memberSaveRequestDto", "authKeyInput",
-                                "ValidAuthKey"))
-                .andExpect(view().name("email-check")); // 다시 email-check 페이지 이동
-
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("email-check"));
     }
 
     @Test
