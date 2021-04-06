@@ -47,6 +47,8 @@ class MemberSaveRequestDtoTest {
                 .nickname("nick")
                 .password("abcde1234!")
                 .passwordCheck("abcde1234!")
+                .authKey("123456")
+                .authKeyInput("123456")
                 .build();
     }
 
@@ -97,22 +99,20 @@ class MemberSaveRequestDtoTest {
         logger.info("violation error message : {}", violation.getMessage());
     }
 
+
     @Test
-    @DisplayName("회원 비밀번호 확인 Validation 실패 테스트")
-    void passwordCheckVaildationFailTest() {
+    @DisplayName("이메일 인증 번호 불일치 테스트")
+    void emailTokenMismatchTest() throws Exception {
         // when
-        when(membersService.existsById(any())).thenReturn(false);
-        when(membersService.existsByNickname(any())).thenReturn(false);
-        dto.setPasswordCheck("123"); // 비밀번호(abcde1234!) 값과 불일치
+        dto.setAuthKeyInput("123123");
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
         ConstraintViolation<MemberSaveRequestDto> violation = violations.iterator().next();
         // then
         assertAll(
                 () -> assertEquals(1, violations.size()),
-                () -> assertEquals("passwordCheck", violation.getPropertyPath().toString()),
-                () -> assertEquals(dto, violation.getInvalidValue())
+                () -> assertEquals("authKeyInput", violation.getPropertyPath().toString()),
+                () -> assertEquals("인증 번호가 다릅니다.", violation.getMessage())
         );
-        logger.info("violation error message : {}", violation.getMessage());
     }
 
 
