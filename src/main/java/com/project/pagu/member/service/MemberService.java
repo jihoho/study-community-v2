@@ -3,7 +3,7 @@ package com.project.pagu.member.service;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
-import com.project.pagu.member.repository.MembersRespository;
+import com.project.pagu.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,23 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class MembersService implements UserDetailsService {
-    private final MembersRespository membersRespository;
+public class MemberService implements UserDetailsService {
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public boolean existsById(MemberId memberId) {
-        return membersRespository.existsById(memberId);
+        return memberRepository.existsById(memberId);
     }
 
     @Transactional
     public boolean existsByNickname(String nickname) {
-        return membersRespository.existsByNickname(nickname);
+        return memberRepository.existsByNickname(nickname);
     }
 
     @Transactional
     public MemberId save(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = (Member) membersRespository.save(memberSaveRequestDto.toEntity());
+        Member member = (Member) memberRepository.save(memberSaveRequestDto.toEntity());
         return new MemberId(member.getEmail(), member.getMemberType());
     }
 

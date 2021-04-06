@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.email.service.EmailService;
-import com.project.pagu.member.service.MembersService;
+import com.project.pagu.member.service.MemberService;
 import com.project.pagu.util.MultiValueMapConverter;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ class MembersControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private MembersService membersService;
+    private MemberService memberService;
     @MockBean
     private EmailService emailService;
 
@@ -91,7 +91,7 @@ class MembersControllerTest {
         // given
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
         // when
-        when(membersService.existsById(any())).thenReturn(true);
+        when(memberService.existsById(any())).thenReturn(true);
         // then
         mockMvc.perform(post("/members/valid").with(csrf())
                 .params(params))
@@ -108,7 +108,7 @@ class MembersControllerTest {
         // given
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
         // when
-        when(membersService.existsByNickname(any())).thenReturn(true);
+        when(memberService.existsByNickname(any())).thenReturn(true);
         // then
         mockMvc.perform(post("/members/valid").with(csrf())
                 .params(params))
@@ -176,7 +176,7 @@ class MembersControllerTest {
         // given: 모든 필드 valid
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
         // when
-        when(membersService.save(any()))
+        when(memberService.save(any()))
                 .thenReturn(new MemberId(dto.getEmail(), MemberType.NORMAL));
 
         mockMvc.perform(post("/members/valid").with(csrf())

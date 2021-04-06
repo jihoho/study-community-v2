@@ -18,10 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Date: 2021-04-04 Time: 오후 4:14
  */
 @ExtendWith(MockitoExtension.class)
-class MembersServiceTest {
+class MemberServiceTest {
 
     @Mock
-    MembersService membersService;
+    MemberService memberService;
     private MemberSaveRequestDto dto =
             MemberSaveRequestDto.builder()
                     .email("123@naver.com")
@@ -34,8 +34,8 @@ class MembersServiceTest {
     @DisplayName("회원 저장 테스트")
     void 회원_저장() throws Exception{
         // given
-        when(membersService.save(dto)).thenReturn(new MemberId(dto.getEmail(), MemberType.NORMAL));
-        when(membersService.existsById(any()));
+        when(memberService.save(dto)).thenReturn(new MemberId(dto.getEmail(), MemberType.NORMAL));
+        when(memberService.existsById(any()));
         // when
       
         // then

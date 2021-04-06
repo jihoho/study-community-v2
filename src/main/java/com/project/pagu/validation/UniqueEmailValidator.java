@@ -3,7 +3,7 @@ package com.project.pagu.validation;
 import com.project.pagu.annotation.UniqueEmail;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
-import com.project.pagu.member.service.MembersService;
+import com.project.pagu.member.service.MemberService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
-    private final MembersService membersService;
+    private final MemberService memberService;
 
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
@@ -24,6 +24,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
-        return !membersService.existsById(new MemberId(email, MemberType.NORMAL));
+        return !memberService.existsById(new MemberId(email, MemberType.NORMAL));
     }
 }

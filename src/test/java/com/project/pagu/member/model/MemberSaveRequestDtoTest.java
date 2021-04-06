@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.project.pagu.member.service.MembersService;
+import com.project.pagu.member.service.MemberService;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -37,7 +37,7 @@ class MemberSaveRequestDtoTest {
     private Validator validator;
 
     @MockBean
-    MembersService membersService;
+    MemberService memberService;
 
     @BeforeEach
     @DisplayName("MeberSaveRequestDto 유효한 데이터 초기 세팅")
@@ -56,8 +56,8 @@ class MemberSaveRequestDtoTest {
     @DisplayName("회원가입 Form validation 성공 테스트")
     void memberFormValidationSuccessTest() throws Exception {
         // when
-        when(membersService.existsById(any())).thenReturn(false); // 이메일 unique
-        when(membersService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
+        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(memberService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
         // then
         assertEquals(0, violations.size());
@@ -67,8 +67,8 @@ class MemberSaveRequestDtoTest {
     @DisplayName("회원 이메일 중복 체크 실패 테스트")
     void uniqueEmailValidationFailTest() {
         // when
-        when(membersService.existsById(any())).thenReturn(true); // 이메일 중복
-        when(membersService.existsByNickname(any())).thenReturn(false); //닉네임 unique
+        when(memberService.existsById(any())).thenReturn(true); // 이메일 중복
+        when(memberService.existsByNickname(any())).thenReturn(false); //닉네임 unique
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 
         // then
@@ -85,8 +85,8 @@ class MemberSaveRequestDtoTest {
     @DisplayName("회원 닉네임 Pattern Validation 실패 테스트")
     void nicknamePatternVaildationFailTest() {
         // when
-        when(membersService.existsById(any())).thenReturn(false); // 이메일 unique
-        when(membersService.existsByNickname(any())).thenReturn(false); //닉네임 unique
+        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(memberService.existsByNickname(any())).thenReturn(false); //닉네임 unique
         dto.setNickname("nick*"); // 닉네임에 * 특수문자
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
         ConstraintViolation<MemberSaveRequestDto> violation = violations.iterator().next();

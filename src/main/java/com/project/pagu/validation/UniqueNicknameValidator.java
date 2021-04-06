@@ -1,7 +1,7 @@
 package com.project.pagu.validation;
 
 import com.project.pagu.annotation.UniqueNickname;
-import com.project.pagu.member.service.MembersService;
+import com.project.pagu.member.service.MemberService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UniqueNicknameValidator implements ConstraintValidator<UniqueNickname, String> {
 
-    private final MembersService membersService;
+    private final MemberService memberService;
 
     @Override
     public void initialize(UniqueNickname constraintAnnotation) {
@@ -22,6 +22,6 @@ public class UniqueNicknameValidator implements ConstraintValidator<UniqueNickna
 
     @Override
     public boolean isValid(String nickname, ConstraintValidatorContext context) {
-        return !membersService.existsByNickname(nickname);
+        return !memberService.existsByNickname(nickname);
     }
 }

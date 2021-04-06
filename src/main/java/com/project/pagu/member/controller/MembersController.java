@@ -2,7 +2,7 @@ package com.project.pagu.member.controller;
 
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.email.service.EmailService;
-import com.project.pagu.member.service.MembersService;
+import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -24,7 +23,7 @@ import javax.validation.Valid;
 @SessionAttributes("memberSaveRequestDto")
 public class MembersController {
 
-    private final MembersService membersService;
+    private final MemberService memberService;
     private final EmailService emailService;
 
     @GetMapping("profile")
@@ -73,8 +72,8 @@ public class MembersController {
             return "email-check";
         }
 
-        membersService.encryptPassword(memberSaveRequestDto);
-        MemberId memberId = membersService.save(memberSaveRequestDto);
+        memberService.encryptPassword(memberSaveRequestDto);
+        MemberId memberId = memberService.save(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/sign-up-success";
     }
