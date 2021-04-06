@@ -35,6 +35,18 @@ public class MembersController {
         return "profile";
     }
 
+    @GetMapping("sign-up")
+    public String signUp(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
+        return "sign-up";
+    }
+
+    @GetMapping("sign-up-success")
+    public String signUpSuccess(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute(memberSaveRequestDto);
+        return "sign-up-success";
+    }
+
     @PostMapping("/members/valid")
     public String validMemberSaveForm(@Valid MemberSaveRequestDto memberSaveRequestDto,
             BindingResult result, Model model) {

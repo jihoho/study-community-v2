@@ -33,12 +33,6 @@ public class MainController {
         return "main-body";
     }
 
-    @GetMapping("sign-up")
-    public String signUp(Model model) {
-        model.addAttribute(new MemberSaveRequestDto());
-        return "sign-up";
-    }
-
     @GetMapping("login")
     public String login() {
         /**
