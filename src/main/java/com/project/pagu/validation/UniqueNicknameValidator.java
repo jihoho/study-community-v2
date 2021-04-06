@@ -1,11 +1,10 @@
 package com.project.pagu.validation;
 
 import com.project.pagu.annotation.UniqueNickname;
-import com.project.pagu.service.members.MembersService;
+import com.project.pagu.member.service.MembersService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by IntelliJ IDEA

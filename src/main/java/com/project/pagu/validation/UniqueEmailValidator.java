@@ -1,9 +1,9 @@
 package com.project.pagu.validation;
 
 import com.project.pagu.annotation.UniqueEmail;
-import com.project.pagu.domain.member.MemberId;
-import com.project.pagu.domain.member.MemberType;
-import com.project.pagu.service.members.MembersService;
+import com.project.pagu.member.domain.MemberId;
+import com.project.pagu.member.domain.MemberType;
+import com.project.pagu.member.service.MembersService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

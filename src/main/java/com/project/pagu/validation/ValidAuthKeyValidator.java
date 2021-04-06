@@ -1,8 +1,8 @@
 package com.project.pagu.validation;
 
 import com.project.pagu.annotation.ValidAuthKey;
-import com.project.pagu.domain.email.EmailAuthKey;
-import com.project.pagu.service.email.EmailAuthKeyService;
+import com.project.pagu.signup.domain.EmailAuthKey;
+import com.project.pagu.signup.service.EmailAuthKeyService;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
