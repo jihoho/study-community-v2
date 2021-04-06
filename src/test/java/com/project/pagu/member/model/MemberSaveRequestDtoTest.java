@@ -74,7 +74,7 @@ class MemberSaveRequestDtoTest {
         assertAll(
                 () -> assertEquals(1, violations.size()),
                 () -> assertEquals("email", violation.getPropertyPath().toString()),
-                () -> assertEquals("123@naver.com", violation.getInvalidValue())
+                () -> assertEquals("123@email.com", violation.getInvalidValue())
         );
         logger.info("violation error message : {}", violation.getMessage());
     }
