@@ -41,6 +41,12 @@ public class MembersController {
         return "sign-up";
     }
 
+    @GetMapping("email-check")
+    public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
+        return "email-check";
+    }
+
     @GetMapping("sign-up-success")
     public String signUpSuccess(Model model, MemberSaveRequestDto memberSaveRequestDto) {
         model.addAttribute(memberSaveRequestDto);
@@ -61,7 +67,7 @@ public class MembersController {
 
     @PostMapping("/members/email-check")
     public String emailCheckAndSaveMember(@Valid MemberSaveRequestDto memberSaveRequestDto,
-            BindingResult result,Model model) {
+            BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             return "email-check";
