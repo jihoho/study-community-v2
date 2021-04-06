@@ -144,19 +144,19 @@ class MembersControllerTest {
     }
 
     @Test
-    @DisplayName("비밀번호 확인 validation 실패 테스트")
+    @DisplayName("회원가입시 비밀번호와 비밀번호 확인이 다른 경우 다시 가입창으로 이동한다.")
     void passwordCheckFailTest() throws Exception {
-        // given: 비밀번호 확인 'abcde1234!'와 다른 값
-        dto.setPasswordCheck("123");
+        // given
+        dto.setPasswordCheck("differentPassword12!");
         MultiValueMap<String, String> params = MultiValueMapConverter.convert(objectMapper, dto);
 
-        mockMvc.perform(post("/members/valid").with(csrf())
+        mockMvc.perform(post("/members/valid")
+                .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(
-                        model().attributeHasFieldErrorCode("memberSaveRequestDto", "passwordCheck",
-                                "FieldsValueMatch"))
-                .andExpect(view().name("sign-up")); // 다시 가입창으로 이동
+                .andExpect(model().hasErrors())
+                .andExpect(content().string(containsString("비밀번호가 다릅니다.")))
+                .andExpect(view().name("sign-up"));
     }
 
     @Test

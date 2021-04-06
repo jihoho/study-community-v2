@@ -1,6 +1,5 @@
 package com.project.pagu.member.model;
 
-import com.project.pagu.annotation.FieldsValueMatch;
 import com.project.pagu.annotation.ValidAuthKey;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
@@ -20,12 +19,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldsValueMatch.List({
-        @FieldsValueMatch(
-                field = "password",
-                fieldMatch = "passwordCheck",
-                message = "비밀번호가 다릅니다.")
-})
 @ValidAuthKey(
         authKeyField = "authKey",
         authKeyInputField = "authKeyInput"

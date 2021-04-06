@@ -29,6 +29,7 @@ public class SignUpValidation implements Validator {
         MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) target;
         isExistedEmail(memberSaveRequestDto.getEmail(), errors);
         isExistedNickname(memberSaveRequestDto.getNickname(), errors);
+        isNotEqualToPassword(memberSaveRequestDto.getPassword(), memberSaveRequestDto.getPasswordCheck(), errors);
     }
 
     private void isExistedEmail(String email, Errors errors) {
@@ -40,6 +41,12 @@ public class SignUpValidation implements Validator {
     private void isExistedNickname(String nickname, Errors errors) {
         if (memberService.existsByNickname(nickname)) {
             errors.rejectValue("nickname", "UniqueNickname", "이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    private void isNotEqualToPassword(String password, String passwordCheck, Errors errors) {
+        if (password != null && !password.equals(passwordCheck)) {
+            errors.rejectValue("passwordCheck", "NotEqualsPassword", "비밀번호가 다릅니다.");
         }
     }
 }
