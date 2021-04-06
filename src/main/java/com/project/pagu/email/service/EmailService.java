@@ -1,8 +1,6 @@
-package com.project.pagu.signup.service;
+package com.project.pagu.email.service;
 
-import com.project.pagu.signup.domain.EmailAuthKey;
-import com.project.pagu.signup.repository.EmailAuthKeyRepository;
-import com.project.pagu.signup.model.EmailAuthKeyDto;
+import com.project.pagu.member.model.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,10 +20,9 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class EmailAuthKeyService {
-    private final JavaMailSender emailSender;
-    private final EmailAuthKeyRepository emailAuthKeyRepository;
+public class EmailService {
 
+    private final JavaMailSender emailSender;
     private final PasswordEncoder authKeyEncoder;
 
 
@@ -48,6 +45,7 @@ public class EmailAuthKeyService {
         return buffer.toString();
     }
 
+
     @Transactional
     public String sendMessage(String to) {
         String authKey = getKey(6);
@@ -61,18 +59,10 @@ public class EmailAuthKeyService {
     }
 
     @Transactional
-    public String save(EmailAuthKeyDto emailAuthKeyDto) {
-        String email = emailAuthKeyDto.getEmail();
-        String authKey = authKeyEncoder.encode(emailAuthKeyDto.getAuthKey());
-        System.out.println("encoding auth key: " + authKey);
-        EmailAuthKey emailAuthKey = EmailAuthKey.builder().email(email).authKey(authKey).build();
-        emailAuthKeyRepository.save(emailAuthKey);
-        return email;
-    }
-
-    @Transactional
-    public Optional<EmailAuthKey> findById(String email) {
-        return emailAuthKeyRepository.findById(email);
+    public void sendMessageToMemberDto(MemberSaveRequestDto dto) {
+        String email = dto.getEmail();
+        String authKey = sendMessage(email);
+        dto.setAuthKey(authKey);
     }
 
 
