@@ -1,9 +1,8 @@
 package com.project.pagu.member.controller;
 
 import com.project.pagu.member.domain.MemberId;
-import com.project.pagu.signup.service.EmailAuthKeyService;
+import com.project.pagu.email.service.EmailService;
 import com.project.pagu.member.service.MembersService;
-import com.project.pagu.signup.model.EmailAuthKeyDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -23,10 +21,11 @@ import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
+@SessionAttributes("memberSaveRequestDto")
 public class MembersController {
 
     private final MembersService membersService;
-    private final EmailAuthKeyService emailAuthKeyService;
+    private final EmailService emailService;
 
     @GetMapping("profile")
     public String profile(/* @AuthenticationPrincipal Member member */) {
@@ -37,43 +36,29 @@ public class MembersController {
     }
 
     @PostMapping("/members/valid")
-    public String validMemberSaveForm(
-            @ModelAttribute @Valid MemberSaveRequestDto memberSaveRequestDto,
-            BindingResult result, HttpServletRequest request, Model model) {
+    public String validMemberSaveForm(@Valid MemberSaveRequestDto memberSaveRequestDto,
+            BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            System.out.println(result);
             return "sign-up";
         }
-        String email = memberSaveRequestDto.getEmail();
-        String authKey = emailAuthKeyService.sendMessage(email);
-        EmailAuthKeyDto emailAuthKeyDto
-                = EmailAuthKeyDto.builder().email(email).authKey(authKey).build();
-        // save authkey in db
-        emailAuthKeyService.save(emailAuthKeyDto);
-        membersService.encryptPassword(memberSaveRequestDto);
-
-        // save member info in session
-        HttpSession session = request.getSession();
-        session.setAttribute("memberInfo", memberSaveRequestDto);
-        model.addAttribute(new EmailAuthKeyDto());
-        return "email-check";
+        emailService.sendMessageToMemberDto(memberSaveRequestDto);
+        model.addAttribute(memberSaveRequestDto);
+        return "redirect:/email-check";
     }
 
     @PostMapping("/members/email-check")
-    public String emailCheckAndSaveMember(@Valid EmailAuthKeyDto emailAuthKeyDto,
-            BindingResult result, HttpServletRequest request) {
+    public String emailCheckAndSaveMember(@Valid MemberSaveRequestDto memberSaveRequestDto,
+            BindingResult result,Model model) {
 
-        HttpSession session = request.getSession();
-        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) session
-                .getAttribute("memberInfo");
         if (result.hasErrors()) {
-            System.out.println(result);
             return "email-check";
         }
-        MemberId memberId = membersService.save(memberSaveRequestDto);
 
-        return "profile";
+        membersService.encryptPassword(memberSaveRequestDto);
+        MemberId memberId = membersService.save(memberSaveRequestDto);
+        model.addAttribute(memberSaveRequestDto);
+        return "redirect:/sign-up-success";
     }
 
 }

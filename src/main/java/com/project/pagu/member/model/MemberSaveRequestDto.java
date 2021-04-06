@@ -3,6 +3,7 @@ package com.project.pagu.member.model;
 import com.project.pagu.annotation.FieldsValueMatch;
 import com.project.pagu.annotation.UniqueEmail;
 import com.project.pagu.annotation.UniqueNickname;
+import com.project.pagu.annotation.ValidAuthKey;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
@@ -27,6 +28,10 @@ import javax.validation.constraints.*;
                 fieldMatch = "passwordCheck",
                 message = "비밀번호가 다릅니다.")
 })
+@ValidAuthKey(
+        authKeyField = "authKey",
+        authKeyInputField = "authKeyInput"
+)
 public class MemberSaveRequestDto {
 
     @NotBlank
@@ -47,6 +52,9 @@ public class MemberSaveRequestDto {
 
     @NotBlank
     String passwordCheck;
+
+    String authKey;
+    String authKeyInput;
 
     public Member toEntity() {
         return Member.builder()
