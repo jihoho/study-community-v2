@@ -13,33 +13,32 @@ import javax.validation.constraints.*;
  * User: hojun
  * Date: 2021-04-02 Time: 오후 5:44
  */
-@ToString
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class MemberSaveRequestDto {
 
     @NotBlank
-    @Email(message = "이메일 형식을 맞춰주세요.")
-    String email;
+    @Pattern(regexp = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$",
+            message = "올바른 형식의 이메일을 입력해주세요.")
+    private String email;
 
     @NotBlank
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
             message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
-    String nickname;
+    private String nickname;
 
     @NotBlank
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
             message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
-    String password;
+    private String password;
 
     @NotBlank
-    String passwordCheck;
+    private String passwordCheck;
 
-    String authKey;
-    String authKeyInput;
+    private String authKey;
+
+    private String authKeyInput;
 
     public Member toEntity() {
         return Member.builder()
