@@ -168,6 +168,8 @@ public class MemberSaveRequestDtoTest {
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
         // then
         assertAll(
+                () -> assertEquals("2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.",
+                        violation.getMessage()),
                 () -> assertEquals("nickname", violation.getPropertyPath().toString()),
                 () -> assertEquals("nick*", violation.getInvalidValue())
         );
