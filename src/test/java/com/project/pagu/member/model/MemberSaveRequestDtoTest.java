@@ -3,8 +3,6 @@ package com.project.pagu.member.model;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -23,21 +21,22 @@ import org.junit.jupiter.api.Test;
 public class MemberSaveRequestDtoTest {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    private final MemberSaveRequestDto MemberSaveRequestDto = new MemberSaveRequestDto();
+    private final MemberSaveRequestDto memberSaveDto = new MemberSaveRequestDto();
 
     @BeforeEach
     @DisplayName("정삭적인 입력 초기 세팅")
     void setSuccessMemberSaveRequestDto() {
-        MemberSaveRequestDto.setNickname("tester");
-        MemberSaveRequestDto.setEmail("tester@test.com");
-        MemberSaveRequestDto.setPassword("12345678a!");
-        MemberSaveRequestDto.setPasswordCheck("12345678a!");
+        memberSaveDto.setNickname("tester");
+        memberSaveDto.setEmail("tester@test.com");
+        memberSaveDto.setPassword("12345678a!");
+        memberSaveDto.setPasswordCheck("12345678a!");
     }
 
     @DisplayName("정상 입력")
     @Test
     void input_success() {
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(MemberSaveRequestDto);
+        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator
+                .validate(memberSaveDto);
 
         assertTrue(violations.isEmpty());
         assertEquals(0, violations.size());
@@ -46,12 +45,13 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("닉네임 2글자 미만")
     @Test
     void input_fail_nickname_min_length() {
-        MemberSaveRequestDto.setNickname("t");
+        memberSaveDto.setNickname("t");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
         assertAll(
-                () -> assertEquals("2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.", violation.getMessage()),
+                () -> assertEquals("2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.",
+                        violation.getMessage()),
                 () -> assertEquals("nickname", violation.getPropertyPath().toString()),
                 () -> assertEquals("t", violation.getInvalidValue())
         );
@@ -60,12 +60,13 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("닉네임 8글자 초과")
     @Test
     void input_fail_nickname_max_length() {
-        MemberSaveRequestDto.setNickname("tester1234");
+        memberSaveDto.setNickname("tester1234");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
         assertAll(
-                () -> assertEquals("2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.", violation.getMessage()),
+                () -> assertEquals("2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.",
+                        violation.getMessage()),
                 () -> assertEquals("nickname", violation.getPropertyPath().toString()),
                 () -> assertEquals("tester1234", violation.getInvalidValue())
         );
@@ -74,7 +75,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("올바르지 않은 이메일 형식")
     @Test
     void input_fail_email() {
-        MemberSaveRequestDto.setEmail("test@test");
+        memberSaveDto.setEmail("test@test");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -88,7 +89,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("8글자 미만 비빌번호")
     @Test
     void input_fail_password_min_length() {
-        MemberSaveRequestDto.setPassword("1234567");
+        memberSaveDto.setPassword("1234567");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -103,7 +104,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("20글자 초과 비빌번호")
     @Test
     void input_fail_password_max_length() {
-        MemberSaveRequestDto.setPassword("123456789012345678901");
+        memberSaveDto.setPassword("123456789012345678901");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -118,7 +119,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("특수문자 미포함 비빌번호")
     @Test
     void input_fail_password_not_special_char() {
-        MemberSaveRequestDto.setPassword("12345678a");
+        memberSaveDto.setPassword("12345678a");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -133,7 +134,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("숫자 미포함 비빌번호")
     @Test
     void input_fail_password_not_number() {
-        MemberSaveRequestDto.setPassword("aaaaaaaa!");
+        memberSaveDto.setPassword("aaaaaaaa!");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -148,7 +149,7 @@ public class MemberSaveRequestDtoTest {
     @DisplayName("영문 미포함 비빌번호")
     @Test
     void input_fail_password_not_word() {
-        MemberSaveRequestDto.setPassword("12345678!");
+        memberSaveDto.setPassword("12345678!");
 
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
 
@@ -163,7 +164,7 @@ public class MemberSaveRequestDtoTest {
     @Test
     @DisplayName("닉네임에 특수문자 포함")
     void invalid_nickname_by_special_word() {
-        MemberSaveRequestDto.setNickname("nick*"); // 닉네임에 * 특수문자
+        memberSaveDto.setNickname("nick*"); // 닉네임에 * 특수문자
         ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
         // then
         assertAll(
@@ -174,7 +175,7 @@ public class MemberSaveRequestDtoTest {
 
     private ConstraintViolation<MemberSaveRequestDto> getViolation() {
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator
-                .validate(MemberSaveRequestDto);
+                .validate(memberSaveDto);
 
         return violations.iterator().next();
     }
