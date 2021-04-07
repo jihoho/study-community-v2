@@ -1,7 +1,6 @@
 package com.project.pagu.member.controller;
 
 import com.project.pagu.member.domain.MemberId;
-import com.project.pagu.email.service.EmailService;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.validation.SignUpValidation;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.springframework.web.bind.support.SessionStatus;
 
 /**
  * Created by IntelliJ IDEA
@@ -26,7 +26,6 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-    private final EmailService emailService;
     private final SignUpValidation signUpValidation;
 
     @InitBinder("memberSaveRequestDto")
@@ -55,7 +54,7 @@ public class MemberController {
         if (result.hasErrors()) {
             return "sign-up";
         }
-        emailService.sendMessageToMemberDto(memberSaveRequestDto);
+        memberService.sendMessageToMemberDto(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/email-check";
     }
@@ -68,7 +67,7 @@ public class MemberController {
 
     @PostMapping("/sign-up/email-check")
     public String emailCheckAndSaveMember(@Valid MemberSaveRequestDto memberSaveRequestDto,
-            BindingResult result, Model model) {
+            BindingResult result, SessionStatus sessionStatus) {
 
         if (result.hasErrors()) {
             return "email-check";
@@ -76,13 +75,12 @@ public class MemberController {
 
         memberService.encryptPassword(memberSaveRequestDto);
         MemberId memberId = memberService.save(memberSaveRequestDto);
-        model.addAttribute(memberSaveRequestDto);
+        sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }
 
-    @GetMapping("sign-up-success")
-    public String signUpSuccess(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        model.addAttribute(memberSaveRequestDto);
+    @GetMapping("/sign-up-success")
+    public String signUpSuccess() {
         return "sign-up-success";
     }
 

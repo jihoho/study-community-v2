@@ -1,5 +1,6 @@
 package com.project.pagu.member.service;
 
+import com.project.pagu.email.MemberMailSender;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
@@ -24,6 +25,7 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberMailSender memberMailSender;
 
     public boolean existsById(MemberId memberId) {
         return memberRepository.existsById(memberId);
@@ -35,6 +37,11 @@ public class MemberService implements UserDetailsService {
 
     public boolean existsByEmail(String email) {
         return memberRepository.existsByEmail(email);
+    }
+
+    public void sendMessageToMemberDto(MemberSaveRequestDto memberSaveRequestDto) {
+        memberSaveRequestDto.createEmailAuthKey();
+        memberMailSender.sendMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.project.pagu.member.model;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
+import java.util.UUID;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -47,5 +48,9 @@ public class MemberSaveRequestDto {
                 .password(password)
                 .role(Role.GUEST)
                 .build();
+    }
+
+    public void createEmailAuthKey() {
+        this.authKey = UUID.randomUUID().toString();
     }
 }
