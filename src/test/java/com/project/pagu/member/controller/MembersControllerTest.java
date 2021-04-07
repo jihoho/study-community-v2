@@ -76,14 +76,13 @@ class MembersControllerTest {
     @BeforeEach
     void beforeEach() {
         // given: 테스트마다 dto set
-        dto = MemberSaveRequestDto.builder()
-                .email("123@naver.com")
-                .nickname("nick")
-                .password("abcde1234!")
-                .passwordCheck("abcde1234!")
-                .authKey("123456")
-                .authKeyInput("123456")
-                .build();
+        dto = new MemberSaveRequestDto();
+        dto.setEmail("123@email.com");
+        dto.setNickname("nick");
+        dto.setPassword("abcde1234!");
+        dto.setPasswordCheck("abcde1234!");
+        dto.setAuthKey("123456");
+        dto.setAuthKeyInput("123456");
     }
 
     @Test
