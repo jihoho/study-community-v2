@@ -44,7 +44,7 @@ import org.springframework.util.MultiValueMap;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
         //@WebMvcTest
-class MembersControllerTest {
+class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

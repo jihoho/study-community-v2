@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 @SessionAttributes("memberSaveRequestDto")
-public class MembersController {
+public class MemberController {
 
     private final MemberService memberService;
     private final EmailService emailService;
