@@ -1,6 +1,5 @@
 package com.project.pagu.member.controller;
 
-import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.validation.SignUpValidation;
@@ -74,7 +73,7 @@ public class MemberController {
             return "email-check";
         }
 
-        memberService.save(memberSaveRequestDto);
+        memberService.saveMember(memberSaveRequestDto);
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }

@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.project.pagu.member.domain.MemberId;
-import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +40,7 @@ class MemberServiceTest {
     private Validator validator;
 
     @MockBean
-    MemberService memberService;
+    private MemberService memberService;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")
@@ -61,7 +58,7 @@ class MemberServiceTest {
     @DisplayName("회원가입 Form validation 성공 테스트")
     void memberFormValidationSuccessTest() throws Exception {
         // when
-        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(memberService.existsByMemberId(any())).thenReturn(false); // 이메일 unique
         when(memberService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
         // then
@@ -72,7 +69,7 @@ class MemberServiceTest {
     @DisplayName("회원 이메일 중복 체크 실패 테스트")
     void uniqueEmailValidationFailTest() {
         // when
-        when(memberService.existsById(any())).thenReturn(true); // 이메일 중복
+        when(memberService.existsByMemberId(any())).thenReturn(true); // 이메일 중복
         when(memberService.existsByNickname(any())).thenReturn(false); //닉네임 unique
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 
@@ -90,7 +87,7 @@ class MemberServiceTest {
     @DisplayName("회원 닉네임 Pattern Validation 실패 테스트")
     void nicknamePatternVaildationFailTest() {
         // when
-        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(memberService.existsByMemberId(any())).thenReturn(false); // 이메일 unique
         when(memberService.existsByNickname(any())).thenReturn(false); //닉네임 unique
         dto.setNickname("nick*"); // 닉네임에 * 특수문자
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
