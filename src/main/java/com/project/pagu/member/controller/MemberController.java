@@ -55,6 +55,7 @@ public class MemberController {
             return "sign-up";
         }
         memberService.sendMessageToMemberDto(memberSaveRequestDto);
+        memberService.encryptPassword(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/email-check";
     }
@@ -73,8 +74,7 @@ public class MemberController {
             return "email-check";
         }
 
-        memberService.encryptPassword(memberSaveRequestDto);
-        MemberId memberId = memberService.save(memberSaveRequestDto);
+        memberService.save(memberSaveRequestDto);
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }
