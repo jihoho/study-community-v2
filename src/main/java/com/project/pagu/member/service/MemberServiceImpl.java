@@ -1,6 +1,5 @@
 package com.project.pagu.member.service;
 
-import com.project.pagu.email.MemberMailSender;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final MemberMailSender memberMailSender;
 
     @Override
     public boolean existsByMemberId(MemberId memberId) {
@@ -43,23 +39,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public void sendMessageToMemberDto(MemberSaveRequestDto memberSaveRequestDto) {
-        memberSaveRequestDto.createEmailAuthKey();
-        memberMailSender.sendMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
-    }
-
-    @Override
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = memberRepository.save(memberSaveRequestDto.toEntity());
         return new MemberId(member.getEmail(), member.getMemberType());
-    }
-
-    @Override
-    public void encryptPassword(MemberSaveRequestDto memberSaveRequestDto) {
-        String password = memberSaveRequestDto.getPassword();
-        memberSaveRequestDto.setPassword(passwordEncoder.encode(password));
-        memberSaveRequestDto.setPasswordCheck(passwordEncoder.encode(password));
     }
 
     @Override

@@ -1,16 +1,19 @@
 package com.project.pagu.member.controller;
 
-import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.model.MemberSaveRequestDto;
+import com.project.pagu.member.service.MemberService;
+import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 /**
@@ -25,6 +28,7 @@ import org.springframework.web.bind.support.SessionStatus;
 public class MemberController {
 
     private final MemberService memberService;
+    private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
     @InitBinder("memberSaveRequestDto")
@@ -53,8 +57,9 @@ public class MemberController {
         if (result.hasErrors()) {
             return "sign-up";
         }
-        memberService.sendMessageToMemberDto(memberSaveRequestDto);
-        memberService.encryptPassword(memberSaveRequestDto);
+
+        signUpManager.sendMessageToMemberDto(memberSaveRequestDto);
+        signUpManager.encryptPassword(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/email-check";
     }

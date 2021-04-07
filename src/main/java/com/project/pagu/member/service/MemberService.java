@@ -18,8 +18,4 @@ public interface MemberService {
 
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 
-    void sendMessageToMemberDto(MemberSaveRequestDto memberSaveRequestDto);
-
-    void encryptPassword(MemberSaveRequestDto memberSaveRequestDto);
-
 }
