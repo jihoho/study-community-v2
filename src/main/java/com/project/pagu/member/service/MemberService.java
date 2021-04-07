@@ -19,16 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
     public boolean existsById(MemberId memberId) {
         return memberRepository.existsById(memberId);
     }
 
-    @Transactional
     public boolean existsByNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
@@ -39,11 +39,10 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public MemberId save(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = (Member) memberRepository.save(memberSaveRequestDto.toEntity());
+        Member member = memberRepository.save(memberSaveRequestDto.toEntity());
         return new MemberId(member.getEmail(), member.getMemberType());
     }
 
-    @Transactional
     public void encryptPassword(MemberSaveRequestDto memberSaveRequestDto) {
         String password = memberSaveRequestDto.getPassword();
         memberSaveRequestDto.setPassword(passwordEncoder.encode(password));

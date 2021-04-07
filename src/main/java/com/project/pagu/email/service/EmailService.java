@@ -45,8 +45,6 @@ public class EmailService {
         return buffer.toString();
     }
 
-
-    @Transactional
     public String sendMessage(String to) {
         String authKey = getKey(6);
         SimpleMailMessage message = new SimpleMailMessage();
@@ -58,7 +56,6 @@ public class EmailService {
         return authKey;
     }
 
-    @Transactional
     public void sendMessageToMemberDto(MemberSaveRequestDto dto) {
         String email = dto.getEmail();
         String authKey = sendMessage(email);
