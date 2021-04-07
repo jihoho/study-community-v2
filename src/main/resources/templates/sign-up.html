@@ -14,7 +14,7 @@
                     </a>
                     <div class="form-signin">
                         <!-- 회원가입 폼 -->
-                        <form th:action="@{/members/valid}" method="post" th:object="${memberSaveRequestDto}">
+                        <form th:action="@{/sign-up/valid}" method="post" th:object="${memberSaveRequestDto}">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <!-- 이메일 -->
                             <div class="form-label-group mt-5">

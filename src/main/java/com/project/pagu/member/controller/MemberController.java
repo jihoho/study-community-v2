@@ -48,19 +48,7 @@ public class MemberController {
         return "sign-up";
     }
 
-    @GetMapping("email-check")
-    public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
-        return "email-check";
-    }
-
-    @GetMapping("sign-up-success")
-    public String signUpSuccess(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        model.addAttribute(memberSaveRequestDto);
-        return "sign-up-success";
-    }
-
-    @PostMapping("/members/valid")
+    @PostMapping("/sign-up/valid")
     public String validMemberSaveForm(@Valid MemberSaveRequestDto memberSaveRequestDto,
             BindingResult result, Model model) {
 
@@ -72,7 +60,13 @@ public class MemberController {
         return "redirect:/email-check";
     }
 
-    @PostMapping("/members/email-check")
+    @GetMapping("email-check")
+    public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
+        return "email-check";
+    }
+
+    @PostMapping("/sign-up/email-check")
     public String emailCheckAndSaveMember(@Valid MemberSaveRequestDto memberSaveRequestDto,
             BindingResult result, Model model) {
 
@@ -84,6 +78,12 @@ public class MemberController {
         MemberId memberId = memberService.save(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/sign-up-success";
+    }
+
+    @GetMapping("sign-up-success")
+    public String signUpSuccess(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute(memberSaveRequestDto);
+        return "sign-up-success";
     }
 
 }

@@ -81,7 +81,7 @@ class MemberControllerTest {
         // given
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().is3xxRedirection())
@@ -99,7 +99,7 @@ class MemberControllerTest {
         when(memberService.existsByEmail(any())).thenReturn(true);
 
         // then
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ class MemberControllerTest {
         when(memberService.existsByNickname(any())).thenReturn(true);
 
         // then
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
@@ -140,7 +140,7 @@ class MemberControllerTest {
         memberSaveDto.setNickname("nick&*");
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
@@ -159,7 +159,7 @@ class MemberControllerTest {
         memberSaveDto.setPasswordCheck("123");
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
@@ -177,7 +177,7 @@ class MemberControllerTest {
         memberSaveDto.setPasswordCheck("differentPassword12!");
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/members/valid")
+        mockMvc.perform(post("/sign-up/valid")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
@@ -195,7 +195,7 @@ class MemberControllerTest {
         // when
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
         // then
-        mockMvc.perform(post("/members/email-check")
+        mockMvc.perform(post("/sign-up/email-check")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().is3xxRedirection())
@@ -210,7 +210,7 @@ class MemberControllerTest {
         memberSaveDto.setAuthKeyInput("123123");
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/members/email-check")
+        mockMvc.perform(post("/sign-up/email-check")
                 .with(csrf())
                 .params(params))
                 .andExpect(status().isOk())
