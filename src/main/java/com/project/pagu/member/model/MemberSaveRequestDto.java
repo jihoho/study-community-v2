@@ -1,6 +1,5 @@
 package com.project.pagu.member.model;
 
-import com.project.pagu.annotation.ValidAuthKey;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
