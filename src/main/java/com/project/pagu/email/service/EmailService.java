@@ -22,13 +22,11 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender emailSender;
-    private final PasswordEncoder authKeyEncoder;
-
-
     private static final String MAIL_SUBJECT = "PAGU 인증 이메일 입니다.";
     private static final String MAIL_CONTENT = "인증번호는 %s 입니다.";
 
+    private final JavaMailSender emailSender;
+    private final PasswordEncoder authKeyEncoder;
 
     private String getKey(int size) {
         return getAuthCode(size);
@@ -61,6 +59,5 @@ public class EmailService {
         String authKey = sendMessage(email);
         dto.setAuthKey(authKey);
     }
-
 
 }
