@@ -71,10 +71,11 @@ public class MemberController {
     }
 
     @PostMapping("/sign-up/email-check")
-    public String emailCheckAndSaveMember(@Valid MemberSaveRequestDto memberSaveRequestDto,
+    public String emailCheckAndSaveMember(MemberSaveRequestDto memberSaveRequestDto,
             BindingResult result, SessionStatus sessionStatus) {
 
-        if (result.hasErrors()) {
+        if (signUpValidation.isNotEqualToEmailAuthKey(memberSaveRequestDto.getAuthKey(),
+                    memberSaveRequestDto.getAuthKeyInput(), result)) {
             return "email-check";
         }
 
