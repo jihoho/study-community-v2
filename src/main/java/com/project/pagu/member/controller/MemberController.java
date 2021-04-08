@@ -46,7 +46,7 @@ public class MemberController {
 
     @GetMapping("sign-up")
     public String signUp(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
+        model.addAttribute(memberSaveRequestDto);
         return "sign-up";
     }
 
@@ -66,7 +66,7 @@ public class MemberController {
 
     @GetMapping("email-check")
     public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        model.addAttribute("memberSaveRequestDto", memberSaveRequestDto);
+        model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }
 
@@ -74,7 +74,7 @@ public class MemberController {
     public String emailCheckAndSaveMember(MemberSaveRequestDto memberSaveRequestDto,
             BindingResult result, SessionStatus sessionStatus) {
 
-        if (signUpValidation.isNotEqualToEmailAuthKey(memberSaveRequestDto.getAuthKey(),
+        if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
                     memberSaveRequestDto.getAuthKeyInput(), result)) {
             return "email-check";
         }

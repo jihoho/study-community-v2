@@ -50,7 +50,7 @@ public class SignUpValidation implements Validator {
         }
     }
 
-    public boolean isNotEqualToEmailAuthKey(String authKey, String authKeyInput, Errors errors) {
+    public boolean validateEmailAuth(String authKey, String authKeyInput, Errors errors) {
         if (authKey != null && !authKey.equals(authKeyInput)) {
             errors.rejectValue("authKeyInput", "NotEqualsAuthKeyInput", "인증번호가 다릅니다.");
             return true;
