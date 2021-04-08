@@ -96,7 +96,7 @@ class MemberControllerTest {
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
         // when
-        when(memberService.existsByEmail(any())).thenReturn(true);
+        when(memberService.existsByMemberId(any())).thenReturn(true);
 
         // then
         mockMvc.perform(post("/sign-up/valid")

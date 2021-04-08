@@ -1,5 +1,7 @@
 package com.project.pagu.validation;
 
+import com.project.pagu.member.domain.MemberId;
+import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +29,13 @@ public class SignUpValidation implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) target;
-        isExistedEmail(memberSaveRequestDto.getEmail(), errors);
+        isExistedNormalEmail(memberSaveRequestDto.getEmail(), errors);
         isExistedNickname(memberSaveRequestDto.getNickname(), errors);
         isNotEqualToPassword(memberSaveRequestDto.getPassword(), memberSaveRequestDto.getPasswordCheck(), errors);
     }
 
-    private void isExistedEmail(String email, Errors errors) {
-        if (memberService.existsByEmail(email)) {
+    private void isExistedNormalEmail(String email,Errors errors) {
+        if (memberService.existsByMemberId(new MemberId(email,MemberType.NORMAL))) {
             errors.rejectValue("email", "UniqueEmail", "이미 존재하는 이메일입니다.");
         }
     }
