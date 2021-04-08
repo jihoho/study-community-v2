@@ -36,6 +36,14 @@ public class MemberController {
         webDataBinder.addValidators(signUpValidation);
     }
 
+    @GetMapping("login")
+    public String login() {
+        /**
+         * todo : 로그인 폼
+         */
+        return "login";
+    }
+
     @GetMapping("profile")
     public String profile(/* @AuthenticationPrincipal Member member */) {
         /**

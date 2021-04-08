@@ -33,14 +33,6 @@ public class MainController {
         return "main-body";
     }
 
-    @GetMapping("login")
-    public String login() {
-        /**
-         * todo : 로그인 폼
-         */
-        return "login";
-    }
-
     @SuppressWarnings("unchecked")
     @GetMapping("auth-login")
     public String getLoginPage(Model model) throws Exception {

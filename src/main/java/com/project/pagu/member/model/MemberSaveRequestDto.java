@@ -52,5 +52,6 @@ public class MemberSaveRequestDto {
 
     public void createEmailAuthKey() {
         this.authKey = UUID.randomUUID().toString();
+        System.out.printf("회원 : %s, 인증 키 : %s\n",this.email,this.authKey);
     }
 }
