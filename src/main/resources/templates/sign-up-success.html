@@ -8,21 +8,19 @@
                 <div class="card card-signin my-5">
                     <div class="card-body">
                         <a class="card-title text-center" href="">
-                            <h1 class="logo">PAGU</h1>
+                            <h1 class="logo" th:href="@{/}">PAGU</h1>
                         </a>
                         <div class="mt-4">
                             <h3 class="text-center">가입이 완료되었습니다!</h3>
                         </div>
-                        <!-- todo: 링크 이동 -->
                         <div>
                             <button class="btn btn-lg btn-sign-in btn-block mt-5">
-                                <a class="button-link" href="">프로필 설정하기</a>
+                                <a class="button-link" th:href="@{/profile}">프로필 설정하기</a>
                             </button>
                         </div>
-                        <!-- todo: 링크 이동 -->
                         <div>
                             <button class="btn btn-lg btn-sign-in btn-block mt-5 mb-5">
-                                <a class="button-link" href="">메인페이지로 이동하기</a>
+                                <a class="button-link" th:href="@{/}">메인페이지로 이동하기</a>
                             </button>
                         </div>
                     </div>
