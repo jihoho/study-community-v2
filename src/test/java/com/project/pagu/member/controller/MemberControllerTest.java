@@ -3,29 +3,39 @@ package com.project.pagu.member.controller;
 import static com.project.pagu.util.MultiValueMapConverter.convert;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.member.model.MemberSaveRequestDto;
+import com.project.pagu.member.repository.MemberRepository;
 import com.project.pagu.member.service.MemberServiceImpl;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
@@ -35,7 +45,7 @@ import org.springframework.util.MultiValueMap;
  * Date: 2021/04/01 Time: 3:07 오후
  */
 
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class MemberControllerTest {
@@ -50,6 +60,12 @@ class MemberControllerTest {
     private MemberServiceImpl memberService;
 
     private MemberSaveRequestDto memberSaveDto;
+
+    @Mock
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     @DisplayName("memberSaveDto 정상 입력 세팅")
@@ -249,6 +265,39 @@ class MemberControllerTest {
                 .andExpect(content().string(containsString("비밀번호 찾기")))
                 .andExpect(content().string(containsString("회원가입")))
                 .andDo(print());
+    }
+
+    @DisplayName("로그인에 성공한다.")
+    @Test
+    void login_success() throws Exception {
+        String encode = passwordEncoder.encode(memberSaveDto.getPassword());
+        given(memberService.loadUserByUsername(any())).willReturn(new User("yy123@email.com", encode,
+                List.of(new SimpleGrantedAuthority("ROLE_GUEST"))));
+
+        MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
+
+        mockMvc.perform(post("/login")
+                .params(params)
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(authenticated().withUsername("yy123@email.com"))
+                .andDo(print());
+    }
+
+    @DisplayName("로그인에 실패한다.")
+    @Test
+    void login_fail() throws Exception {
+        given(memberService.loadUserByUsername(any())).willReturn(any());
+
+        MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
+
+        mockMvc.perform(post("/login")
+                .params(params)
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"))
+                .andExpect(unauthenticated());
     }
 
 }
