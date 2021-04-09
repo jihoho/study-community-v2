@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean existsByMemberId(MemberId memberId) {
@@ -48,14 +47,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = Member.builder()
-                .email(memberSaveRequestDto.getEmail())
-                .memberType(MemberType.NORMAL)
-                .nickname(memberSaveRequestDto.getNickname())
-                .password(passwordEncoder.encode(memberSaveRequestDto.getPassword()))
-                .role(Role.GUEST)
-                .build();
-        Member saveMember = memberRepository.save(member);
+        Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
         return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
     }
 
