@@ -1,13 +1,16 @@
 package com.project.pagu.config;
 
+import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
 import com.project.pagu.member.service.MemberService;
+import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,29 +32,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    MemberService memberService;
+    private final MemberServiceImpl memberServiceImpl;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /** 임시적으로 모든 요청 허용*/
 
         http.authorizeRequests()
+                .antMatchers("/sign-up/**", "/login/**", "/email-check", "/sign-up-success")
+                .permitAll()
+                .antMatchers("/profile")
+                .hasAnyAuthority(Role.GUEST.getKey(), Role.USER.getKey())
                 .anyRequest().permitAll()
-            .and()
+                .and()
+
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .and()
+                .and()
+
                 .formLogin()
                 .loginPage("/login").permitAll()
                 .loginProcessingUrl("/login-process")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
-            .and()
+                .and()
+
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
-            .and()
+                .and()
+
                 .oauth2Login().loginPage("/oauth-login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
@@ -62,10 +73,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("aeno").password("{noop}123").roles("GUEST");
+        auth.userDetailsService(memberServiceImpl)
+                .passwordEncoder(passwordEncoder())
+
+                .and().inMemoryAuthentication()
+                .withUser("guest")
+                .password("{noop}123")
+                .roles("GUEST")
+                .and()
+                .withUser("user")
+                .password("{noop}123")
+                .roles("USER");
     }
 
 
