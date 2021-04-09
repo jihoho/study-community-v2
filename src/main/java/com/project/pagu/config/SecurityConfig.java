@@ -34,10 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
-                .passwordParameter("password").defaultSuccessUrl("/");
+                .passwordParameter("password")
+                .defaultSuccessUrl("/");
 
         http.logout()
-                .invalidateHttpSession(true);
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/");
 
         http.exceptionHandling()
                 .accessDeniedPage("/not-accept");
