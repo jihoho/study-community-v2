@@ -8,7 +8,10 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,7 +51,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
+        login(saveMember);
         return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
+    }
+
+    private void login(Member member) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                member.getEmail(),
+                member.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_GUEST")));
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token);
     }
 
     @Override
