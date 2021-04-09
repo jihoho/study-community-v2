@@ -1,7 +1,10 @@
 package com.project.pagu.member.controller;
 
+import com.project.pagu.annotation.CurrentMember;
+import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
+import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
 import javax.validation.Valid;
@@ -27,7 +30,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("memberSaveRequestDto")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
@@ -38,9 +41,6 @@ public class MemberController {
 
     @GetMapping("login")
     public String login() {
-        /**
-         * todo : 로그인 폼
-         */
         return "login";
     }
 
