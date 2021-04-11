@@ -83,6 +83,9 @@ public class MemberController {
 
     @GetMapping("email-check")
     public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        if (memberSaveRequestDto.getEmail() == null || memberSaveRequestDto.getAuthKey() == null) {
+            return "redirect:/sign-up";
+        }
         model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }
@@ -92,7 +95,7 @@ public class MemberController {
             BindingResult result, SessionStatus sessionStatus) {
 
         if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
-                    memberSaveRequestDto.getAuthKeyInput(), result)) {
+                memberSaveRequestDto.getAuthKeyInput(), result)) {
             return "email-check";
         }
 
