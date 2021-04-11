@@ -1,24 +1,17 @@
 package com.project.pagu.config;
 
-import com.project.pagu.member.domain.MemberType;
+import com.project.pagu.handler.CustomLoginSuccessHandler;
 import com.project.pagu.member.domain.Role;
-import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
-import java.util.Locale;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -33,6 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final MemberServiceImpl memberServiceImpl;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -55,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
+                .successHandler(successHandler())
                 .and()
 
                 .logout()
@@ -69,23 +65,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder authKeyEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationSuccessHandler successHandler() {
+        return new CustomLoginSuccessHandler("/");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberServiceImpl)
-                .passwordEncoder(passwordEncoder())
-
+                .passwordEncoder(passwordEncoder)
                 .and().inMemoryAuthentication()
                 .withUser("guest")
                 .password("{noop}123")
+
                 .roles("GUEST")
                 .and()
                 .withUser("user")
