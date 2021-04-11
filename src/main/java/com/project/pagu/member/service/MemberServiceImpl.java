@@ -55,6 +55,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
     }
 
+    @Override
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                //todo : 예외 처리 수정
+                .orElseThrow(() -> new IllegalArgumentException());
+    }
+
     private void login(Member member) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 member.getEmail(),

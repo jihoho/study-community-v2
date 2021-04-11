@@ -1,5 +1,6 @@
 package com.project.pagu.member.controller;
 
+import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
@@ -41,14 +42,13 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(@AuthenticationPrincipal User user) {
+    public String profile(@AuthenticationPrincipal User user, Model model) {
         if (user == null) {
             return "/login";
         }
-        /**
-         * 회원 정보를 담아서 리턴
-         */
-        return "profile";
+        Member member = memberService.findByEmail(user.getUsername());
+        model.addAttribute(member);
+        return "/profile";
     }
 
     @GetMapping("sign-up")

@@ -1,6 +1,8 @@
 package com.project.pagu.member.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -12,6 +14,7 @@ import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -109,4 +112,20 @@ public class MemberServiceImplTest {
         // then
         verify(memberRepository, times(1)).existsByNickname(dto.getNickname());
     }
+
+    @Test
+    @DisplayName("이메일로 회원 조회")
+    void find_by_email() {
+        // given
+        given(memberRepository.findByEmail(dto.getEmail())).willReturn(Optional.of(dto.toEntity()));
+
+        // when
+        Member member = memberService.findByEmail(dto.getEmail());
+
+        // then
+        verify(memberRepository, times(1)).findByEmail(dto.getEmail());
+        assertNotNull(member);
+        assertThat(member.getEmail()).isEqualTo("123@email.com");
+    }
+
 }
