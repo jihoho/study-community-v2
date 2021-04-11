@@ -206,6 +206,18 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("이메일입력 없이 이메일 인증페이지로 이동한 경우 에러페이지로 이동한다.")
+    void wrong_approach_email_check() throws Exception {
+        memberSaveDto.setEmail("");
+        MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
+        // then
+        mockMvc.perform(get("/email-check")
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error")); // 이메일 인증 성공 후 profile 페이지로 이동
+    }
+
+    @Test
     @DisplayName("이메일 인증 성공 테스트")
     void emailCheckSuccessTest() throws Exception {
         // when

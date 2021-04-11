@@ -5,6 +5,7 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -67,6 +68,9 @@ public class MemberController {
 
     @GetMapping("email-check")
     public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        if (memberSaveRequestDto.getEmail().isEmpty()) {
+            return "error";
+        }
         model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }
