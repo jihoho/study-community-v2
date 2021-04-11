@@ -3,19 +3,26 @@ package com.project.pagu.member.controller;
 import static com.project.pagu.util.MultiValueMapConverter.convert;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.MemberSaveRequestDto;
-import com.project.pagu.member.service.MemberService;
+import com.project.pagu.member.service.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +33,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
@@ -47,7 +56,10 @@ class MemberControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MemberService memberService;
+    private MemberServiceImpl memberService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private MemberSaveRequestDto memberSaveDto;
 
@@ -190,7 +202,7 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("이메일 인증 성공 테스트")
+    @DisplayName("이메일 인증 성공 후 sign-up-success 페이지로 이동")
     void emailCheckSuccessTest() throws Exception {
         // when
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
@@ -221,24 +233,18 @@ class MemberControllerTest {
                 .andExpect(view().name("email-check"));
     }
 
-    @DisplayName("프로필 페이지로 이동한다.")
+    @DisplayName("권한이 없는 사용자가 프로필 페이지로 이동 시 로그인 페이지로 redirect 된다.")
     @Test
-    void profile() throws Exception {
+    void get_profile_fail() throws Exception {
         mockMvc.perform(get("/profile"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"))
-                .andExpect(content().string(containsString("프로필 정보")))
-                .andExpect(content().string(containsString("이메일")))
-                .andExpect(content().string(containsString("닉네임")))
-                .andExpect(content().string(containsString("포지션")))
-                .andExpect(content().string(containsString("경력")))
-                .andExpect(content().string(containsString("링크")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"))
                 .andDo(print());
     }
 
     @DisplayName("로그인 페이지로 이동한다.")
     @Test
-    void login() throws Exception {
+    void get_login() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
@@ -249,6 +255,38 @@ class MemberControllerTest {
                 .andExpect(content().string(containsString("비밀번호 찾기")))
                 .andExpect(content().string(containsString("회원가입")))
                 .andDo(print());
+    }
+
+    @DisplayName("로그인에 성공한다.")
+    @Test
+    void login_success() throws Exception {
+        memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
+        given(memberService.loadUserByUsername(anyString()))
+                .willReturn(new UserMember(memberSaveDto.toEntity()));
+
+        mockMvc.perform(post("/login-process")
+                .param("email", "yy123@email.com")
+                .param("password", "abcde1234!")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(authenticated().withUsername("yy123@email.com"));
+    }
+
+    @DisplayName("로그인에 실패한다.")
+    @Test
+    void login_fail() throws Exception {
+        memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
+        given(memberService.loadUserByUsername(anyString()))
+                .willReturn(new UserMember(memberSaveDto.toEntity()));
+
+        mockMvc.perform(post("/login-process")
+                .param("email", "yy123@email.com")
+                .param("password", "dif12314!") // 기존 비밀번호(abcde1234!) 와 다른 비밀번호
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"))
+                .andExpect(unauthenticated());
     }
 
 }
