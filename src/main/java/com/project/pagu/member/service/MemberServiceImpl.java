@@ -63,7 +63,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = memberRepository.save(memberSaveRequestDto.toEntity());
-        autoLogin(member);
         return new MemberId(member.getEmail(), member.getMemberType());
     }
 

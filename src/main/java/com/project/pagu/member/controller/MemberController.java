@@ -100,6 +100,7 @@ public class MemberController {
         }
 
         memberService.saveMember(memberSaveRequestDto);
+        memberService.autoLogin(memberSaveRequestDto.toEntity());
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }
