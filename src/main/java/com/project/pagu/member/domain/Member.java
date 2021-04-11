@@ -44,13 +44,15 @@ public class Member extends BaseTimeEntity {
 
     private String career;
 
+    private String postion;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Builder
     public Member(String email, MemberType memberType, String nickname,
-                  String password, String imageURL, Role role) {
+            String password, String imageURL, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.password = password;
@@ -61,7 +63,7 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String email, MemberType memberType, String nickname,
-                  String password, Role role) {
+            String password, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.nickname = nickname;

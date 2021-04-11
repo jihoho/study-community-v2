@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public void autoLogin(Member member) {
-        UserDetails userDetails=loadUserByUsername(member.getEmail());
+        UserDetails userDetails = loadUserByUsername(member.getEmail());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 member.getPassword(),
@@ -84,5 +84,20 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Member member = findById(new MemberId(email,
                 MemberType.NORMAL)).orElseThrow(() -> new UsernameNotFoundException(email));
         return new UserMember(member);
+    }
+
+    public MemberDetailRequestDto convertMemberToMemberDetailRequestDto(Member member) {
+        MemberDetailRequestDto memberDetailRequestDto = MemberDetailRequestDto
+                .builder()
+                .email(member.getEmail())
+                .memberType(member.getMemberType().getKey())
+                .nickname(member.getNickname())
+                .imageUrl(member.getImageURL())
+                .link(member.getLink())
+                .info(member.getInfo())
+                .career(member.getCareer())
+                .position(member.getPostion())
+                .build();
+        return memberDetailRequestDto;
     }
 }
