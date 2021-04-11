@@ -8,6 +8,8 @@ import com.project.pagu.validation.SignUpValidation;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,9 +41,12 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(/* @AuthenticationPrincipal Member member */) {
+    public String profile(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return "/login";
+        }
         /**
-         * 로그인 상태
+         * 회원 정보를 담아서 리턴
          */
         return "profile";
     }

@@ -251,6 +251,7 @@ class MemberControllerTest {
 
     @DisplayName("프로필 페이지로 이동한다.")
     @Test
+    @WithMockUser
     void profile() throws Exception {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
@@ -261,6 +262,15 @@ class MemberControllerTest {
                 .andExpect(content().string(containsString("포지션")))
                 .andExpect(content().string(containsString("경력")))
                 .andExpect(content().string(containsString("링크")))
+                .andDo(print());
+    }
+
+    @DisplayName("비로그인 상태로 프로필 페이지 접근시 로그인 페이지로 이동.")
+    @Test
+    void not_login_profile() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/login"))
                 .andDo(print());
     }
 
