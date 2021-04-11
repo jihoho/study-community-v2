@@ -40,7 +40,14 @@ public class MemberController {
     }
 
     @GetMapping("login")
-    public String login() {
+    public String login(HttpServletRequest request, @CurrentMember Member member) {
+        if (member != null) {
+            return "redirect:/";
+        }
+
+        String referrer = request.getHeader("Referer");
+        request.getSession().setAttribute("prevPage", referrer);
+
         return "login";
     }
 
