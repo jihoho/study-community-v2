@@ -93,7 +93,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .email(member.getEmail())
                 .memberType(member.getMemberType().getKey())
                 .nickname(member.getNickname())
-                .imageUrl(member.getFilename())
+                .filename(member.getFilename())
                 .link(member.getLink())
                 .info(member.getInfo())
                 .career(member.getCareer())

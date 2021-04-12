@@ -17,6 +17,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @IdClass(MemberId.class)
 public class Member extends BaseTimeEntity {
@@ -50,7 +51,6 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @Builder
     public Member(String email, MemberType memberType, String nickname,
             String password, String filename, Role role) {
         this.email = email;
@@ -61,7 +61,6 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-    @Builder
     public Member(String email, MemberType memberType, String nickname,
             String password, Role role) {
         this.email = email;
