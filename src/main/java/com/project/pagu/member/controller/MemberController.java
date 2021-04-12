@@ -1,9 +1,15 @@
 package com.project.pagu.member.controller;
 
+import com.project.pagu.annotation.CurrentMember;
+import com.project.pagu.member.domain.Member;
+import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
+
+import java.security.Principal;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -36,11 +42,23 @@ public class MemberController {
         webDataBinder.addValidators(signUpValidation);
     }
 
+    @GetMapping("login")
+    public String login(HttpServletRequest request, Principal principal) {
+        if (principal != null) {
+            return "redirect:/error";
+        }
+
+        String referrer = request.getHeader("Referer");
+        request.getSession().setAttribute("prevPage", referrer);
+
+        return "login";
+    }
+
     @GetMapping("profile")
-    public String profile(/* @AuthenticationPrincipal Member member */) {
-        /**
-         * 로그인 상태
-         */
+    public String profile(@CurrentMember Member member, ProfileRequestDto profileDto,
+            Model model) {
+        profileDto = memberService.convertMemberToProfileRequestDto(member);
+        model.addAttribute(profileDto);
         return "profile";
     }
 
@@ -66,6 +84,9 @@ public class MemberController {
 
     @GetMapping("email-check")
     public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        if (memberSaveRequestDto.getEmail().isEmpty()) {
+            return "error";
+        }
         model.addAttribute(memberSaveRequestDto);
         return "email-check";
     }
@@ -75,11 +96,12 @@ public class MemberController {
             BindingResult result, SessionStatus sessionStatus) {
 
         if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
-                    memberSaveRequestDto.getAuthKeyInput(), result)) {
+                memberSaveRequestDto.getAuthKeyInput(), result)) {
             return "email-check";
         }
 
         memberService.saveMember(memberSaveRequestDto);
+        memberService.login(memberSaveRequestDto.toEntity());
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }

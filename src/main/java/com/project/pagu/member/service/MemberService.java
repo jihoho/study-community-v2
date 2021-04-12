@@ -1,7 +1,10 @@
 package com.project.pagu.member.service;
 
+import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
+import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA
@@ -16,6 +19,13 @@ public interface MemberService {
 
     boolean existsByNickname(String nickname);
 
+    Optional<Member> findById(MemberId memberId);
+
+    void login(Member member);
+
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 
+    Member findByEmail(String username);
+
+    ProfileRequestDto convertMemberToProfileRequestDto(Member member);
 }

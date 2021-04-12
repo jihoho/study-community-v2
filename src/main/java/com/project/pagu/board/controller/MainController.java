@@ -1,6 +1,8 @@
 package com.project.pagu.board.controller;
 
-import com.project.pagu.member.model.MemberSaveRequestDto;
+import com.project.pagu.annotation.CurrentMember;
+import com.project.pagu.member.domain.Member;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -21,24 +23,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Controller
 public class MainController {
+
     private static final String authorizationRequestBaseUri = "oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
     private final ClientRegistrationRepository clientRegistrationRepository;
 
     @GetMapping("/")
     public String mainPage() {
-        /**
-         * todo : 로그인 상태, 최근 게시물 10개
-         */
         return "main-body";
-    }
-
-    @GetMapping("login")
-    public String login() {
-        /**
-         * todo : 로그인 폼
-         */
-        return "login";
     }
 
     @SuppressWarnings("unchecked")

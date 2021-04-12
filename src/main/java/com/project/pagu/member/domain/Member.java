@@ -17,6 +17,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @IdClass(MemberId.class)
 public class Member extends BaseTimeEntity {
@@ -35,7 +36,7 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String imageURL;
+    private String filename;
 
     private String link;
 
@@ -44,24 +45,24 @@ public class Member extends BaseTimeEntity {
 
     private String career;
 
+    private String postion;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Builder
     public Member(String email, MemberType memberType, String nickname,
-                  String password, String imageURL, Role role) {
+            String password, String filename, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.password = password;
         this.nickname = nickname;
-        this.imageURL = imageURL;
+        this.filename = filename;
         this.role = role;
     }
 
-    @Builder
     public Member(String email, MemberType memberType, String nickname,
-                  String password, Role role) {
+            String password, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.nickname = nickname;
