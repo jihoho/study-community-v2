@@ -322,4 +322,14 @@ class MemberControllerTest {
                 .andExpect(unauthenticated());
     }
 
+    @DisplayName("로그인 상태에서 로그인 페이지 요청시 에러페이지로 이동한다.")
+    @Test
+    @WithMockUser
+    void login_status_try_login() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"))
+                .andExpect(unauthenticated());
+    }
+
 }

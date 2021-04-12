@@ -29,7 +29,7 @@ public class MainController {
     private final ClientRegistrationRepository clientRegistrationRepository;
 
     @GetMapping("/")
-    public String mainPage(@CurrentMember Member member) {
+    public String mainPage() {
         return "main-body";
     }
 

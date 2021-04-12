@@ -8,6 +8,7 @@ import com.project.pagu.member.service.MemberService;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
 
+import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,8 @@ public class MemberController {
     }
 
     @GetMapping("login")
-    public String login(HttpServletRequest request, @CurrentMember Member member) {
-        if (member != null) {
+    public String login(HttpServletRequest request, Principal principal) {
+        if (principal != null) {
             return "redirect:/error";
         }
 
