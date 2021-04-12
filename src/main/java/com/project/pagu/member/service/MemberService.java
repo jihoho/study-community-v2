@@ -27,5 +27,5 @@ public interface MemberService {
 
     Member findByEmail(String username);
 
-    ProfileRequestDto convertMemberToMemberDetailRequestDto(Member member);
+    ProfileRequestDto convertMemberToProfileRequestDto(Member member);
 }

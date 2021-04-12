@@ -88,7 +88,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public ProfileRequestDto convertMemberToMemberDetailRequestDto(Member member) {
+    public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
         return ProfileRequestDto.builder()
                 .email(member.getEmail())
                 .memberType(member.getMemberType().getKey())
