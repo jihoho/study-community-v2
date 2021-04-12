@@ -35,7 +35,7 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String imageURL;
+    private String filename;
 
     private String link;
 
@@ -52,12 +52,12 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String email, MemberType memberType, String nickname,
-            String password, String imageURL, Role role) {
+            String password, String filename, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.password = password;
         this.nickname = nickname;
-        this.imageURL = imageURL;
+        this.filename = filename;
         this.role = role;
     }
 

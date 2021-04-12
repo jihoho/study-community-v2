@@ -47,7 +47,7 @@ public class MemberController {
     @GetMapping("login")
     public String login(HttpServletRequest request, @CurrentMember Member member) {
         if (member != null) {
-            return "redirect:/";
+            return "redirect:/error";
         }
 
         String referrer = request.getHeader("Referer");
