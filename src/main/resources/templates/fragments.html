@@ -45,10 +45,10 @@
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/sign-up}">SignUp</a>
                 </li>
-                <li sec:authorize="hasRole('ROLE_GUEST')" class="nav-item">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/profile}">MyPage</a>
                 </li>
-                <li sec:authorize="hasRole('ROLE_GUEST')" class="nav-item">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/logout}">Logout</a>
                 </li>
             </ul>
