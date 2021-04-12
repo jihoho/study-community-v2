@@ -19,8 +19,7 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @Builder
-@ToString
-public class MemberDetailRequestDto {
+public class ProfileRequestDto {
 
     @NotBlank
     private String email;

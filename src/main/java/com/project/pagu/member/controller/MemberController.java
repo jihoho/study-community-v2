@@ -2,18 +2,15 @@ package com.project.pagu.member.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.model.MemberDetailRequestDto;
+import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
-import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +32,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("memberSaveRequestDto")
 public class MemberController {
 
-    private final MemberServiceImpl memberService;
+    private final MemberService memberService;
     private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
@@ -57,10 +54,10 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(@CurrentMember Member member, MemberDetailRequestDto memberInfo,
+    public String profile(@CurrentMember Member member, ProfileRequestDto profileDto,
             Model model) {
-        memberInfo = memberService.convertMemberToMemberDetailRequestDto(member);
-        model.addAttribute(memberInfo);
+        profileDto = memberService.convertMemberToMemberDetailRequestDto(member);
+        model.addAttribute(profileDto);
         return "profile";
     }
 

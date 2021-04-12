@@ -14,7 +14,7 @@ import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.UserMember;
-import com.project.pagu.member.model.MemberDetailRequestDto;
+import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 
@@ -28,9 +28,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Created by IntelliJ IDEA
@@ -52,7 +49,7 @@ public class MemberServiceImplTest {
 
     private MemberSaveRequestDto dto;
 
-    private MemberDetailRequestDto detailRequestDto;
+    private ProfileRequestDto detailRequestDto;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")

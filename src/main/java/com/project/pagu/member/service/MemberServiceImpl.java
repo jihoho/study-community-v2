@@ -3,28 +3,21 @@ package com.project.pagu.member.service;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
-import com.project.pagu.member.domain.Role;
 
 import com.project.pagu.member.domain.UserMember;
-import com.project.pagu.member.model.MemberDetailRequestDto;
+import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +67,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 //todo : 예외 처리 수정
                 .orElseThrow(() -> new IllegalArgumentException());
     }
+
     @Override
     public void login(Member member) {
         UserDetails userDetails = loadUserByUsername(member.getEmail());
@@ -93,9 +87,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return new UserMember(member);
     }
 
-    public MemberDetailRequestDto convertMemberToMemberDetailRequestDto(Member member) {
-        MemberDetailRequestDto memberDetailRequestDto = MemberDetailRequestDto
-                .builder()
+    @Override
+    public ProfileRequestDto convertMemberToMemberDetailRequestDto(Member member) {
+        return ProfileRequestDto.builder()
                 .email(member.getEmail())
                 .memberType(member.getMemberType().getKey())
                 .nickname(member.getNickname())
@@ -105,6 +99,5 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .career(member.getCareer())
                 .position(member.getPostion())
                 .build();
-        return memberDetailRequestDto;
     }
 }
