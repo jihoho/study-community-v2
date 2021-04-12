@@ -329,7 +329,7 @@ class MemberControllerTest {
         mockMvc.perform(get("/login"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"))
-                .andExpect(unauthenticated());
+                .andExpect(authenticated());
     }
 
 }
