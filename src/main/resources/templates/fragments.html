@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head th:fragment="head">
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>PAGU</title>
-    <link href="/static/css/pagu-nav.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="/css/pagu-nav.css" rel="stylesheet">
-    <link href="/css/main-body.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="/css/pagu-nav.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <link href="/css/pagu-nav.css" rel="stylesheet" />
+    <link href="/css/main-body.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="/css/board-form.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="/css/board-detail.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="/css/board-form.css" rel="stylesheet" type="text/css" media="screen" />
@@ -19,87 +18,82 @@
     <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.1.0/dist/jdenticon.min.js" async integrity="sha384-VngWWnG9GS4jDgsGEUNaoRQtfBGiIKZTiXwm9KpgAeaRn6Y/1tAFiyXqSzqC8Ga/" crossorigin="anonymous"></script>
 </head>
 <body>
-
-    <div th:fragment="pagu-nav">
-        <!--todo: 타임리프 연동하여 로그인시 메뉴 상태 변경, 검색 기능 추가, fragment로 분리-->
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <!-- 로고 -->
-            <a class="navbar-brand" th:href="@{/}"> PAGU</a>
-            <!-- 화면 줄어들었을 때 -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- 검색창 -->
-                <div class="form-box">
-                    <form class="form-inline my-2 my-lg-0 navbar-form mr-auto">
-                        <div class="input-group input-group-search mx-auto">
-                            <input type="search" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-button-addon" />
-                            <button class="btn btn-" type="submit" id="search-button-addon">&#128269;</button>
-                        </div>
-                    </form>
-                </div>
-                <!-- 메뉴 -->
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/login}">Login</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/sign-up}">SignUp</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/profile}">MyPage</a>
-                    </li>
-                    <li sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button class="nav-button" type="submit">Logout</button>
-                        </form>
-                    </li>
-                </ul>
+<div th:fragment="pagu-nav">
+    <!--todo: 타임리프 연동하여 로그인시 메뉴 상태 변경, 검색 기능 추가, fragment로 분리-->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <!-- 로고 -->
+        <a class="navbar-brand" th:href="@{/}"> PAGU</a>
+        <!-- 화면 줄어들었을 때 -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- 검색창 -->
+            <div class="form-box">
+                <form class="form-inline my-2 my-lg-0 navbar-form mr-auto">
+                    <div class="input-group input-group-search mx-auto">
+                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-button-addon" />
+                        <button class="btn btn-" type="submit" id="search-button-addon">&#128269;</button>
+                    </div>
+                </form>
             </div>
-        </nav>
-    </div>
-
-    <div th:fragment="board-head-example">
-        <li class="list-group-item list-group-small">
-            <div>
-                <div style="float: left;">
-                    <a th:href="@{/boards/1}">
-                        <span class="list-field">
-                            여기는 스터디 제목~~~
-                        </span>
-                    </a>
-                </div>
-                <div style="float: right;">
-                    <img class="list-profile-img" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10">
-                    <a href="">
-                        <span class="list-field">
-                            닉네임
-                        </span>
-                    </a>
-                    <span class="list-field list-write-time">
-                        2021-03-19 오후 3시 34분
-                    </span>
-                </div>
+            <!-- 메뉴 -->
+            <ul class="navbar-nav ml-auto">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/login}">Login</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/sign-up}">SignUp</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_GUEST')" class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/profile}">MyPage</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_GUEST')" class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div th:fragment="board-head-example">
+    <li class="list-group-item list-group-small">
+        <div>
+            <div style="float: left;">
+                <a th:href="@{/boards/1}">
+                            <span class="list-field">
+                                여기는 스터디 제목~~~
+                            </span>
+                </a>
             </div>
-        </li>
-    </div>
-
-    <div th:fragment="boards-head-example">
-        <td><a th:href="@{/boards/1}"><span>여기는 스터디 제목~~~~~~~</span></a></td>
-        <td><span>강남역 인근 ...</span></td>
-        <td>nickname</td>
-        <td>2021-03-21 12:30:00</td>
-        <td class="align-center">
-            <button type="button" class="btn btn-primary btn-sm active">Web</button>
-            <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-            <button type="button" class="btn btn-primary btn-sm active">JPA</button>
-        </td>
-        <td class="align-center">
-            <button type="button" class="btn btn-success active">모집중</button>
-        </td>
-    </div>
-
-
+            <div style="float: right;">
+                <img class="list-profile-img" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
+                <a href="">
+                            <span class="list-field">
+                                닉네임
+                            </span>
+                </a>
+                <span class="list-field list-write-time">
+                            2021-03-19 오후 3시 34분
+                        </span>
+            </div>
+        </div>
+    </li>
+</div>
+<div th:fragment="boards-head-example">
+    <td>
+        <a th:href="@{/boards/1}"><span>여기는 스터디 제목~~~~~~~</span></a>
+    </td>
+    <td><span>강남역 인근 ...</span></td>
+    <td>nickname</td>
+    <td>2021-03-21 12:30:00</td>
+    <td class="align-center">
+        <button type="button" class="btn btn-primary btn-sm active">Web</button>
+        <button type="button" class="btn btn-primary btn-sm active">Backend</button>
+        <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+    </td>
+    <td class="align-center">
+        <button type="button" class="btn btn-success active">모집중</button>
+    </td>
+</div>
 </body>
 </html>

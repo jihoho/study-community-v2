@@ -3,6 +3,7 @@ package com.project.pagu.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -12,8 +13,11 @@ import static org.mockito.Mockito.verify;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
+import com.project.pagu.member.domain.UserMember;
+import com.project.pagu.member.model.MemberDetailRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +28,9 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Created by IntelliJ IDEA
@@ -44,6 +51,8 @@ public class MemberServiceImplTest {
     private ArgumentCaptor<Member> argumentCaptor;
 
     private MemberSaveRequestDto dto;
+
+    private MemberDetailRequestDto detailRequestDto;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")
@@ -126,6 +135,21 @@ public class MemberServiceImplTest {
         verify(memberRepository, times(1)).findByEmail(dto.getEmail());
         assertNotNull(member);
         assertThat(member.getEmail()).isEqualTo("123@email.com");
+    }
+    
+    @Test
+    @DisplayName("loadUserByUsername 테스트")
+    void load_user_by_username(){
+        // given
+        Member member=dto.toEntity();
+        Optional<Member> optionalMember=Optional.of(member);
+        given(memberRepository.findById(any())).willReturn(optionalMember);
+
+        // when
+        assertEquals(memberService.loadUserByUsername(member.getEmail()),new UserMember(member));
+
+        // then
+        verify(memberRepository, times(1)).findById(any());
     }
 
 }

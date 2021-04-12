@@ -1,12 +1,11 @@
 package com.project.pagu.member.controller;
 
-import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
+import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
-import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,7 +31,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("memberSaveRequestDto")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
@@ -41,14 +40,24 @@ public class MemberController {
         webDataBinder.addValidators(signUpValidation);
     }
 
-    @GetMapping("profile")
-    public String profile(@AuthenticationPrincipal User user, Model model) {
-        if (user == null) {
-            return "/login";
+    @GetMapping("login")
+    public String login(HttpServletRequest request, @CurrentMember Member member) {
+        if (member != null) {
+            return "redirect:/";
         }
-        Member member = memberService.findByEmail(user.getUsername());
-        model.addAttribute(member);
-        return "/profile";
+
+        String referrer = request.getHeader("Referer");
+        request.getSession().setAttribute("prevPage", referrer);
+
+        return "login";
+    }
+
+    @GetMapping("profile")
+    public String profile(@CurrentMember Member member, MemberDetailRequestDto memberInfo,
+            Model model) {
+        memberInfo = memberService.convertMemberToMemberDetailRequestDto(member);
+        model.addAttribute(memberInfo);
+        return "profile";
     }
 
     @GetMapping("sign-up")
@@ -85,11 +94,12 @@ public class MemberController {
             BindingResult result, SessionStatus sessionStatus) {
 
         if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
-                    memberSaveRequestDto.getAuthKeyInput(), result)) {
+                memberSaveRequestDto.getAuthKeyInput(), result)) {
             return "email-check";
         }
 
         memberService.saveMember(memberSaveRequestDto);
+        memberService.autoLogin(memberSaveRequestDto.toEntity());
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }

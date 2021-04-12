@@ -2,48 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head"></head>
 <body>
-    <!-- todo: 페이지 이동 -->
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div class="card card-signin my-5">
-                    <div class="card-body">
-                        <!-- 로고 -->
-                        <a class="card-title text-center" href="">
-                            <h1 class="logo">PAGU</h1>
-                        </a>
-                        <div class="form-signin">
-                            <!-- 회원가입 폼 -->
-                            <form th:action="@{/login}" method="post">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                <div class="form-label-group mt-5">
-                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus />
-                                    <label for="email">이메일</label>
-                                </div>
-                                <div class="form-label-group">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
-                                    <label for="password">비밀번호</label>
-                                </div>
-                                <button class="btn btn-lg btn-sign-in btn-block mt-4" type="submit">
-                                    로그인
-                                </button>
-                                <hr class="my-4" />
-                            </form>
-                            <!-- 구글 로그인 이동 페이지 버튼 -->
-                            <button onclick="location.href='/oauth2/authorization/google'" class="btn btn-lg btn-google btn-block"><a href="/oauth2/authorization/google" class="fab fa-google mr-2"></a> 구글 로그인</button>
+<!-- todo: 페이지 이동 -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <!-- 로고 -->
+                    <a class="card-title text-center" href="">
+                        <h1 class="logo">PAGU</h1>
+                    </a>
+                    <div class="form-signin">
+                        <!-- 회원가입 폼 -->
+                        <form th:action="@{/login-process}" method="post">
+                            <!--     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+                            <div class="form-label-group mt-5">
+                                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus />
+                                <label for="inputEmail">이메일</label>
+                            </div>
+                            <div class="form-label-group">
+                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required />
+                                <label for="inputPassword">비밀번호</label>
+                                <small class="form-text text-danger" th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></small>
+                            </div>
+
+                            <button class="btn btn-lg btn-sign-in btn-block mt-4" type="submit">
+                                로그인
+                            </button>
                             <hr class="my-4" />
-                        </div>
-                        <!-- 비밀번호 찾기 % 회원가입 -->
-                        <div class="form-inline form-group">
-                            <a href="" class="mr-5 ml-5">비밀번호를 찾기</a>
-                            <div class="updown"></div>
-                            <a th:href="@{/sign-up}" class="mr-5 ml-5">회원가입</a>
-                        </div>
+                        </form>
+                        <!-- 구글 로그인 이동 페이지 버튼 -->
+                        <button onclick="location.href='/oauth2/authorization/google'" class="btn btn-lg btn-google btn-block"><a href="/oauth2/authorization/google" class="fab fa-google mr-2"></a> 구글 로그인</button>
+                        <hr class="my-4" />
+                    </div>
+                    <!-- 비밀번호 찾기 % 회원가입 -->
+                    <div class="form-inline form-group">
+                        <a href="" class="mr-5 ml-5">비밀번호를 찾기</a>
+                        <div class="updown"></div>
+                        <a th:href="@{/sign-up}" class="mr-5 ml-5">회원가입</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
 </body>
 </html>

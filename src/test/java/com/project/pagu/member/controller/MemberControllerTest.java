@@ -3,6 +3,7 @@ package com.project.pagu.member.controller;
 import static com.project.pagu.util.MultiValueMapConverter.convert;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -14,14 +15,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 import com.project.pagu.member.service.MemberServiceImpl;
 import java.util.List;
+import com.project.pagu.member.service.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -217,8 +223,8 @@ class MemberControllerTest {
                 .andExpect(view().name("error")); // 이메일 인증 성공 후 profile 페이지로 이동
     }
 
-    @Test
-    @DisplayName("이메일 인증 성공 테스트")
+
+    @DisplayName("이메일 인증 성공 후 sign-up-success 페이지로 이동")
     void emailCheckSuccessTest() throws Exception {
         // when
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
@@ -249,19 +255,12 @@ class MemberControllerTest {
                 .andExpect(view().name("email-check"));
     }
 
-    @DisplayName("프로필 페이지로 이동한다.")
+    @DisplayName("권한이 없는 사용자가 프로필 페이지로 이동 시 로그인 페이지로 redirect 된다.")
     @Test
-    @WithMockUser
-    void profile() throws Exception {
+    void get_profile_fail() throws Exception {
         mockMvc.perform(get("/profile"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"))
-                .andExpect(content().string(containsString("프로필 정보")))
-                .andExpect(content().string(containsString("이메일")))
-                .andExpect(content().string(containsString("닉네임")))
-                .andExpect(content().string(containsString("포지션")))
-                .andExpect(content().string(containsString("경력")))
-                .andExpect(content().string(containsString("링크")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"))
                 .andDo(print());
     }
 
@@ -276,7 +275,7 @@ class MemberControllerTest {
 
     @DisplayName("로그인 페이지로 이동한다.")
     @Test
-    void login() throws Exception {
+    void get_login() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
