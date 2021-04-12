@@ -4,6 +4,7 @@ import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
+
 import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.MemberDetailRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,11 +64,18 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = memberRepository.save(memberSaveRequestDto.toEntity());
-        return new MemberId(member.getEmail(), member.getMemberType());
+        Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
+        login(saveMember);
+        return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
     }
 
     @Override
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                //todo : 예외 처리 수정
+                .orElseThrow(() -> new IllegalArgumentException());
+    }
+
     public void autoLogin(Member member) {
         UserDetails userDetails = loadUserByUsername(member.getEmail());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

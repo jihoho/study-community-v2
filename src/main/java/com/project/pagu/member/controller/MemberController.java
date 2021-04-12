@@ -1,16 +1,15 @@
 package com.project.pagu.member.controller;
 
-import com.project.pagu.annotation.CurrentMember;
-import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.model.MemberDetailRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -83,8 +82,8 @@ public class MemberController {
 
     @GetMapping("email-check")
     public String emailCheck(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        if (memberSaveRequestDto.getEmail() == null || memberSaveRequestDto.getAuthKey() == null) {
-            return "redirect:/sign-up";
+        if (memberSaveRequestDto.getEmail().isEmpty()) {
+            return "error";
         }
         model.addAttribute(memberSaveRequestDto);
         return "email-check";

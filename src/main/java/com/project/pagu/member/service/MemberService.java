@@ -24,4 +24,5 @@ public interface MemberService {
 
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 
+    Member findByEmail(String username);
 }

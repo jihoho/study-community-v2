@@ -1,7 +1,5 @@
 package com.project.pagu.config;
 
-import com.project.pagu.handler.CustomLoginSuccessHandler;
-import com.project.pagu.member.domain.Role;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final MemberServiceImpl memberService;
 
     private final MemberServiceImpl memberServiceImpl;
 
@@ -58,10 +57,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .and()
-
+          
                 .oauth2Login().loginPage("/oauth-login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(authKeyEncoder());
     }
 
     @Bean
@@ -86,6 +90,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 }
-
-
-
