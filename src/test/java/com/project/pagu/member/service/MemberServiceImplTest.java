@@ -2,6 +2,7 @@ package com.project.pagu.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,6 +18,7 @@ import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+import com.project.pagu.member.domain.Role;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -148,5 +150,49 @@ public class MemberServiceImplTest {
         // then
         verify(memberRepository, times(1)).findById(any());
     }
+    
+    
+    @Test
+    @DisplayName("Member엔티티 profileRequestDto 변환 테스트")
+    void  convert_member_to_profiledto() throws Exception{
+        // given
+        Member targetMember=Member.builder()
+                .email("email@email.com")
+                .memberType(MemberType.NORMAL)
+                .nickname("nick")
+                .password("1234")
+                .filename("filename.png")
+                .link("https://link.com")
+                .info("안녕하세요")
+                .career("취준생")
+                .postion("웹 백엔드")
+                .role(Role.GUEST)
+                .build();
+
+        ProfileRequestDto expectedDto=ProfileRequestDto.builder()
+                .email("email@email.com")
+                .memberType(MemberType.NORMAL.getKey())
+                .nickname("nick")
+                .filename("filename.png")
+                .link("https://link.com")
+                .info("안녕하세요")
+                .career("취준생")
+                .position("웹 백엔드")
+                .build();
+        // when
+        ProfileRequestDto resultDto=memberService.convertMemberToProfileRequestDto(targetMember);
+
+        // then
+        assertAll(
+                ()->assertEquals(expectedDto.getEmail(),resultDto.getEmail()),
+                ()->assertEquals(expectedDto.getMemberType(),resultDto.getMemberType()),
+                ()->assertEquals(expectedDto.getNickname(),resultDto.getNickname()),
+                ()->assertEquals(expectedDto.getFilename(),resultDto.getFilename()),
+                ()->assertEquals(expectedDto.getLink(),resultDto.getLink()),
+                ()->assertEquals(expectedDto.getCareer(),resultDto.getCareer()),
+                ()->assertEquals(expectedDto.getPosition(),resultDto.getPosition())
+        );
+    }
+    
 
 }
