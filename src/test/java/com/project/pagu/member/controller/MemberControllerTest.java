@@ -4,6 +4,7 @@ import static com.project.pagu.util.MultiValueMapConverter.convert;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -268,8 +269,8 @@ class MemberControllerTest {
     @Test
     void not_login_profile() throws Exception {
         mockMvc.perform(get("/profile"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"))
                 .andDo(print());
     }
 
@@ -297,7 +298,7 @@ class MemberControllerTest {
 
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/login-process")
                 .params(params)
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -309,12 +310,12 @@ class MemberControllerTest {
     @DisplayName("로그인에 실패한다.")
     @Test
     void login_fail() throws Exception {
-        given(memberService.loadUserByUsername(any())).willReturn(any());
-
-        MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
-
-        mockMvc.perform(post("/login")
-                .params(params)
+        memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
+        given(memberService.loadUserByUsername(anyString()))
+                .willReturn(new UserMember(memberSaveDto.toEntity()));
+        mockMvc.perform(post("/login-process")
+                .param("email", "yy123@email.com")
+                .param("password", "dif12314!") // 기존 비밀번호(abcde1234!) 와 다른 비밀번호
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?error"))

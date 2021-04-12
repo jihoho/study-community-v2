@@ -20,7 +20,7 @@ public interface MemberService {
 
     Optional<Member> findById(MemberId memberId);
 
-    void autoLogin(Member member);
+    void login(Member member);
 
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 

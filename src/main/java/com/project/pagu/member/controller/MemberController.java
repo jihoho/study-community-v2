@@ -1,11 +1,15 @@
 package com.project.pagu.member.controller;
 
+import com.project.pagu.annotation.CurrentMember;
+import com.project.pagu.member.domain.Member;
+import com.project.pagu.member.model.MemberDetailRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.signup.SignUpManager;
 import com.project.pagu.validation.SignUpValidation;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -99,7 +103,7 @@ public class MemberController {
         }
 
         memberService.saveMember(memberSaveRequestDto);
-        memberService.autoLogin(memberSaveRequestDto.toEntity());
+        memberService.login(memberSaveRequestDto.toEntity());
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }

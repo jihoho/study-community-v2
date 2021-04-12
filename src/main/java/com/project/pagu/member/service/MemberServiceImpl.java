@@ -65,7 +65,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
-        login(saveMember);
         return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
     }
 
@@ -75,8 +74,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 //todo : 예외 처리 수정
                 .orElseThrow(() -> new IllegalArgumentException());
     }
-
-    public void autoLogin(Member member) {
+    @Override
+    public void login(Member member) {
         UserDetails userDetails = loadUserByUsername(member.getEmail());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 userDetails,

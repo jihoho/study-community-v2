@@ -1,5 +1,6 @@
 package com.project.pagu.config;
 
+import com.project.pagu.handler.CustomLoginSuccessHandler;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.project.pagu.member.domain.Role;
 
 /**
  * Created by IntelliJ IDEA User: yhh1056@naver.com Date: 2021/03/31 Time: 5:45 오후
@@ -22,11 +24,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+
     private final MemberServiceImpl memberService;
 
-    private final MemberServiceImpl memberServiceImpl;
-
     private final PasswordEncoder passwordEncoder;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -63,11 +65,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userService(customOAuth2UserService);
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(authKeyEncoder());
-    }
-
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return new CustomLoginSuccessHandler("/");
@@ -75,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberServiceImpl)
+        auth.userDetailsService(memberService)
                 .passwordEncoder(passwordEncoder)
                 .and().inMemoryAuthentication()
                 .withUser("guest")
