@@ -29,38 +29,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /** 임시적으로 모든 요청 허용*/
 
         http.authorizeRequests()
-                .antMatchers("/sign-up/**", "/login/**", "/email-check", "/sign-up-success")
-                .permitAll()
-                .antMatchers("/profile")
-                .hasAnyAuthority(Role.GUEST.getKey(), Role.USER.getKey())
-                .anyRequest().permitAll()
-                .and()
+                .antMatchers("/sign-up/**", "/login/**", "/email-check", "/sign-up-success").permitAll()
+                .antMatchers("/profile").hasAnyAuthority(Role.GUEST.getKey(), Role.USER.getKey())
+                .anyRequest().permitAll();
 
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+        http.csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
-                .formLogin()
+        http.formLogin()
                 .loginPage("/login").permitAll()
                 .loginProcessingUrl("/login-process")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
-                .successHandler(successHandler())
-                .and()
+                .successHandler(successHandler());
 
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        http.logout()
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .and()
-          
-                .oauth2Login().loginPage("/oauth-login")
+                .invalidateHttpSession(true);
+
+        http.oauth2Login()
+                .loginPage("/oauth-login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
     }
@@ -77,7 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().inMemoryAuthentication()
                 .withUser("guest")
                 .password("{noop}123")
-
                 .roles("GUEST")
                 .and()
                 .withUser("user")
