@@ -57,13 +57,13 @@
                 <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-info-tab">
                     <h3 class="mb-4">프로필 정보</h3>
                     <!-- 프로필 수정 폼 -->
-                    <form th:action="@{/members}" method="post" th:object="${memberDetailRequestDto}">
+                    <form th:action="@{/members}" method="post" th:object="${profileRequestDto}">
                         <div class="row">
                             <!-- 프로필 사진 todo : 사진 변경하기 누를 시 사진 등록하는 기능 필요-->
                             <div class="col-md-4">
                                 <div>
-                                    <svg th:if="${#strings.isEmpty(memberDetailRequestDto.imageUrl)}" th:data-jdenticon-value="${memberDetailRequestDto.nickname}" width="200" height="200"></svg>
-                                    <img th:if="${!#strings.isEmpty(memberDetailRequestDto.imageUrl)}" th:src="${memberDetailRequestDto.imageUrl}" width="200" height="200" />
+                                    <svg th:if="${#strings.isEmpty(profileRequestDto.filename)}" th:data-jdenticon-value="${profileRequestDto.nickname}" width="200" height="200"></svg>
+                                    <img th:if="${!#strings.isEmpty(profileRequestDto.filename)}" th:src="${profileRequestDto.filename}" width="200" height="200" />
                                 </div>
                                 <div class="text-center">
                                     <button class="btn btn-secondary">사진 변경하기</button>
