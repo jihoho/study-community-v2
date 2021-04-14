@@ -2,7 +2,8 @@ package com.project.pagu.board.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.member.domain.Member;
-import java.security.Principal;
+import com.project.pagu.member.model.OAuthMemberSaveDto;
+import com.project.pagu.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * Created by IntelliJ IDEA
@@ -27,10 +29,29 @@ public class MainController {
     private static final String authorizationRequestBaseUri = "oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
     private final ClientRegistrationRepository clientRegistrationRepository;
+    private final MemberService memberService;
 
     @GetMapping("/")
     public String mainPage() {
         return "main-body";
+    }
+
+    @GetMapping("/sign-up-google")
+    public String signUpGoogle(Model model, @CurrentMember Member member) {
+        if (!memberService.existsByEmail(member.getEmail())) {
+            model.addAttribute(new OAuthMemberSaveDto());
+            return "sign-up-google";
+        }
+
+        return "/main-body";
+    }
+
+    @PostMapping("/sign-up-google")
+    public String submitSignUpGoogle(@CurrentMember Member member, OAuthMemberSaveDto oAuthMemberSaveDto) {
+        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getFilename());
+
+        memberService.saveMember(oAuthMemberSaveDto);
+        return "redirect:/";
     }
 
     @SuppressWarnings("unchecked")

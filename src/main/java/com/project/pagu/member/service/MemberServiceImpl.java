@@ -5,6 +5,7 @@ import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 
 import com.project.pagu.member.domain.UserMember;
+import com.project.pagu.member.model.OAuthMemberSaveDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
@@ -99,5 +100,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .career(member.getCareer())
                 .position(member.getPostion())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public Member saveMember(OAuthMemberSaveDto OAuthMemberSaveDto) {
+        return memberRepository.save(OAuthMemberSaveDto.toEntity());
     }
 }
