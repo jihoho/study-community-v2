@@ -55,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.oauth2Login()
                 .loginPage("/oauth-login")
+                .defaultSuccessUrl("/sign-up-google")
+                .failureUrl("/sign-up")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
     }
