@@ -26,6 +26,8 @@ public interface MemberService {
 
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 
+    Member save(Member member);
+
     Member findByEmail(String username);
 
     ProfileRequestDto convertMemberToProfileRequestDto(Member member);

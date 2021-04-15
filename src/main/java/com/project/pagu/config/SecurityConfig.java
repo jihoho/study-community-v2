@@ -1,6 +1,7 @@
 package com.project.pagu.config;
 
 import com.project.pagu.handler.CustomLoginSuccessHandler;
+import com.project.pagu.handler.OAuth2SuccessHandler;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.project.pagu.member.domain.Role;
 
 /**
@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberServiceImpl memberService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -54,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
 
         http.oauth2Login()
+                .successHandler(oAuth2SuccessHandler)
                 .loginPage("/oauth-login")
-                .defaultSuccessUrl("/sign-up-google")
                 .failureUrl("/sign-up")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);

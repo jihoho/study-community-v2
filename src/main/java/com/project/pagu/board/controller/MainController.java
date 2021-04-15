@@ -48,17 +48,14 @@ public class MainController {
     }
 
     @GetMapping("/sign-up-google")
-    public String signUpGoogle(Model model, @CurrentMember Member member) {
-        if (!memberService.existsByEmail(member.getEmail())) {
-            model.addAttribute(new OauthMemberSaveDto());
-            return "sign-up-google";
-        }
-
-        return "/main-body";
+    public String signUpGoogle(Model model) {
+        model.addAttribute(new OauthMemberSaveDto());
+        return "sign-up-google";
     }
 
     @PostMapping("/sign-up-google")
-    public String submitSignUpGoogle(@CurrentMember Member member, @Valid OauthMemberSaveDto oAuthMemberSaveDto,
+    public String submitSignUpGoogle(@CurrentMember Member member,
+            @Valid OauthMemberSaveDto oAuthMemberSaveDto,
             BindingResult result) {
         if (result.hasErrors()) {
             return "sign-up-google";
