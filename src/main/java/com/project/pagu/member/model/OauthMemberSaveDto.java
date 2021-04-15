@@ -3,6 +3,8 @@ package com.project.pagu.member.model;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +16,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OAuthMemberSaveDto {
+public class OauthMemberSaveDto {
 
     private String email;
     private String nickname;

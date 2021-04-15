@@ -2,7 +2,7 @@ package com.project.pagu.member.service;
 
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
-import com.project.pagu.member.model.OAuthMemberSaveDto;
+import com.project.pagu.member.model.OauthMemberSaveDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import java.util.Optional;
@@ -30,5 +30,5 @@ public interface MemberService {
 
     ProfileRequestDto convertMemberToProfileRequestDto(Member member);
 
-    Member saveMember(OAuthMemberSaveDto OAuthMemberSaveDto);
+    Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
 }

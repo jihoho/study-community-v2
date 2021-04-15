@@ -39,7 +39,7 @@ public class MainController {
     @GetMapping("/sign-up-google")
     public String signUpGoogle(Model model, @CurrentMember Member member) {
         if (!memberService.existsByEmail(member.getEmail())) {
-            model.addAttribute(new OAuthMemberSaveDto());
+            model.addAttribute(new OauthMemberSaveDto());
             return "sign-up-google";
         }
 
@@ -47,7 +47,7 @@ public class MainController {
     }
 
     @PostMapping("/sign-up-google")
-    public String submitSignUpGoogle(@CurrentMember Member member, OAuthMemberSaveDto oAuthMemberSaveDto) {
+    public String submitSignUpGoogle(@CurrentMember Member member, @Valid OauthMemberSaveDto oAuthMemberSaveDto) {
         oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getFilename());
 
         memberService.saveMember(oAuthMemberSaveDto);
