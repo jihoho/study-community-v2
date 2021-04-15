@@ -2,17 +2,24 @@ package com.project.pagu.board.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.member.domain.Member;
-import java.security.Principal;
+import com.project.pagu.member.model.OauthMemberSaveDto;
+import com.project.pagu.member.service.MemberService;
+import com.project.pagu.validation.OauthSignUpValidation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * Created by IntelliJ IDEA
@@ -27,10 +34,40 @@ public class MainController {
     private static final String authorizationRequestBaseUri = "oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
     private final ClientRegistrationRepository clientRegistrationRepository;
+    private final MemberService memberService;
+    private final OauthSignUpValidation oauthSignUpValidation;
+
+    @InitBinder("oauthMemberSaveDto")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(oauthSignUpValidation);
+    }
 
     @GetMapping("/")
     public String mainPage() {
         return "main-body";
+    }
+
+    @GetMapping("/sign-up-google")
+    public String signUpGoogle(Model model, @CurrentMember Member member) {
+        if (!memberService.existsByEmail(member.getEmail())) {
+            model.addAttribute(new OauthMemberSaveDto());
+            return "sign-up-google";
+        }
+
+        return "/main-body";
+    }
+
+    @PostMapping("/sign-up-google")
+    public String submitSignUpGoogle(@CurrentMember Member member, @Valid OauthMemberSaveDto oAuthMemberSaveDto,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            return "sign-up-google";
+        }
+
+        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getFilename());
+
+        memberService.saveMember(oAuthMemberSaveDto);
+        return "redirect:/";
     }
 
     @SuppressWarnings("unchecked")

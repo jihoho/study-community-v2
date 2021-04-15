@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-7 col-lg-10 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <!-- 로고 -->
+                        <a class="card-title text-center" href="">
+                            <h1 class="logo">PAGU</h1>
+                        </a>
+                        <div class="form-signin">
+                            <!-- 회원가입 폼 -->
+                            <form th:action="@{/sign-up-google}" th:object="${oauthMemberSaveDto}" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <!-- 닉네임 -->
+                                <div class="form-label-group mt-5">
+                                    <input type="text" id="inputNickname" th:field="*{nickname}" class="form-control" placeholder="nickname" required />
+                                    <label for="inputNickname" >2 ~ 8 글자 사이의 닉네임을 입력해주세요</label>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></small>
+                                </div>
+
+                                <!-- 구글 가입 버튼 -->
+                                <button class="btn btn-lg btn-sign-in btn-block mt-5" type="submit">
+                                    가입 완료
+                                </button>
+                            </form>
+                            <hr class="my-4" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
