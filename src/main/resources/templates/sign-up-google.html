@@ -20,8 +20,7 @@
                                 <div class="form-label-group mt-5">
                                     <input type="text" id="inputNickname" th:field="*{nickname}" class="form-control" placeholder="nickname" required />
                                     <label for="inputNickname" >2 ~ 8 글자 사이의 닉네임을 입력해주세요</label>
-                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->닉네임이 중복되었습니다</small>
-                                    <small class="form-text text-danger"> <!--th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"> -->2 ~ 8 글자 사이의 닉네임을 입력해주세요</small>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></small>
                                 </div>
 
                                 <!-- 구글 가입 버튼 -->
