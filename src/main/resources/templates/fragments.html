@@ -48,8 +48,10 @@
                 <li sec:authorize="isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/profile}">MyPage</a>
                 </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/logout}">Logout</a>
+                <li sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button class="nav-button" type="submit">Logout</button>
+                    </form>
                 </li>
             </ul>
         </div>

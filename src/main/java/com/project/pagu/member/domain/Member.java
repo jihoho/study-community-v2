@@ -70,6 +70,10 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
+    public void updateImage(String filename) {
+        this.filename = filename;
+    }
+
     public String getRoleKey() {
         return this.role.getKey();
     }

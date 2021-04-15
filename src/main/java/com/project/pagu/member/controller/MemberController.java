@@ -55,10 +55,10 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(@CurrentMember Member member, ProfileRequestDto profileDto,
-            Model model) {
-        profileDto = memberService.convertMemberToProfileRequestDto(member);
-        model.addAttribute(profileDto);
+    public String profile(@CurrentMember Member member, Model model) {
+        Member findMember = memberService.findByEmail(member.getEmail());
+        ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(findMember);
+        model.addAttribute(profileRequestDto);
         return "profile";
     }
 
