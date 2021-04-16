@@ -31,7 +31,10 @@ public class ProfileRequestDto {
     private String nickname;
 
     @NotBlank
-    private String filename;
+    private String imageFile;
+
+    @NotBlank
+    private String imageUrl;
 
     @NotBlank
     private String link;

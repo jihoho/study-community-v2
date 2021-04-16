@@ -31,7 +31,7 @@ public class OAuthAttributes {
     private static OauthMember ofGoogle(Map<String, Object> attributes) {
         return new OauthMember(Member.builder()
                 .email((String) attributes.get("email"))
-                .filename((String) attributes.get("picture"))
+                .imageUrl((String) attributes.get("picture"))
                 .memberType(MemberType.GOOGLE)
                 .role(Role.GUEST)
                 .build());

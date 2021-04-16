@@ -36,7 +36,9 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String filename;
+    private String imageFile;
+
+    private String imageUrl;
 
     private String link;
 
@@ -52,12 +54,12 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     public Member(String email, MemberType memberType, String nickname,
-            String password, String filename, Role role) {
+            String password, String imageFile, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.password = password;
         this.nickname = nickname;
-        this.filename = filename;
+        this.imageFile = imageFile;
         this.role = role;
     }
 
@@ -71,7 +73,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public void updateImage(String filename) {
-        this.filename = filename;
+        this.imageFile = filename;
     }
 
     public String getRoleKey() {
