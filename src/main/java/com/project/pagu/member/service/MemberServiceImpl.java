@@ -114,4 +114,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
         return memberRepository.save(OAuthMemberSaveDto.toEntity());
     }
+
+    @Override
+    @Transactional
+    public void update(Member findMember, ProfileRequestDto profileRequestDto) {
+        findMember.update(profileRequestDto.getImageFile(),
+                profileRequestDto.getLink(),
+                profileRequestDto.getInfo(),
+                profileRequestDto.getCareer(),
+                profileRequestDto.getPosition());
+    }
 }

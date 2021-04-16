@@ -2,6 +2,7 @@ package com.project.pagu.member.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.member.domain.Member;
+import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
@@ -60,6 +61,17 @@ public class MemberController {
         ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(findMember);
         model.addAttribute(profileRequestDto);
         return "profile";
+    }
+
+    @PostMapping("/members/update")
+    public String updateMember(@CurrentMember Member member, ProfileRequestDto profileRequestDto) {
+        Member findMember = memberService
+                .findById(new MemberId(member.getEmail(), member.getMemberType()))
+                //** todo exception handling , validation */
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        memberService.update(findMember, profileRequestDto);
+        return "redirect:/profile";
     }
 
     @GetMapping("sign-up")

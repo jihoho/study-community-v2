@@ -33,4 +33,6 @@ public interface MemberService {
     ProfileRequestDto convertMemberToProfileRequestDto(Member member);
 
     Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
+
+    void update(Member findMember, ProfileRequestDto profileRequestDto);
 }
