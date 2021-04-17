@@ -161,7 +161,7 @@ public class MemberServiceImplTest {
                 .memberType(MemberType.NORMAL)
                 .nickname("nick")
                 .password("1234")
-                .filename("filename.png")
+                .imageFile("filename.png")
                 .link("https://link.com")
                 .info("안녕하세요")
                 .career("취준생")
