@@ -117,8 +117,16 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     @Transactional
-    public void update(Member findMember, ProfileRequestDto profileRequestDto) {
-        findMember.update(profileRequestDto.getImageFile(),
+    public void update(Member member, ProfileRequestDto profileRequestDto) {
+        Member findMember = memberRepository
+                .findById(new MemberId(member.getEmail(), member.getMemberType()))
+                /** exception handling*/
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        findMember.update(
+                findMember.getEmail(),
+                profileRequestDto.getNickname(),
+                findMember.getMemberType(),
                 profileRequestDto.getLink(),
                 profileRequestDto.getInfo(),
                 profileRequestDto.getCareer(),

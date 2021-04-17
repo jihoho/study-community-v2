@@ -55,24 +55,6 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("profile")
-    public String profile(@CurrentMember Member member, Model model) {
-        Member findMember = memberService.findByEmail(member.getEmail());
-        ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(findMember);
-        model.addAttribute(profileRequestDto);
-        return "profile";
-    }
-
-    @PostMapping("/members/update")
-    public String updateMember(@CurrentMember Member member, ProfileRequestDto profileRequestDto) {
-        Member findMember = memberService
-                .findById(new MemberId(member.getEmail(), member.getMemberType()))
-                //** todo exception handling , validation */
-                .orElseThrow(() -> new IllegalArgumentException());
-
-        memberService.update(findMember, profileRequestDto);
-        return "redirect:/profile";
-    }
 
     @GetMapping("sign-up")
     public String signUp(Model model, MemberSaveRequestDto memberSaveRequestDto) {
