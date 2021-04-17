@@ -3,21 +3,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments :: head">
     <style>
-        a .nav-link.active {
-            color: #70ab6b;
-            text-decoration: none;
-            background-color: transparent;
-        }
+      a .nav-link.active {
+        color: #70ab6b;
+        text-decoration: none;
+        background-color: transparent;
+      }
 
-        .nav-pills .nav-link.active {
-            color: #fff;
-            background-color: #70ab6b;
-        }
+      .nav-pills .nav-link.active {
+        color: #fff;
+        background-color: #70ab6b;
+      }
 
-        .tab-content > .active {
-            display: block;
-            margin-right: -146px;
-        }
+      .tab-content > .active {
+        display: block;
+        margin-right: -146px;
+      }
     </style>
 </head>
 <body>
@@ -56,29 +56,30 @@
                 <!-- 프로필 정보 -->
                 <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-info-tab">
                     <h3 class="mb-4">프로필 정보</h3>
-                    <!-- 프로필 수정 폼 -->
-                    <form th:action="@{/members}" method="post" th:object="${profileRequestDto}">
-                        <div class="row">
-                            <!-- 프로필 사진 todo : 사진 변경하기 누를 시 사진 등록하는 기능 필요-->
-                            <div class="col-md-4">
-                                <div>
-                                    <svg th:if="${#strings.isEmpty(profileRequestDto.getImageFile)}" th:data-jdenticon-value="${profileRequestDto.nickname}" width="200" height="200"></svg>
-                                    <img th:if="${!#strings.isEmpty(profileRequestDto.getImageFile)}" th:src="${profileRequestDto.getImageFile}" width="200" height="200" />
-                                </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary">사진 변경하기</button>
-                                </div>
+                    <div class="row">
+                        <!-- 프로필 사진 todo : 사진 변경하기 누를 시 사진 등록하는 기능 필요-->
+                        <div class="col-md-4">
+                            <div>
+                                <svg th:if="${#strings.isEmpty(profileRequestDto.getImageFile)}" th:data-jdenticon-value="${profileRequestDto.email}" width="200" height="200"></svg>
+                                <img th:if="${!#strings.isEmpty(profileRequestDto.getImageFile)}" th:src="${profileRequestDto.getImageFile}" width="200" height="200" />
                             </div>
-                            <div class="col-md-8">
+                            <div class="text-center">
+                                <button class="btn btn-secondary">사진 변경하기</button>
+                            </div>
+                        </div>
+                        <!-- 프로필 수정 폼 -->
+                        <div class="col-md-8">
+                             <form th:action="@{/members/update}" method="post" th:object="${profileRequestDto}">
                                 <!-- 이메일 -->
                                 <div class="form-group">
                                     <label>이메일</label>
-                                    <input type="text" class="form-control" th:field="*{email}" style="display: inline-block;" disabled />
+                                    <input type="text" class="form-control" th:field="*{email}" style="display: inline-block;" readonly />
                                 </div>
                                 <!-- 닉네임 -->
                                 <div class="form-group">
                                     <label>닉네임</label>
                                     <input type="text" class="form-control" th:field="*{nickname}" />
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></small>
                                 </div>
                                 <!-- 포지션 -->
                                 <div class="form-group">
@@ -95,20 +96,19 @@
                                     <label>링크</label>
                                     <input type="text" class="form-control" th:field="*{link}" />
                                 </div>
-                            </div>
-                            <!-- 자기소개 -->
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>자기소개</label>
-                                    <textarea class="form-control text-left" rows="4" th:field="*{info}"> </textarea>
+                                    <!-- 자기소개 -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>자기소개</label>
+                                        <textarea class="form-control text-left" rows="4" th:field="*{info}"> </textarea>
+                                    </div>
                                 </div>
-                            </div>
+                                <div>
+                                    <button class="btn btn-primary" type="submit">변경하기</button>
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <button class="btn btn-primary" type="submit">변경하기</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
                 <!-- 게시물 관리 -->
                 <div class="tab-pane fade" id="boards" role="tabpanel" aria-labelledby="password-tab">
                     <h3 class="mb-4">게시물 관리</h3>
