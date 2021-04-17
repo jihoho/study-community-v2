@@ -84,11 +84,13 @@ public class Member extends BaseTimeEntity {
         return this.memberType.getKey();
     }
 
-    public void update(String imageFile, String link, String info, String career, String position) {
-        this.imageFile = imageFile;
+    public void update(String email, String nickname, MemberType memberType, String link, String info, String career, String postion) {
+        this.email = email;
+        this.nickname = nickname;
+        this.memberType = memberType;
         this.link = link;
         this.info = info;
         this.career = career;
-        this.postion = position;
+        this.postion = postion;
     }
 }
