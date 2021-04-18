@@ -1,5 +1,6 @@
 package com.project.pagu.member.service;
 
+import com.project.pagu.common.FileManager;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by IntelliJ IDEA
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final FileManager fileManager;
 
     @Override
     public Optional<Member> findById(MemberId memberId) {
@@ -64,7 +67,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     @Transactional
-    public Member save(Member member){
+    public Member save(Member member) {
         return memberRepository.save(member);
     }
 
@@ -123,13 +126,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 /** exception handling*/
                 .orElseThrow(() -> new IllegalArgumentException());
 
-        findMember.update(
-                findMember.getEmail(),
-                profileRequestDto.getNickname(),
-                findMember.getMemberType(),
-                profileRequestDto.getLink(),
-                profileRequestDto.getInfo(),
-                profileRequestDto.getCareer(),
-                profileRequestDto.getPosition());
+        updateImageFile(profileRequestDto);
+        findMember.updateProfile(profileRequestDto);
+    }
+
+    private void updateImageFile(ProfileRequestDto profileRequestDto) {
+        MultipartFile uploadFile = profileRequestDto.getMultipartFile();
+
+        if (uploadFile != null) {
+            String fileName = fileManager.createFileName();
+            profileRequestDto.setImageFile(fileName);
+            fileManager.uploadProfileImage(uploadFile, fileName);
+        }
     }
 }

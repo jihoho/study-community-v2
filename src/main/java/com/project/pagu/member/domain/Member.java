@@ -1,6 +1,7 @@
 package com.project.pagu.member.domain;
 
 import com.project.pagu.common.BaseTimeEntity;
+import com.project.pagu.member.model.ProfileRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,8 +73,19 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-    public void updateImage(String filename) {
-        this.imageFile = filename;
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateProfile(ProfileRequestDto dto) {
+        this.nickname = dto.getNickname();
+        this.imageUrl = dto.getImageUrl();
+        this.imageFile = dto.getImageFile();
+        this.link = dto.getLink();
+        this.info = dto.getInfo();
+        this.career = dto.getCareer();
+        this.postion = dto.getPosition();
+        this.role = Role.USER;
     }
 
     public String getRoleKey() {
@@ -82,15 +94,5 @@ public class Member extends BaseTimeEntity {
 
     public String getMemberTypeKey() {
         return this.memberType.getKey();
-    }
-
-    public void update(String email, String nickname, MemberType memberType, String link, String info, String career, String postion) {
-        this.email = email;
-        this.nickname = nickname;
-        this.memberType = memberType;
-        this.link = link;
-        this.info = info;
-        this.career = career;
-        this.postion = postion;
     }
 }
