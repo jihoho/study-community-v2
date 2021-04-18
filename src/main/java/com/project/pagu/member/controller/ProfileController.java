@@ -37,11 +37,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(@CurrentMember Member member, Model model) {
-        Member findMember = memberService
-                .findById(new MemberId(member.getEmail(), member.getMemberType()))
-                /** todo: exception handing */
-                .orElseThrow(() -> new IllegalArgumentException());
-        ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(findMember);
+        ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(member);
         model.addAttribute(profileRequestDto);
         return "profile";
     }

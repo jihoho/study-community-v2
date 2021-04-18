@@ -99,17 +99,26 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
+        Member findMember = findMember(member);
+
         return ProfileRequestDto.builder()
-                .email(member.getEmail())
-                .memberType(member.getMemberType().getKey())
-                .nickname(member.getNickname())
-                .imageFile(member.getImageFile())
-                .imageUrl(member.getImageUrl())
-                .link(member.getLink())
-                .info(member.getInfo())
-                .career(member.getCareer())
-                .position(member.getPostion())
+                .email(findMember.getEmail())
+                .memberType(findMember.getMemberType().getKey())
+                .nickname(findMember.getNickname())
+                .imageFile(findMember.getImageFile())
+                .imageUrl(findMember.getImageUrl())
+                .link(findMember.getLink())
+                .info(findMember.getInfo())
+                .career(findMember.getCareer())
+                .position(findMember.getPostion())
                 .build();
+    }
+
+    private Member findMember(Member member) {
+        return memberRepository
+                .findById(new MemberId(member.getEmail(), member.getMemberType()))
+                /** todo: exception handing */
+                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     @Override
@@ -121,10 +130,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     @Transactional
     public void update(Member member, ProfileRequestDto profileRequestDto) {
-        Member findMember = memberRepository
-                .findById(new MemberId(member.getEmail(), member.getMemberType()))
-                /** exception handling*/
-                .orElseThrow(() -> new IllegalArgumentException());
+        Member findMember = findMember(member);
 
         updateImageFile(profileRequestDto);
         findMember.updateProfile(profileRequestDto);
