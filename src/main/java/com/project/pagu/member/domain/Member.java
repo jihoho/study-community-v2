@@ -73,8 +73,9 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-    public void updateImage(String imageUrl) {
+    public Member updateImage(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     public void updateProfile(ProfileRequestDto dto) {

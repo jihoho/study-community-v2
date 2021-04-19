@@ -19,21 +19,41 @@ import java.util.Map;
 @Builder
 public class OAuthAttributes {
 
-    private OAuthAttributes() {}
+    private Map<String, Object> attributes;
+    private String email;
+    private MemberType memberType;
+    private String picture;
 
-    public static OauthMember of(String registrationId, Map<String, Object> attributes) {
+    private OAuthAttributes(Map<String, Object> attributes, String email, MemberType memberType,
+            String picture) {
+        this.attributes = attributes;
+        this.email = email;
+        this.memberType = memberType;
+        this.picture = picture;
+    }
+
+    public static OAuthAttributes of(String registrationId, Map<String, Object> attributes) {
         if (registrationId.equals("google")) {
             return ofGoogle(attributes);
         }
         throw new NoSuchElementException();
     }
 
-    private static OauthMember ofGoogle(Map<String, Object> attributes) {
-        return new OauthMember(Member.builder()
+    private static OAuthAttributes ofGoogle(Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .attributes(attributes)
                 .email((String) attributes.get("email"))
-                .imageUrl((String) attributes.get("picture"))
                 .memberType(MemberType.GOOGLE)
+                .picture((String) attributes.get("picture"))
+                .build();
+    }
+
+    public Member toEntity(){
+        return Member.builder()
+                .email(email)
+                .memberType(memberType)
+                .imageUrl(picture)
                 .role(Role.GUEST)
-                .build());
+                .build();
     }
 }
