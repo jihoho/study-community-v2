@@ -1,7 +1,10 @@
 package com.project.pagu.member.domain;
 
+import com.project.pagu.board.domain.Board;
 import com.project.pagu.common.BaseTimeEntity;
 import com.project.pagu.member.model.ProfileRequestDto;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,6 +56,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "member")
+    private List<Board> boards = new ArrayList<>();
 
     public Member(String email, MemberType memberType, String nickname,
             String password, String imageFile, Role role) {
