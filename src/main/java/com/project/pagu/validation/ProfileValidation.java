@@ -27,7 +27,9 @@ public class ProfileValidation implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ProfileRequestDto profileRequestDto = (ProfileRequestDto) target;
-        isExistedNickname(profileRequestDto.getNickname(), errors);
+        if (!profileRequestDto.getNickname().equals(profileRequestDto.getChangeNickname())) {
+            isExistedNickname(profileRequestDto.getChangeNickname(), errors);
+        }
     }
 
     private void isExistedNickname(String nickname, Errors errors) {

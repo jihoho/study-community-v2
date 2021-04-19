@@ -105,6 +105,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .email(findMember.getEmail())
                 .memberType(findMember.getMemberType().getKey())
                 .nickname(findMember.getNickname())
+                .changeNickname(findMember.getNickname())
                 .imageFile(findMember.getImageFile())
                 .imageUrl(findMember.getImageUrl())
                 .link(findMember.getLink())
@@ -114,7 +115,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .build();
     }
 
-    private Member findMember(Member member) {
+    public Member findMember(Member member) {
         return memberRepository
                 .findById(new MemberId(member.getEmail(), member.getMemberType()))
                 /** todo: exception handing */
@@ -139,7 +140,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
         MultipartFile uploadFile = profileRequestDto.getMultipartFile();
 
-        if (uploadFile != null) {
+        if (uploadFile.getSize() != 0) {
             String fileName = fileManager.createFileName();
             profileRequestDto.setImageFile(fileName);
             fileManager.uploadProfileImage(uploadFile, fileName);

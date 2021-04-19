@@ -2,31 +2,29 @@
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments :: head">
-    <style>
-      <!--
-      헤더 대체되서 스타일 안읽힘
-
-      -->
-      a .nav-link.active {
-        color: #70ab6b;
-        text-decoration: none;
-        background-color: transparent;
-      }
-
-      .nav-pills .nav-link.active {
-        color: #fff;
-        background-color: #70ab6b;
-      }
-
-      .tab-content > .active {
-        display: block;
-        margin-right: -146px;
-      }
-    </style>
-</head>
+<head th:include="fragments :: head"></head>
 
 <link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen"/>
+<style>
+  <!--
+  헤더 대체되서 스타일 안읽힘
+  -->
+  a .nav-link.active {
+    color: #70ab6b;
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .nav-pills .nav-link.active {
+    color: #fff;
+    background-color: #70ab6b;
+  }
+
+  .tab-content > .active {
+    display: block;
+    margin-right: -146px;
+  }
+</style>
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
 <section>
@@ -105,6 +103,7 @@
                                 <input type="hidden" th:field="*{memberType}"/>
                                 <input type="hidden" th:field="*{imageUrl}"/>
                                 <input type="hidden" th:field="*{imageFile}"/>
+                                <input type="hidden" th:field="*{nickname}"/>
                                 <!-- 이메일 -->
                                 <div class="form-group">
                                     <label>이메일</label>
@@ -114,8 +113,8 @@
                                 <!-- 닉네임 -->
                                 <div class="form-group">
                                     <label>닉네임</label>
-                                    <input type="text" class="form-control" th:field="*{nickname}"
-                                           required/>
+                                    <input type="text" class="form-control" th:field="*{changeNickname}" required/>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{changeNickname}"></small>
                                 </div>
                                 <!-- 포지션 -->
                                 <div class="form-group">

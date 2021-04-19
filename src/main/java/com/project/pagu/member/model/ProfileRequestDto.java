@@ -31,6 +31,10 @@ public class ProfileRequestDto {
             message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
     private String nickname;
 
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
+            message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
+    private String changeNickname;
+
     private MultipartFile multipartFile;
 
     private String imageFile;
