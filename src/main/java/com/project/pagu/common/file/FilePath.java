@@ -1,5 +1,7 @@
 package com.project.pagu.common;
 
+import static com.project.pagu.common.file.FilePathValue.PROFILE_IMAGE_PATH;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -10,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum FilePath {
-    PROFILE_IMAGE("/Desktop/pagu/profile_image/");
+    PROFILE_IMAGE(PROFILE_IMAGE_PATH);
 
     private final String path;
 
