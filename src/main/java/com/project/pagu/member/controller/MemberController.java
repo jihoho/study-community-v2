@@ -2,6 +2,7 @@ package com.project.pagu.member.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.member.domain.Member;
+import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
@@ -54,13 +55,6 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("profile")
-    public String profile(@CurrentMember Member member, Model model) {
-        Member findMember = memberService.findByEmail(member.getEmail());
-        ProfileRequestDto profileRequestDto = memberService.convertMemberToProfileRequestDto(findMember);
-        model.addAttribute(profileRequestDto);
-        return "profile";
-    }
 
     @GetMapping("sign-up")
     public String signUp(Model model, MemberSaveRequestDto memberSaveRequestDto) {

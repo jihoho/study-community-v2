@@ -1,11 +1,13 @@
 package com.project.pagu.member.service;
 
+import com.project.pagu.common.file.FileManager;
 import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.domain.MemberType;
 
 import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.OauthMemberSaveDto;
+import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final FileManager fileManager;
 
     @Override
     public Optional<Member> findById(MemberId memberId) {
@@ -64,7 +67,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     @Transactional
-    public Member save(Member member){
+    public Member save(Member member) {
         return memberRepository.save(member);
     }
 
@@ -96,21 +99,51 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
+        Member findMember = findMember(member);
+
         return ProfileRequestDto.builder()
-                .email(member.getEmail())
-                .memberType(member.getMemberType().getKey())
-                .nickname(member.getNickname())
-                .filename(member.getFilename())
-                .link(member.getLink())
-                .info(member.getInfo())
-                .career(member.getCareer())
-                .position(member.getPostion())
+                .email(findMember.getEmail())
+                .memberType(findMember.getMemberType().getKey())
+                .nickname(findMember.getNickname())
+                .changeNickname(findMember.getNickname())
+                .imageFile(findMember.getImageFile())
+                .imageUrl(findMember.getImageUrl())
+                .link(findMember.getLink())
+                .info(findMember.getInfo())
+                .career(findMember.getCareer())
+                .position(findMember.getPostion())
                 .build();
+    }
+
+    public Member findMember(Member member) {
+        return memberRepository
+                .findById(new MemberId(member.getEmail(), member.getMemberType()))
+                /** todo: exception handing */
+                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     @Override
     @Transactional
     public Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
         return memberRepository.save(OAuthMemberSaveDto.toEntity());
+    }
+
+    @Override
+    @Transactional
+    public void update(Member member, ProfileRequestDto profileRequestDto) {
+        Member findMember = findMember(member);
+
+        updateImageFile(profileRequestDto);
+        findMember.updateProfile(profileRequestDto);
+    }
+
+    private void updateImageFile(ProfileRequestDto profileRequestDto) {
+
+        if (profileRequestDto.getMultipartFile().getSize() != 0) {
+            String fileName = fileManager.createFileName();
+            profileRequestDto.setImageFile(fileName);
+            ProfileImageDto profileImageDto = profileRequestDto.toProfileImageDto();
+            fileManager.uploadProfileImage(profileImageDto);
+        }
     }
 }

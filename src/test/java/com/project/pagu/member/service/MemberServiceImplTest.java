@@ -161,7 +161,7 @@ public class MemberServiceImplTest {
                 .memberType(MemberType.NORMAL)
                 .nickname("nick")
                 .password("1234")
-                .filename("filename.png")
+                .imageFile("filename.png")
                 .link("https://link.com")
                 .info("안녕하세요")
                 .career("취준생")
@@ -173,12 +173,15 @@ public class MemberServiceImplTest {
                 .email("email@email.com")
                 .memberType(MemberType.NORMAL.getKey())
                 .nickname("nick")
-                .filename("filename.png")
+                .imageFile("filename.png")
                 .link("https://link.com")
                 .info("안녕하세요")
                 .career("취준생")
                 .position("웹 백엔드")
                 .build();
+
+        given(memberRepository.findById(any())).willReturn(Optional.of(targetMember));
+
         // when
         ProfileRequestDto resultDto=memberService.convertMemberToProfileRequestDto(targetMember);
 
@@ -187,7 +190,7 @@ public class MemberServiceImplTest {
                 ()->assertEquals(expectedDto.getEmail(),resultDto.getEmail()),
                 ()->assertEquals(expectedDto.getMemberType(),resultDto.getMemberType()),
                 ()->assertEquals(expectedDto.getNickname(),resultDto.getNickname()),
-                ()->assertEquals(expectedDto.getFilename(),resultDto.getFilename()),
+                ()->assertEquals(expectedDto.getImageFile(),resultDto.getImageFile()),
                 ()->assertEquals(expectedDto.getLink(),resultDto.getLink()),
                 ()->assertEquals(expectedDto.getCareer(),resultDto.getCareer()),
                 ()->assertEquals(expectedDto.getPosition(),resultDto.getPosition())

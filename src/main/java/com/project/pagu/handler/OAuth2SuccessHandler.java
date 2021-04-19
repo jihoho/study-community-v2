@@ -38,7 +38,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         ).ifPresentOrElse(
                 member -> {
                     log.info("update google picture email: " + member.getEmail());
-                    member.updateImage(oauthMember.getMember().getFilename());
+                    member.updateImage(oauthMember.getMember().getImageUrl());
                     memberService.save(member);
                     try {
                         response.sendRedirect("/");

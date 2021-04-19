@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments :: head">
-    <style>
-        a .nav-link.active {
-            color: #70ab6b;
-            text-decoration: none;
-            background-color: transparent;
-        }
+<head th:include="fragments :: head"></head>
 
-        .nav-pills .nav-link.active {
-            color: #fff;
-            background-color: #70ab6b;
-        }
+<link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen" />
+<style>
+    <!-- 헤더 대체되서 스타일 안읽힘 -- >
+    a .nav-link.active {
+        color: #70ab6b;
+        text-decoration: none;
+        background-color: transparent;
+    }
 
-        .tab-content > .active {
-            display: block;
-            margin-right: -146px;
-        }
-    </style>
-</head>
+    .nav-pills .nav-link.active {
+        color: #fff;
+        background-color: #70ab6b;
+    }
+
+    .tab-content > .active {
+        display: block;
+        margin-right: -146px;
+    }
+</style>
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
 <section>
@@ -57,50 +59,70 @@
                 <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-info-tab">
                     <h3 class="mb-4">프로필 정보</h3>
                     <!-- 프로필 수정 폼 -->
-                    <form th:action="@{/members}" method="post" th:object="${profileRequestDto}">
+                    <form th:action="@{/members/update}" method="post" th:object="${profileRequestDto}" enctype="multipart/form-data">
                         <div class="row">
-                            <!-- 프로필 사진 todo : 사진 변경하기 누를 시 사진 등록하는 기능 필요-->
                             <div class="col-md-4">
-                                <div>
-                                    <svg th:if="${#strings.isEmpty(profileRequestDto.filename)}" th:data-jdenticon-value="${profileRequestDto.nickname}" width="200" height="200"></svg>
-                                    <img th:if="${!#strings.isEmpty(profileRequestDto.filename)}" th:src="${profileRequestDto.filename}" width="200" height="200" />
+                                <div id="img-box">
+                                    <img th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${!#strings.isEmpty(profileRequestDto.imageUrl)}" th:src="${profileRequestDto.imageUrl}" class="profile-img" />
+                                    <!--todo: 임시적으로 filename으로 설정해둠 -->
+                                    <img
+                                        th:if="${!#strings.isEmpty(profileRequestDto.imageFile)}"
+                                        th:src="@{/profileThumbnails/{email}/{type}/{filename}(email=${profileRequestDto.email},type=${profileRequestDto.memberType},filename=${profileRequestDto.imageFile})}"
+                                        class="profile-img"
+                                    />
+                                    <svg
+                                        th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${#strings.isEmpty(profileRequestDto.imageUrl)}"
+                                        th:data-jdenticon-value="${profileRequestDto.nickname}"
+                                        class="profile-image"
+                                    ></svg>
                                 </div>
                                 <div class="text-center">
-                                    <button class="btn btn-secondary">사진 변경하기</button>
+                                    <div class="filebox">
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('input_img').click();">
+                                            사진 변경하기
+                                        </button>
+                                        <input type="file" id="input_img" th:field="*{multipartFile}" style="display: none;" onchange="setThumbnail(event);" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-8">
+                                <!-- 멤버 타입 -->
+                                <input type="hidden" th:field="*{memberType}" />
+                                <input type="hidden" th:field="*{imageUrl}" />
+                                <input type="hidden" th:field="*{imageFile}" />
+                                <input type="hidden" th:field="*{nickname}" />
                                 <!-- 이메일 -->
                                 <div class="form-group">
                                     <label>이메일</label>
-                                    <input type="text" class="form-control" th:field="*{email}" style="display: inline-block;" disabled />
+                                    <input type="text" class="form-control" th:field="*{email}" style="display: inline-block;" readonly />
                                 </div>
                                 <!-- 닉네임 -->
                                 <div class="form-group">
                                     <label>닉네임</label>
-                                    <input type="text" class="form-control" th:field="*{nickname}" />
+                                    <input type="text" class="form-control" th:field="*{changeNickname}" required />
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{changeNickname}"></small>
                                 </div>
                                 <!-- 포지션 -->
                                 <div class="form-group">
                                     <label>포지션</label>
-                                    <input type="text" class="form-control" th:field="*{position}" />
+                                    <input type="text" class="form-control" th:field="*{position}" required />
                                 </div>
                                 <!-- 경력 -->
                                 <div class="form-group">
                                     <label>경력</label>
-                                    <input type="text" class="form-control" th:field="*{career}" />
+                                    <input type="text" class="form-control" th:field="*{career}" required />
                                 </div>
                                 <!-- 링크 -->
                                 <div class="form-group">
                                     <label>링크</label>
-                                    <input type="text" class="form-control" th:field="*{link}" />
+                                    <input type="text" class="form-control" th:field="*{link}" required />
                                 </div>
                             </div>
                             <!-- 자기소개 -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>자기소개</label>
-                                    <textarea class="form-control text-left" rows="4" th:field="*{info}"> </textarea>
+                                    <textarea class="form-control text-left" rows="4" th:field="*{info}" required> </textarea>
                                 </div>
                             </div>
                         </div>
@@ -138,9 +160,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -156,9 +184,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-warning active">모집마감</button>
@@ -173,9 +207,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -190,9 +230,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -207,9 +253,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -224,9 +276,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -241,9 +299,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -258,9 +322,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -275,9 +345,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -292,9 +368,15 @@
                                 <td>nickname</td>
                                 <td>2021-03-21 12:30:00</td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">Backend</button>
-                                    <button type="button" class="btn btn-primary btn-sm active">JPA</button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
                                 </td>
                                 <td class="align-center">
                                     <button type="button" class="btn btn-success active">모집중</button>
@@ -334,5 +416,6 @@
         </div>
     </div>
 </section>
+<script src="/js/profile.js"></script>
 </body>
 </html>
