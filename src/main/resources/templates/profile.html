@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:include="fragments :: head"></head>
 
-<link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen" />
 <style>
-  <!--
-  헤더 대체되서 스타일 안읽힘
-  -->
-  a .nav-link.active {
-    color: #70ab6b;
-    text-decoration: none;
-    background-color: transparent;
-  }
+    <!-- 헤더 대체되서 스타일 안읽힘 -- >
+    a .nav-link.active {
+        color: #70ab6b;
+        text-decoration: none;
+        background-color: transparent;
+    }
 
-  .nav-pills .nav-link.active {
-    color: #fff;
-    background-color: #70ab6b;
-  }
+    .nav-pills .nav-link.active {
+        color: #fff;
+        background-color: #70ab6b;
+    }
 
-  .tab-content > .active {
-    display: block;
-    margin-right: -146px;
-  }
+    .tab-content > .active {
+        display: block;
+        margin-right: -146px;
+    }
 </style>
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
@@ -33,29 +30,24 @@
             <!-- 왼쪽 메뉴 바 -->
             <div class="profile-tab-nav border-right col-2">
                 <div class="p-4"></div>
-                <div class="nav flex-column nav-pills" id="menu-tab" role="tablist"
-                     aria-orientation="vertical">
+                <div class="nav flex-column nav-pills" id="menu-tab" role="tablist" aria-orientation="vertical">
                     <!-- 프로필 정보 -->
-                    <a class="nav-link active" id="profile-info-tab" data-toggle="pill"
-                       href="#profile" role="tab" aria-selected="true">
+                    <a class="nav-link active" id="profile-info-tab" data-toggle="pill" href="#profile" role="tab" aria-selected="true">
                         <i class="fa fa-home text-center mr-1"></i>
                         프로필 정보
                     </a>
                     <!-- 게시물 관리 -->
-                    <a class="nav-link" id="password-tab" data-toggle="pill" href="#boards"
-                       role="tab" aria-selected="false">
+                    <a class="nav-link" id="password-tab" data-toggle="pill" href="#boards" role="tab" aria-selected="false">
                         <i class="fa fa-key text-center mr-1"></i>
                         게시물 관리
                     </a>
                     <!-- 스터디 관리 -->
-                    <a class="nav-link" id="security-tab" data-toggle="pill" href="#study"
-                       role="tab" aria-selected="false">
+                    <a class="nav-link" id="security-tab" data-toggle="pill" href="#study" role="tab" aria-selected="false">
                         <i class="fa fa-user text-center mr-1"></i>
                         스터디 관리
                     </a>
                     <!-- 스터디 신청 내역 -->
-                    <a class="nav-link" id="application-tab " data-toggle="pill"
-                       href="#study-request" role="tab" aria-selected="false">
+                    <a class="nav-link" id="application-tab " data-toggle="pill" href="#study-request" role="tab" aria-selected="false">
                         <i class="fa fa-tv text-center mr-1"></i>
                         스터디 신청 내역
                     </a>
@@ -64,83 +56,73 @@
             <!-- 본문 -->
             <div class="tab-content p-4 p-md-5" id="menu-tap-content col-8">
                 <!-- 프로필 정보 -->
-                <div class="tab-pane fade show active" id="profile" role="tabpanel"
-                     aria-labelledby="profile-info-tab">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-info-tab">
                     <h3 class="mb-4">프로필 정보</h3>
                     <!-- 프로필 수정 폼 -->
-                    <form th:action="@{/members/update}" method="post"
-                          th:object="${profileRequestDto}" enctype="multipart/form-data">
+                    <form th:action="@{/members/update}" method="post" th:object="${profileRequestDto}" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-4">
                                 <div id="img-box">
-                                    <img
-                                        th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${!#strings.isEmpty(profileRequestDto.imageUrl)}"
-                                        th:src="${profileRequestDto.imageUrl}" class="profile-img"/>
+                                    <img th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${!#strings.isEmpty(profileRequestDto.imageUrl)}" th:src="${profileRequestDto.imageUrl}" class="profile-img" />
                                     <!--todo: 임시적으로 filename으로 설정해둠 -->
                                     <img
                                         th:if="${!#strings.isEmpty(profileRequestDto.imageFile)}"
                                         th:src="@{/profileThumbnails/{email}/{type}/{filename}(email=${profileRequestDto.email},type=${profileRequestDto.memberType},filename=${profileRequestDto.imageFile})}"
-                                        class="profile-img"/>
+                                        class="profile-img"
+                                    />
                                     <svg
                                         th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${#strings.isEmpty(profileRequestDto.imageUrl)}"
                                         th:data-jdenticon-value="${profileRequestDto.nickname}"
-                                        class="profile-image"></svg>
+                                        class="profile-image"
+                                    ></svg>
                                 </div>
                                 <div class="text-center">
                                     <div class="filebox">
-                                        <button type="button" class="btn btn-secondary"
-                                                onclick="document.getElementById('input_img').click();">
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('input_img').click();">
                                             사진 변경하기
                                         </button>
-                                        <input type="file" id="input_img"
-                                               th:field="*{multipartFile}" style="display: none;"
-                                               onchange="setThumbnail(event);"/>
+                                        <input type="file" id="input_img" th:field="*{multipartFile}" style="display: none;" onchange="setThumbnail(event);" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <!-- 멤버 타입 -->
-                                <input type="hidden" th:field="*{memberType}"/>
-                                <input type="hidden" th:field="*{imageUrl}"/>
-                                <input type="hidden" th:field="*{imageFile}"/>
-                                <input type="hidden" th:field="*{nickname}"/>
+                                <input type="hidden" th:field="*{memberType}" />
+                                <input type="hidden" th:field="*{imageUrl}" />
+                                <input type="hidden" th:field="*{imageFile}" />
+                                <input type="hidden" th:field="*{nickname}" />
                                 <!-- 이메일 -->
                                 <div class="form-group">
                                     <label>이메일</label>
-                                    <input type="text" class="form-control" th:field="*{email}"
-                                           style="display: inline-block;" readonly/>
+                                    <input type="text" class="form-control" th:field="*{email}" style="display: inline-block;" readonly />
                                 </div>
                                 <!-- 닉네임 -->
                                 <div class="form-group">
                                     <label>닉네임</label>
-                                    <input type="text" class="form-control" th:field="*{changeNickname}" required/>
+                                    <input type="text" class="form-control" th:field="*{changeNickname}" required />
                                     <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{changeNickname}"></small>
                                 </div>
                                 <!-- 포지션 -->
                                 <div class="form-group">
                                     <label>포지션</label>
-                                    <input type="text" class="form-control" th:field="*{position}"
-                                           required/>
+                                    <input type="text" class="form-control" th:field="*{position}" required />
                                 </div>
                                 <!-- 경력 -->
                                 <div class="form-group">
                                     <label>경력</label>
-                                    <input type="text" class="form-control" th:field="*{career}"
-                                           required/>
+                                    <input type="text" class="form-control" th:field="*{career}" required />
                                 </div>
                                 <!-- 링크 -->
                                 <div class="form-group">
                                     <label>링크</label>
-                                    <input type="text" class="form-control" th:field="*{link}"
-                                           required/>
+                                    <input type="text" class="form-control" th:field="*{link}" required />
                                 </div>
                             </div>
                             <!-- 자기소개 -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>자기소개</label>
-                                    <textarea class="form-control text-left" rows="4"
-                                              th:field="*{info}" required> </textarea>
+                                    <textarea class="form-control text-left" rows="4" th:field="*{info}" required> </textarea>
                                 </div>
                             </div>
                         </div>
@@ -150,8 +132,7 @@
                     </form>
                 </div>
                 <!-- 게시물 관리 -->
-                <div class="tab-pane fade" id="boards" role="tabpanel"
-                     aria-labelledby="password-tab">
+                <div class="tab-pane fade" id="boards" role="tabpanel" aria-labelledby="password-tab">
                     <h3 class="mb-4">게시물 관리</h3>
                     <div id="board-list-body mt-auto">
                         <table class="table table-striped table-hover">
@@ -190,8 +171,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <!--     table row end      -->
@@ -215,8 +195,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-warning active">모집마감
-                                    </button>
+                                    <button type="button" class="btn btn-warning active">모집마감</button>
                                 </td>
                             </tr>
                             <tr>
@@ -239,8 +218,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -263,8 +241,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -287,8 +264,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -311,8 +287,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -335,8 +310,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -359,8 +333,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -383,8 +356,7 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             <tr>
@@ -407,37 +379,24 @@
                                     </button>
                                 </td>
                                 <td class="align-center">
-                                    <button type="button" class="btn btn-success active">모집중
-                                    </button>
+                                    <button type="button" class="btn btn-success active">모집중</button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <div id="paginationBox">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#"
-                                                         onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}')">Previous</a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#"
-                                                                onClick="">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">2</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">3</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">4</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">5</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">6</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">7</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">8</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#" onClick="">9</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#"
-                                                         onClick="">10</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}')">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#" onClick="">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">5</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">6</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">7</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">8</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">9</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">10</a></li>
                                 <li class="page-item">
                                     <a class="page-link" href="#" onClick="">Next</a>
                                 </li>
@@ -446,13 +405,11 @@
                     </div>
                 </div>
                 <!-- 스터디 관리 -->
-                <div class="tab-pane fade" id="study" role="tabpanel"
-                     aria-labelledby="security-tab">
+                <div class="tab-pane fade" id="study" role="tabpanel" aria-labelledby="security-tab">
                     <h3 class="mb-4">준비중인 서비스입니다.</h3>
                 </div>
                 <!-- 스터디 신청 내역 -->
-                <div class="tab-pane fade" id="study-request" role="tabpanel"
-                     aria-labelledby="application-tab">
+                <div class="tab-pane fade" id="study-request" role="tabpanel" aria-labelledby="application-tab">
                     <h3 class="mb-4">준비중인 서비스입니다.</h3>
                 </div>
             </div>
