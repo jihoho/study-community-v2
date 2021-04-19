@@ -7,6 +7,7 @@ import com.project.pagu.member.domain.MemberType;
 
 import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.OauthMemberSaveDto;
+import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
@@ -22,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by IntelliJ IDEA
@@ -138,12 +138,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
-        MultipartFile uploadFile = profileRequestDto.getMultipartFile();
 
-        if (uploadFile.getSize() != 0) {
+        if (profileRequestDto.getMultipartFile().getSize() != 0) {
             String fileName = fileManager.createFileName();
             profileRequestDto.setImageFile(fileName);
-            fileManager.uploadProfileImage(uploadFile, fileName);
+            ProfileImageDto profileImageDto = profileRequestDto.toProfileImageDto();
+            fileManager.uploadProfileImage(profileImageDto);
         }
     }
 }

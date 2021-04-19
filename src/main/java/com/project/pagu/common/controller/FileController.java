@@ -1,11 +1,11 @@
 package com.project.pagu.common.controller;
 
 import com.project.pagu.common.FileManager;
+import com.project.pagu.member.model.ProfileImageDto;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Created by IntelliJ IDEA
@@ -19,8 +19,9 @@ public class FileController {
 
     private final FileManager fileManager;
 
-    @GetMapping("/profileThumbnails/{filename}")
-    public void profileThumbnails(@PathVariable String filename, HttpServletResponse response) throws Exception {
-        fileManager.profileThumbnails(filename, response);
+    @GetMapping("/profileThumbnails/{email}/{type}/{filename}")
+    public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
+            throws Exception {
+        fileManager.profileThumbnails(profileImageDto, response);
     }
 }

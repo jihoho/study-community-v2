@@ -1,5 +1,6 @@
 package com.project.pagu.common;
 
+import com.project.pagu.member.model.ProfileImageDto;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,15 +23,21 @@ public class FileManager {
         return UUID.randomUUID().toString() + System.nanoTime();
     }
 
-    public void uploadProfileImage(MultipartFile uploadFile, String fileName) {
-        File file = newFile(fileName);
-        findDirectory(file);
-        upload(uploadFile, file);
+    public String creatSubPath(ProfileImageDto profileImageDto) {
+        return profileImageDto.getType() + File.separator + profileImageDto.getEmail()
+                + File.separator + profileImageDto.getFilename();
     }
 
-    private File newFile(String fileName) {
+    public void uploadProfileImage(ProfileImageDto profileImageDto) {
+        File file = newFile(profileImageDto);
+        findDirectory(file);
+        upload(profileImageDto.getMultipartFile(), file);
+    }
+
+    private File newFile(ProfileImageDto profileImageDto) {
         String absolutePath = System.getProperty("user.home");
-        String filePath = FilePath.PROFILE_IMAGE.getPath() + fileName;
+        String subPath = creatSubPath(profileImageDto);
+        String filePath = FilePath.PROFILE_IMAGE.getPath() + subPath;
         return new File(absolutePath + filePath);
     }
 
@@ -48,8 +55,9 @@ public class FileManager {
         }
     }
 
-    public void profileThumbnails(String filename, HttpServletResponse response) throws Exception {
-        File image = newFile(filename);
+    public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
+            throws Exception {
+        File image = newFile(profileImageDto);
         try (OutputStream out = response.getOutputStream()) {
             isExistImageMakeThumbnail(image, out);
             byte[] buffer = new byte[1024 * 12];
