@@ -25,13 +25,13 @@ public class OauthMemberSaveDto {
             message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
     private String nickname;
 
-    private String filename;
+    private String imageUrl;
 
     public Member toEntity() {
         return Member.builder()
                 .email(email)
                 .memberType(MemberType.GOOGLE)
-                .filename(filename)
+                .imageUrl(imageUrl)
                 .nickname(nickname)
                 .role(Role.GUEST)
                 .build();
@@ -39,6 +39,6 @@ public class OauthMemberSaveDto {
 
     public void updateEmailAndImage(String email, String filename) {
         this.email = email;
-        this.filename = filename;
+        this.imageUrl = filename;
     }
 }

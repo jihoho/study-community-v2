@@ -4,11 +4,13 @@ import com.project.pagu.member.domain.Member;
 import com.project.pagu.member.domain.MemberType;
 import com.project.pagu.member.domain.Role;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by IntelliJ IDEA
@@ -21,28 +23,30 @@ import lombok.ToString;
 @Builder
 public class ProfileRequestDto {
 
-    @NotBlank
     private String email;
 
-    @NotBlank
     private String memberType;
 
-    @NotBlank
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
+            message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
     private String nickname;
 
-    @NotBlank
-    private String filename;
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,8}$",
+            message = "2글자 이상 8글자 이하, 공백을 포함 할 수 없으며 특수문자는 '-','_'만 가능합니다.")
+    private String changeNickname;
 
-    @NotBlank
+    private MultipartFile multipartFile;
+
+    private String imageFile;
+
+    private String imageUrl;
+
     private String link;
 
-    @NotBlank
     private String info;
 
-    @NotBlank
     private String career;
 
-    @NotBlank
     private String position;
 
 }

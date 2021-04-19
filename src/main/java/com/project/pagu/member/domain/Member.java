@@ -1,6 +1,7 @@
 package com.project.pagu.member.domain;
 
 import com.project.pagu.common.BaseTimeEntity;
+import com.project.pagu.member.model.ProfileRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +37,9 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String filename;
+    private String imageFile;
+
+    private String imageUrl;
 
     private String link;
 
@@ -52,12 +55,12 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     public Member(String email, MemberType memberType, String nickname,
-            String password, String filename, Role role) {
+            String password, String imageFile, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.password = password;
         this.nickname = nickname;
-        this.filename = filename;
+        this.imageFile = imageFile;
         this.role = role;
     }
 
@@ -70,8 +73,19 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-    public void updateImage(String filename) {
-        this.filename = filename;
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateProfile(ProfileRequestDto dto) {
+        this.nickname = dto.getChangeNickname();
+        this.imageUrl = dto.getImageUrl();
+        this.imageFile = dto.getImageFile();
+        this.link = dto.getLink();
+        this.info = dto.getInfo();
+        this.career = dto.getCareer();
+        this.postion = dto.getPosition();
+        this.role = Role.USER;
     }
 
     public String getRoleKey() {

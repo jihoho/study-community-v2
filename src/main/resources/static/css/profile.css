@@ -1,0 +1,10 @@
+#img-box {
+
+}
+
+.profile-img {
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 30%;
+}
