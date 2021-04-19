@@ -1,4 +1,4 @@
-package com.project.pagu.common;
+package com.project.pagu.common.file;
 
 import static com.project.pagu.common.file.FilePathValue.PROFILE_IMAGE_PATH;
 

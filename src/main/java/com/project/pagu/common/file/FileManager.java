@@ -1,4 +1,4 @@
-package com.project.pagu.common;
+package com.project.pagu.common.file;
 
 import com.project.pagu.member.model.ProfileImageDto;
 import java.io.File;

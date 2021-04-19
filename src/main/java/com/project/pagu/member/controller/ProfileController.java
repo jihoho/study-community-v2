@@ -1,18 +1,18 @@
 package com.project.pagu.member.controller;
 
 import com.project.pagu.annotation.CurrentMember;
+import com.project.pagu.common.file.FileManager;
 import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.domain.MemberId;
+import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.validation.ProfileValidation;
-import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -29,6 +29,7 @@ public class ProfileController {
 
     private final MemberService memberService;
     private final ProfileValidation profileValidation;
+    private final FileManager fileManager;
 
     @InitBinder("profileRequestDto")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -51,6 +52,12 @@ public class ProfileController {
 
         memberService.update(member, profileRequestDto);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/profileThumbnails/{email}/{type}/{filename}")
+    public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
+            throws Exception {
+        fileManager.profileThumbnails(profileImageDto, response);
     }
 
 }
