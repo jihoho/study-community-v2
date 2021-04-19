@@ -179,6 +179,9 @@ public class MemberServiceImplTest {
                 .career("취준생")
                 .position("웹 백엔드")
                 .build();
+
+        given(memberRepository.findById(any())).willReturn(Optional.of(targetMember));
+
         // when
         ProfileRequestDto resultDto=memberService.convertMemberToProfileRequestDto(targetMember);
 
