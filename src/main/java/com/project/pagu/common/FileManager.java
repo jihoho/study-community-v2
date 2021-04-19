@@ -52,7 +52,7 @@ public class FileManager {
         File image = newFile(filename);
         try (OutputStream out = response.getOutputStream()) {
             isExistImageMakeThumbnail(image, out);
-            byte[] buffer = new byte[1024 * 8];
+            byte[] buffer = new byte[1024 * 12];
             out.write(buffer);
         }
     }
