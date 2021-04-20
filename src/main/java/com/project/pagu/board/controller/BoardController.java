@@ -1,8 +1,11 @@
 package com.project.pagu.board.controller;
 
+import com.project.pagu.board.model.BoardSaveRequestDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -23,11 +26,14 @@ public class BoardController {
         return "boards/board-list";
     }
 
+    @PostMapping()
+    public String createBoard(BoardSaveRequestDto boardSaveRequestDto) {
+        return "boards/board-form";
+    }
+
     @GetMapping("/form")
-    public String boardsFrom() {
-        /**
-         * todo : 로그인 상태, 게시물 등록 폼
-         */
+    public String boardsFrom(Model model, BoardSaveRequestDto boardSaveRequestDto) {
+        model.addAttribute(boardSaveRequestDto);
         return "boards/board-form";
     }
 

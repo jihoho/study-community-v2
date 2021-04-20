@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -53,6 +56,13 @@ public class Board extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "board")
     private List<BoardImage> boardImages = new ArrayList<>();
+
+    @Lob
+    private String etc;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StudyStatus status;
 
     /**
      * 추후 해시태그 기반으로 수정
