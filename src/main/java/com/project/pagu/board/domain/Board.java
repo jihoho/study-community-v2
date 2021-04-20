@@ -16,6 +16,9 @@ import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by IntelliJ IDEA
@@ -23,6 +26,8 @@ import javax.persistence.OneToMany;
  * Date: 2021-04-19 Time: 오후 10:57
  */
 @Entity
+@Getter
+@NoArgsConstructor
 public class Board extends BaseTimeEntity {
 
     @Id
@@ -70,4 +75,43 @@ public class Board extends BaseTimeEntity {
     private String subjects;
 
     private String techStacks;
+
+    @Builder
+    public Board(String title, String goal, String place, Member member,
+            LocalDate recruitmentStartAt, LocalDate recruitmentEndAt, LocalDate termsStartAt,
+            LocalDate termsEndAt, List<BoardSchedule> boardSchedules, String etc,
+            StudyStatus status, String subjects,
+            String techStacks) {
+        this.title = title;
+        this.goal = goal;
+        this.place = place;
+        setMember(member);
+        this.recruitmentStartAt = recruitmentStartAt;
+        this.recruitmentEndAt = recruitmentEndAt;
+        this.termsStartAt = termsStartAt;
+        this.termsEndAt = termsEndAt;
+        for (BoardSchedule boardSchedule : boardSchedules) {
+            addBoardSchedule(boardSchedule);
+        }
+        this.etc = etc;
+        this.status = status;
+        this.subjects = subjects;
+        this.techStacks = techStacks;
+    }
+
+
+    //==연관관계 편의 메서드==//
+    private void addBoardSchedule(BoardSchedule boardSchedule) {
+        boardSchedules.add(boardSchedule);
+        boardSchedule.setBoard(this);
+    }
+
+    private void setMember(Member member) {
+        this.member = member;
+        member.addBoard(this);
+    }
+
+    public void addBoardImage(BoardImage boardImage) {
+        boardImages.add(boardImage);
+    }
 }

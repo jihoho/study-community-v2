@@ -2,8 +2,10 @@ package com.project.pagu.board.controller;
 
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.board.model.BoardSaveRequestDto;
+import com.project.pagu.board.service.BoardService;
 import com.project.pagu.member.domain.Member;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/boards")
+@RequiredArgsConstructor
 public class BoardController {
+
+    private final BoardService boardService;
 
     @GetMapping
     public String boards() {
@@ -38,6 +43,8 @@ public class BoardController {
         if (result.hasErrors()) {
             return "boards/board-form";
         }
+
+        boardService.saveBoardDto(member, boardSaveRequestDto);
         return "redirect:/";
     }
 

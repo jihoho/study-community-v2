@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 
 /**
  * Created by IntelliJ IDEA
@@ -35,4 +36,14 @@ public class BoardSchedule {
     @JoinColumn(name = "study_board_id")
     private Board board;
 
+    @Builder
+    public BoardSchedule(StudyDay studyDay, LocalTime startTime, LocalTime endTime) {
+        this.studyDay = studyDay;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 }

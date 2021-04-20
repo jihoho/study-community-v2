@@ -1,5 +1,7 @@
 package com.project.pagu.board.model;
 
+import com.project.pagu.board.domain.BoardSchedule;
+import com.project.pagu.board.domain.StudyDay;
 import java.time.LocalTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +26,12 @@ public class BoardScheduleDto {
     private LocalTime endTime;
 
     private int dayKey;
+
+    public BoardSchedule toEntity(){
+        return BoardSchedule.builder()
+                .studyDay(StudyDay.of(dayKey))
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
 }

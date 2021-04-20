@@ -95,6 +95,10 @@ public class Member extends BaseTimeEntity {
         this.role = Role.USER;
     }
 
+    public void addBoard(Board board){
+        boards.add(board);
+    }
+
     public String getRoleKey() {
         return this.role.getKey();
     }
@@ -102,4 +106,6 @@ public class Member extends BaseTimeEntity {
     public String getMemberTypeKey() {
         return this.memberType.getKey();
     }
+
+    public MemberId getMemberId() { return new MemberId(email, memberType); }
 }

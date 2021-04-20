@@ -1,5 +1,9 @@
 package com.project.pagu.board.model;
 
+import com.project.pagu.board.domain.Board;
+import com.project.pagu.board.domain.BoardSchedule;
+import com.project.pagu.board.domain.StudyStatus;
+import com.project.pagu.member.domain.Member;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +69,39 @@ public class BoardSaveRequestDto {
 
     private List<MultipartFile> fileList = new ArrayList<>();
 
+    public Board toEntity(Member member) {
+        return Board.builder()
+                .title(this.title)
+                .goal(this.goal)
+                .place(this.place)
+                .member(member)
+                .recruitmentStartAt(this.recruitmentStartAt)
+                .recruitmentEndAt(this.recruitmentEndAt)
+                .termsStartAt(this.termsStartAt)
+                .termsEndAt(this.termsEndAt)
+                .boardSchedules(createBoardSchedule())
+                .etc(this.etc)
+                .status(StudyStatus.READY)
+                .subjects(this.subjects)
+                .techStacks(this.teckStacks)
+                .build();
+    }
+
+    private List<BoardSchedule> createBoardSchedule() {
+        List<BoardSchedule> boardScheduleList = new ArrayList<>();
+        for (BoardScheduleDto boardScheduleDto : boardSchedules) {
+            BoardSchedule boardSchedule=boardScheduleDto.toEntity();
+            boardScheduleList.add(boardSchedule);
+        }
+        return boardScheduleList;
+    }
+
+    public List<BoardImageDto> toBoardImageDto() {
+        List<BoardImageDto> boardImageDtos = new ArrayList<>();
+        for (MultipartFile multipartFile : fileList) {
+            boardImageDtos.add(new BoardImageDto(multipartFile));
+        }
+        return boardImageDtos;
+    }
 
 }

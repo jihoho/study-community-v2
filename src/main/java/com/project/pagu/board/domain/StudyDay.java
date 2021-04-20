@@ -1,5 +1,9 @@
 package com.project.pagu.board.domain;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -21,4 +25,11 @@ public enum StudyDay {
 
     private final int key;
     private final String dayName;
+
+    private static final Map<Integer, String> KEY_MAP = Collections.unmodifiableMap(
+            Stream.of(values()).collect(Collectors.toMap(StudyDay::getKey, StudyDay::name)));
+
+    public static StudyDay of(final int key) {
+        return StudyDay.valueOf(KEY_MAP.get(key));
+    }
 }
