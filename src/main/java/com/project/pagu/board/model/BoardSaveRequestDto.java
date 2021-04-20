@@ -3,6 +3,10 @@ package com.project.pagu.board.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,23 +24,40 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 public class BoardSaveRequestDto {
 
+    @NotBlank
+    @Size(max = 50, message = "50글자 이내만 가능 합니다.")
     private String title;
+
+    @NotBlank
     private String subjects;
+
+    @NotBlank
     private String teckStacks;
+
+    @NotBlank
+    @Size(max = 50, message = "50글자 이내만 가능 합니다.")
     private String goal;
+
+    @NotBlank
+    @Size(max = 50, message = "50글자 이내만 가능 합니다.")
     private String place;
 
+    @NotEmpty(message = "스터디 일정을 등록해주세요.")
     private List<BoardScheduleDto> boardSchedules = new ArrayList<>();
 
+    @NotNull(message = "모집 시작 기간을 등록해주세요.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate recruitmentStartAt;
 
+    @NotNull(message = "모집 종료 기간을 등록해주세요.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate recruitmentEndAt;
 
+    @NotNull(message = "스터디 시작 기간을 등록해주세요.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate termsStartAt;
 
+    @NotNull(message = "스터디 종료 기간을 등록해주세요.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate termsEndAt;
 

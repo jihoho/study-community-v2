@@ -14,23 +14,27 @@
         <div class="form-group">
             <label for="title-input">제목</label>
             <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="제목 입력해주세요." required />
-            <small id="titleHelp" class="form-text text-muted">제목 입력 해주세요.</small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
         </div>
         <div class="form-group">
             <label for="subject-input">주제</label>
             <input type="text" class="form-control" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('subjects')}" th:errors="*{subjects}"></small>
         </div>
         <div class="form-group">
             <label for="tech-input">기술</label>
             <input type="text" class="form-control" id="tech-input" th:field="*{teckStacks}" placeholder="기술 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('teckStacks')}" th:errors="*{teckStacks}"></small>
         </div>
         <div class="form-group">
             <label for="goal-input">목표</label>
             <input type="text" class="form-control" id="goal-input" th:field="*{goal}" placeholder="목표 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('goal')}" th:errors="*{goal}"></small>
         </div>
         <div class="form-group">
             <label for="place-input">장소</label>
-            <input type="text" class="form-control" id="place-input" th:field="*{place}" placeholder="목표 입력해주세요." required />
+            <input type="text" class="form-control" id="place-input" th:field="*{place}" placeholder="장소 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('place')}" th:errors="*{place}"></small>
         </div>
         <div class="form-group">
             <label for="time-table">시간</label>
@@ -63,15 +67,23 @@
                 </table>
                 <div id="schedule-input"></div>
             </div>
+
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('boardSchedules')}" th:errors="*{boardSchedules}"></small>
         </div>
         <div class="form-group">
             <label for="recruitment-term-div">모집 기간</label>
             <div id="recruitment-term-div"><input type="date" th:field="*{recruitmentStartAt}" /> ~ <input type="date" th:field="*{recruitmentEndAt}" required /></div>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitmentStartAt')} and !${#fields.hasErrors('recruitmentEndAt')}" th:errors="*{recruitmentStartAt}"></small>
+            <small class="form-text text-danger" th:if="!${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}" th:errors="*{recruitmentEndAt}"></small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}">모집 기간 등록해주세요.</small>
         </div>
 
         <div class="form-group">
             <label for="study-term-div">스터디 기간</label>
             <div id="study-term-div"><input type="date" th:field="*{termsStartAt}" /> ~ <input type="date" th:field="*{termsEndAt}" required /></div>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and !${#fields.hasErrors('termsEndAt')}" th:errors="*{termsStartAt}"></small>
+            <small class="form-text text-danger" th:if="!${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}" th:errors="*{termsEndAt}"></small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}" >스터디 기간 등록해주세요.</small>
         </div>
         <div class="form-group">
             <label for="etc-input">기타 사항</label>

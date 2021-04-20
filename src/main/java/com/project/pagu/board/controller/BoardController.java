@@ -1,8 +1,12 @@
 package com.project.pagu.board.controller;
 
+import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.board.model.BoardSaveRequestDto;
+import com.project.pagu.member.domain.Member;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +31,14 @@ public class BoardController {
     }
 
     @PostMapping()
-    public String createBoard(BoardSaveRequestDto boardSaveRequestDto) {
-        return "boards/board-form";
+    public String createBoard(@CurrentMember Member member,
+            @Valid BoardSaveRequestDto boardSaveRequestDto,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "boards/board-form";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/form")
