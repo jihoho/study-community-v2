@@ -1,5 +1,6 @@
 package com.project.pagu.common.file;
 
+import com.project.pagu.board.model.BoardImageDto;
 import com.project.pagu.member.model.ProfileImageDto;
 import java.io.File;
 import java.io.IOException;
@@ -19,26 +20,43 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileManager {
 
+    private static final String ABSOLUTE_PATH = System.getProperty("user.home");
+
     public String createFileName() {
         return UUID.randomUUID().toString() + System.nanoTime();
     }
 
-    public String creatSubPath(ProfileImageDto profileImageDto) {
+    public String creatSubPathProfile(ProfileImageDto profileImageDto) {
         return profileImageDto.getType() + File.separator + profileImageDto.getEmail()
                 + File.separator + profileImageDto.getFilename();
     }
 
+    public String creatSubPathBoardImage(BoardImageDto boardImageDto) {
+        return boardImageDto.getBoardId() + File.separator + boardImageDto.getFilename();
+    }
+
     public void uploadProfileImage(ProfileImageDto profileImageDto) {
-        File file = newFile(profileImageDto);
+        File file = newFileProfileImage(profileImageDto);
         findDirectory(file);
         upload(profileImageDto.getMultipartFile(), file);
     }
 
-    private File newFile(ProfileImageDto profileImageDto) {
-        String absolutePath = System.getProperty("user.home");
-        String subPath = creatSubPath(profileImageDto);
+    public void uploadBoardImage(BoardImageDto boardImageDto) {
+        File file = newFileBoardImage(boardImageDto);
+        findDirectory(file);
+        upload(boardImageDto.getMultipartFile(), file);
+    }
+
+    private File newFileProfileImage(ProfileImageDto profileImageDto) {
+        String subPath = creatSubPathProfile(profileImageDto);
         String filePath = FilePath.PROFILE_IMAGE.getPath() + subPath;
-        return new File(absolutePath + filePath);
+        return new File(ABSOLUTE_PATH + filePath);
+    }
+
+    private File newFileBoardImage(BoardImageDto boardImageDto) {
+        String subPath = creatSubPathBoardImage(boardImageDto);
+        String filePath = FilePath.BOARD_IMAGE.getPath() + subPath;
+        return new File(ABSOLUTE_PATH + filePath);
     }
 
     private void findDirectory(File file) {
@@ -57,7 +75,7 @@ public class FileManager {
 
     public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
             throws Exception {
-        File image = newFile(profileImageDto);
+        File image = newFileProfileImage(profileImageDto);
         try (OutputStream out = response.getOutputStream()) {
             isExistImageMakeThumbnail(image, out);
             byte[] buffer = new byte[1024 * 12];
