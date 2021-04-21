@@ -3,9 +3,13 @@ package com.project.pagu.member.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.project.pagu.member.mockMember.WithMember;
+import com.project.pagu.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ class ProfileControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @DisplayName("권한이 없는 사용자가 프로필 페이지로 이동 시 로그인 페이지로 redirect 된다.")
     @Test
     void get_profile_fail() throws Exception {
@@ -41,6 +48,17 @@ class ProfileControllerTest {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("프로필 수정 폼으로 이동한다.")
+    @WithMember
+    void profile_update_form() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"))
+                .andExpect(model().attributeExists("profileRequestDto"))
                 .andDo(print());
     }
 
