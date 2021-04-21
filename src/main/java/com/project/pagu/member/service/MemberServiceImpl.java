@@ -138,6 +138,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
+        if (profileRequestDto.getMultipartFile() == null) {
+            return;
+        }
 
         if (profileRequestDto.getMultipartFile().getSize() != 0) {
             String fileName = fileManager.createFileName();
