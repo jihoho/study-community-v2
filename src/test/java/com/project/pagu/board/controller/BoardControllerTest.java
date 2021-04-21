@@ -4,9 +4,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.project.pagu.member.mockMember.WithMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +49,11 @@ class BoardControllerTest {
 
     @DisplayName("게시물 등록 페이지로 이동한다.")
     @Test
+    @WithMember
     void boards_form() throws Exception {
-        mockMvc.perform(get("/boards/form"))
+        mockMvc.perform(get("/boards/board-form"))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("boardSaveRequestDto"))
                 .andExpect(view().name("boards/board-form"))
                 .andExpect(content().string(containsString("스터디 모집 공고 등록")))
                 .andExpect(content().string(containsString("제목")))
