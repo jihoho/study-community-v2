@@ -28,6 +28,7 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 import com.project.pagu.member.service.MemberServiceImpl;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,11 @@ class MemberControllerTest2 {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @AfterEach
+    void afterEach() {
+        memberRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("회원 가입 페이지로 이동한다.")

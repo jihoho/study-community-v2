@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.member.mockMember.WithMember;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ class ProfileControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @AfterEach
+    void afterEach() {
+        memberRepository.deleteAll();
+    }
 
     @DisplayName("권한이 없는 사용자가 프로필 페이지로 이동 시 로그인 페이지로 redirect 된다.")
     @Test
@@ -83,9 +89,9 @@ class ProfileControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-
     private ProfileRequestDto givenDto() {
         return ProfileRequestDto.builder()
+                .nickname("tester")
                 .email("test@email.com")
                 .memberType("NORMAL")
                 .nickname("tester")
