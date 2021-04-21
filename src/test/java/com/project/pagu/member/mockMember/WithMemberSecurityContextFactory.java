@@ -3,9 +3,11 @@ package com.project.pagu.member.mockMember;
 import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberServiceImpl;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,10 +35,11 @@ public class WithMemberSecurityContextFactory implements WithSecurityContextFact
         dto.setNickname(nickname);
         dto.setEmail(nickname + "@email.com");
         dto.setPassword(passwordEncoder.encode("123123a!"));
-        MemberId memberId = memberService.saveMember(dto);
+        memberService.saveMember(dto);
 
         UserDetails principal = memberService.loadUserByUsername(dto.getEmail());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         return context;
