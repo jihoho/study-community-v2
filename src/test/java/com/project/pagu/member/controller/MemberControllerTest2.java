@@ -64,6 +64,9 @@ class MemberControllerTest2 {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Test
     @DisplayName("회원 가입 페이지로 이동한다.")
     void sign_up() throws Exception {
@@ -233,7 +236,7 @@ class MemberControllerTest2 {
                 .email("test@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
-                .password(new BCryptPasswordEncoder().encode("abcde1234!"))
+                .password(passwordEncoder.encode("abcde1234!"))
                 .role(Role.GUEST)
                 .imageUrl(null)
                 .career("취준생")
