@@ -60,6 +60,7 @@
                     <h3 class="mb-4">프로필 정보</h3>
                     <!-- 프로필 수정 폼 -->
                     <form th:action="@{/members/update}" method="post" th:object="${profileRequestDto}" enctype="multipart/form-data">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <div class="row">
                             <div class="col-md-4">
                                 <div id="img-box">
