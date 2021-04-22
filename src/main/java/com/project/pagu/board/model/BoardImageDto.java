@@ -26,10 +26,9 @@ public class BoardImageDto {
         this.multipartFile = multipartFile;
     }
 
-    public BoardImage toEntity(Board board) {
+    public BoardImage toEntity() {
         return BoardImage.builder()
                 .filename(this.filename)
-                .board(board)
                 .build();
     }
 }

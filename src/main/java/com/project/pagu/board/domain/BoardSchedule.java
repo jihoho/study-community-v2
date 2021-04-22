@@ -1,12 +1,11 @@
 package com.project.pagu.board.domain;
 
+import static javax.persistence.FetchType.LAZY;
 import java.time.LocalTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -41,7 +40,7 @@ public class BoardSchedule {
 
     private LocalTime endTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "study_board_id")
     private Board board;
 

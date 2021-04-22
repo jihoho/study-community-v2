@@ -1,5 +1,7 @@
 package com.project.pagu.board.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
 import com.project.pagu.common.BaseTimeEntity;
 import com.project.pagu.member.domain.Member;
 import java.time.LocalDate;
@@ -45,7 +47,7 @@ public class Board extends BaseTimeEntity {
 
     private String place;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumns({
             @JoinColumn(name = "email"),
             @JoinColumn(name = "member_type")
@@ -61,9 +63,11 @@ public class Board extends BaseTimeEntity {
     private LocalDate termsEndAt;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<BoardSchedule> boardSchedules = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<BoardImage> boardImages = new ArrayList<>();
 
     @Lob
@@ -81,17 +85,30 @@ public class Board extends BaseTimeEntity {
     private String techStacks;
 
     //==연관관계 편의 메서드==//
+    public void addBoardScheduleList(List<BoardSchedule> boardSchedules) {
+        for (BoardSchedule boardSchedule : boardSchedules) {
+            addBoardSchedule(boardSchedule);
+        }
+    }
+
     public void addBoardSchedule(BoardSchedule boardSchedule) {
-        boardSchedules.add(boardSchedule);
+        this.boardSchedules.add(boardSchedule);
         boardSchedule.setBoard(this);
     }
 
-    private void setMember(Member member) {
+    public void setMember(Member member) {
         this.member = member;
         member.addBoard(this);
     }
 
-    public void addBoardImage(BoardImage boardImage) {
-        boardImages.add(boardImage);
+    public void addBoardImageList(List<BoardImage> boardImageList) {
+        for (BoardImage boardImage : boardImageList) {
+            addBoardImage(boardImage);
+        }
+    }
+
+    private void addBoardImage(BoardImage boardImage) {
+        this.boardImages.add(boardImage);
+        boardImage.setBoard(this);
     }
 }

@@ -1,5 +1,6 @@
 package com.project.pagu.board.domain;
 
+import static javax.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,8 +34,12 @@ public class BoardImage {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "study_board_id")
     private Board board;
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
 }
