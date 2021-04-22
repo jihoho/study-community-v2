@@ -49,13 +49,13 @@ public class FileManager {
 
     private File newFileProfileImage(ProfileImageDto profileImageDto) {
         String subPath = creatSubPathProfile(profileImageDto);
-        String filePath = FilePath.PROFILE_IMAGE.getPath() + subPath;
+        String filePath = FilePath.PROFILE_IMAGE + subPath;
         return new File(ABSOLUTE_PATH + filePath);
     }
 
     private File newFileBoardImage(BoardImageDto boardImageDto) {
         String subPath = creatSubPathBoardImage(boardImageDto);
-        String filePath = FilePath.BOARD_IMAGE.getPath() + subPath;
+        String filePath = FilePath.BOARD_IMAGE + subPath;
         return new File(ABSOLUTE_PATH + filePath);
     }
 
