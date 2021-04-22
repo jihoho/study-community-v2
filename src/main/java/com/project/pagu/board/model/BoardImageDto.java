@@ -29,6 +29,7 @@ public class BoardImageDto {
     public BoardImage toEntity(Board board) {
         return BoardImage.builder()
                 .filename(this.filename)
-                .board(board).build();
+                .board(board)
+                .build();
     }
 }

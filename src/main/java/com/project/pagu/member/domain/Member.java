@@ -60,25 +60,6 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Board> boards = new ArrayList<>();
 
-    public Member(String email, MemberType memberType, String nickname,
-            String password, String imageFile, Role role) {
-        this.email = email;
-        this.memberType = memberType;
-        this.password = password;
-        this.nickname = nickname;
-        this.imageFile = imageFile;
-        this.role = role;
-    }
-
-    public Member(String email, MemberType memberType, String nickname,
-            String password, Role role) {
-        this.email = email;
-        this.memberType = memberType;
-        this.nickname = nickname;
-        this.password = password;
-        this.role = role;
-    }
-
     public Member updateImage(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;

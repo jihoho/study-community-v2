@@ -5,6 +5,7 @@ import com.project.pagu.member.domain.Member;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,8 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Board extends BaseTimeEntity {
 
@@ -56,7 +60,7 @@ public class Board extends BaseTimeEntity {
 
     private LocalDate termsEndAt;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardSchedule> boardSchedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "board")
@@ -76,32 +80,8 @@ public class Board extends BaseTimeEntity {
 
     private String techStacks;
 
-    @Builder
-    public Board(String title, String goal, String place, Member member,
-            LocalDate recruitmentStartAt, LocalDate recruitmentEndAt, LocalDate termsStartAt,
-            LocalDate termsEndAt, List<BoardSchedule> boardSchedules, String etc,
-            StudyStatus status, String subjects,
-            String techStacks) {
-        this.title = title;
-        this.goal = goal;
-        this.place = place;
-        setMember(member);
-        this.recruitmentStartAt = recruitmentStartAt;
-        this.recruitmentEndAt = recruitmentEndAt;
-        this.termsStartAt = termsStartAt;
-        this.termsEndAt = termsEndAt;
-        for (BoardSchedule boardSchedule : boardSchedules) {
-            addBoardSchedule(boardSchedule);
-        }
-        this.etc = etc;
-        this.status = status;
-        this.subjects = subjects;
-        this.techStacks = techStacks;
-    }
-
-
     //==연관관계 편의 메서드==//
-    private void addBoardSchedule(BoardSchedule boardSchedule) {
+    public void addBoardSchedule(BoardSchedule boardSchedule) {
         boardSchedules.add(boardSchedule);
         boardSchedule.setBoard(this);
     }
