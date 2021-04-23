@@ -68,8 +68,8 @@ class MemberControllerTest2 {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @AfterEach
-    void afterEach() {
+    @BeforeEach
+    void beforeEach() {
         memberRepository.deleteAll();
     }
 
