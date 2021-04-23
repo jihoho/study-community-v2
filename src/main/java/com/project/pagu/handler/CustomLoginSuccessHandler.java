@@ -26,17 +26,21 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws ServletException, IOException {
+
         HttpSession session = request.getSession();
-        if (session != null) {
-            String redirectUrl = (String) session.getAttribute("prevPage");
-            if (redirectUrl != null) {
-                session.removeAttribute("prevPage");
-                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-            } else {
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-        } else {
+        if (session == null) {
             super.onAuthenticationSuccess(request, response, authentication);
+            return;
         }
+
+        String redirectUrl = (String) session.getAttribute("prevPage");
+        if (redirectUrl == null) {
+            super.onAuthenticationSuccess(request, response, authentication);
+            return;
+        }
+
+        session.removeAttribute("prevPage");
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+
     }
 }
