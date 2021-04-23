@@ -48,7 +48,7 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping("/form")
+    @GetMapping("/board-form")
     public String boardsFrom(Model model, BoardSaveRequestDto boardSaveRequestDto) {
         model.addAttribute(boardSaveRequestDto);
         return "boards/board-form";

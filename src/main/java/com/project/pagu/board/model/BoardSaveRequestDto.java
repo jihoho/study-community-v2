@@ -36,7 +36,7 @@ public class BoardSaveRequestDto {
     private String subjects;
 
     @NotBlank
-    private String teckStacks;
+    private String techStacks;
 
     @NotBlank
     @Size(max = 50, message = "50글자 이내만 가능 합니다.")
@@ -81,7 +81,7 @@ public class BoardSaveRequestDto {
                 .etc(this.etc)
                 .status(StudyStatus.READY)
                 .subjects(this.subjects)
-                .techStacks(this.teckStacks)
+                .techStacks(this.techStacks)
                 .build();
     }
 

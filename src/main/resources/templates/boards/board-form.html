@@ -29,8 +29,8 @@
         </div>
         <div class="form-group">
             <label for="tech-input">기술</label>
-            <input type="text" class="form-control" data-role="tagsinput" id="tech-input" th:field="*{teckStacks}" placeholder="기술 입력해주세요." required />
-            <small class="form-text text-danger" th:if="${#fields.hasErrors('teckStacks')}" th:errors="*{teckStacks}"></small>
+            <input type="text" class="form-control" id="tech-input" th:field="*{techStacks}" placeholder="기술 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('techStacks')}" th:errors="*{techStacks}"></small>
         </div>
         <div class="form-group">
             <label for="goal-input">목표</label>
