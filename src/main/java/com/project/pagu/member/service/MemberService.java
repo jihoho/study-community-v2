@@ -16,8 +16,6 @@ public interface MemberService {
 
     boolean existsByMemberId(MemberId memberId);
 
-    boolean existsByEmail(String email);
-
     boolean existsByNickname(String nickname);
 
     Optional<Member> findById(MemberId memberId);
@@ -27,8 +25,6 @@ public interface MemberService {
     MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
 
     Member save(Member member);
-
-    Member findByEmail(String username);
 
     ProfileRequestDto convertMemberToProfileRequestDto(Member member);
 

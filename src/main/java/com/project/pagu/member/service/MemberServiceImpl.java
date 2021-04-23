@@ -58,11 +58,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return memberRepository.existsByEmail(email);
-    }
-
-    @Override
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
@@ -73,13 +68,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public Member save(Member member) {
         return memberRepository.save(member);
-    }
-
-    @Override
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                //todo : 예외 처리 수정
-                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     @Override

@@ -96,19 +96,6 @@ public class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("이메일이 존재하는지")
-    void exists_by_email() {
-        // given
-        given(memberRepository.existsByEmail(dto.getEmail())).willReturn(true);
-
-        // when
-        assertTrue(memberService.existsByEmail(dto.getEmail()));
-
-        // then
-        verify(memberRepository, times(1)).existsByEmail(dto.getEmail());
-    }
-
-    @Test
     @DisplayName("닉네임이 존재하는지")
     void exists_by_nickname() {
         // given
@@ -122,18 +109,18 @@ public class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("이메일로 회원 조회")
+    @DisplayName("아이디로 회원 조회")
     void find_by_email() {
         // given
-        given(memberRepository.findByEmail(dto.getEmail())).willReturn(Optional.of(dto.toEntity()));
+        given(memberRepository.findById(any())).willReturn(Optional.of(dto.toEntity()));
 
         // when
-        Member member = memberService.findByEmail(dto.getEmail());
+        Optional<Member> byId = memberService
+                .findById(MemberId.of(dto.getEmail(), MemberType.NORMAL));
 
         // then
-        verify(memberRepository, times(1)).findByEmail(dto.getEmail());
-        assertNotNull(member);
-        assertThat(member.getEmail()).isEqualTo("123@email.com");
+        verify(memberRepository, times(1)).findById(any());
+        assertNotNull(byId);
     }
     
     @Test
