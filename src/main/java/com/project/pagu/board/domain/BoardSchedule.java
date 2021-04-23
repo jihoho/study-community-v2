@@ -1,5 +1,6 @@
 package com.project.pagu.board.domain;
 
+import static javax.persistence.FetchType.LAZY;
 import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Created by IntelliJ IDEA
@@ -17,6 +21,10 @@ import lombok.Builder;
  * Date: 2021-04-19 Time: 오후 11:16
  */
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class BoardSchedule {
 
     @Id
@@ -32,16 +40,9 @@ public class BoardSchedule {
 
     private LocalTime endTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "study_board_id")
     private Board board;
-
-    @Builder
-    public BoardSchedule(StudyDay studyDay, LocalTime startTime, LocalTime endTime) {
-        this.studyDay = studyDay;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 
     public void setBoard(Board board) {
         this.board = board;

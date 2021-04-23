@@ -11,11 +11,16 @@ import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -131,10 +136,16 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     @Transactional
     public void update(Member member, ProfileRequestDto profileRequestDto) {
-        Member findMember = findMember(member);
-
         updateImageFile(profileRequestDto);
-        findMember.updateProfile(profileRequestDto);
+        member.updateProfile(profileRequestDto);
+        memberRepository.save(member);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+        updatedAuthorities.add(new SimpleGrantedAuthority(member.getRoleKey()));
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
     private void updateImageFile(ProfileRequestDto profileRequestDto) {

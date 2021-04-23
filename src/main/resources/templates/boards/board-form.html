@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head"></head>
+
+<link rel="stylesheet" href="/node_modules/bootstrap-tagsinput/src/bootstrap-tagsinput.css" />
+<link href="/css/board-form.css" rel="stylesheet" type="text/css" media="screen" />
+<!-- 해시태그 관련 라이브러리 -->
+<script src="/typeahead/typeahead.bundle.js"></script>
+<!-- 해시태그 관련 라이브러리 end-->
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
 
@@ -18,7 +24,7 @@
         </div>
         <div class="form-group">
             <label for="subject-input">주제</label>
-            <input type="text" class="form-control" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
+            <input type="text" class="form-control" data-role="tagsinput" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
             <small class="form-text text-danger" th:if="${#fields.hasErrors('subjects')}" th:errors="*{subjects}"></small>
         </div>
         <div class="form-group">
@@ -43,13 +49,27 @@
                     <thead>
                     <!--     table header      -->
                     <tr>
-                        <th><button class="day-butt" type="button" id="day-0">월</button></th>
-                        <th><button class="day-butt" type="button" id="day-1">화</button></th>
-                        <th><button class="day-butt" type="button" id="day-2">수</button></th>
-                        <th><button class="day-butt" type="button" id="day-3">목</button></th>
-                        <th><button class="day-butt" type="button" id="day-4">금</button></th>
-                        <th><button class="day-butt" type="button" id="day-5">토</button></th>
-                        <th><button class="day-butt" type="button" id="day-6">일</button></th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-0">월</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-1">화</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-2">수</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-3">목</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-4">금</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-5">토</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-6">일</button>
+                        </th>
                     </tr>
                     <!--     table header end      -->
                     </thead>
@@ -83,7 +103,7 @@
             <div id="study-term-div"><input type="date" th:field="*{termsStartAt}" /> ~ <input type="date" th:field="*{termsEndAt}" required /></div>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and !${#fields.hasErrors('termsEndAt')}" th:errors="*{termsStartAt}"></small>
             <small class="form-text text-danger" th:if="!${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}" th:errors="*{termsEndAt}"></small>
-            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}" >스터디 기간 등록해주세요.</small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}">스터디 기간 등록해주세요.</small>
         </div>
         <div class="form-group">
             <label for="etc-input">기타 사항</label>
@@ -132,5 +152,6 @@
 </div>
 <!-- Modal end-->
 <script src="/js/board-form.js"></script>
+
 </body>
 </html>

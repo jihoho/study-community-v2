@@ -1,24 +1,22 @@
 package com.project.pagu.common.file;
 
-import static com.project.pagu.common.file.FilePathValue.BOARD_IMAGE_PATH;
-import static com.project.pagu.common.file.FilePathValue.PROFILE_IMAGE_PATH;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA
- * User: yhh1056@naver.com
- * Date: 2021/04/18 Time: 8:34 오후
+ * User: hojun
+ * Date: 2021-04-19 Time: 오후 5:32
  */
 
-@RequiredArgsConstructor
-public enum FilePath {
-    PROFILE_IMAGE(PROFILE_IMAGE_PATH),
-    BOARD_IMAGE(BOARD_IMAGE_PATH);
+public class FilePath {
 
-    private final String path;
+    @Value("${profile.image.filepath}")
+    private static String PROFILE_IMAGE_PATH;
 
-    public String getPath() {
-        return this.path;
-    }
+    @Value("${board.image.filepath}")
+    private static String BOARD_IMAGE_PATH;
+
+    public static final String PROFILE_IMAGE = PROFILE_IMAGE_PATH;
+    public static final String BOARD_IMAGE = BOARD_IMAGE_PATH;
 }

@@ -1,5 +1,6 @@
 package com.project.pagu.board.domain;
 
+import static javax.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,7 +19,9 @@ import org.springframework.data.annotation.CreatedDate;
  * Date: 2021-04-19 Time: 오후 11:48
  */
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class BoardImage {
 
     @Id
@@ -30,19 +34,12 @@ public class BoardImage {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "study_board_id")
     private Board board;
 
-    @Builder
-    public BoardImage(String filename, Board board) {
-        this.filename = filename;
-        setBoard(board);
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
-    //==연관관계 편의 메서드==//
-    private void setBoard(Board board) {
-        this.board = board;
-        board.addBoardImage(this);
-    }
 }

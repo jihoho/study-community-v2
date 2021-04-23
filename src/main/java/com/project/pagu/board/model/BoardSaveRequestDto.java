@@ -69,17 +69,15 @@ public class BoardSaveRequestDto {
 
     private List<MultipartFile> fileList = new ArrayList<>();
 
-    public Board toEntity(Member member) {
+    public Board toEntity() {
         return Board.builder()
                 .title(this.title)
                 .goal(this.goal)
                 .place(this.place)
-                .member(member)
                 .recruitmentStartAt(this.recruitmentStartAt)
                 .recruitmentEndAt(this.recruitmentEndAt)
                 .termsStartAt(this.termsStartAt)
                 .termsEndAt(this.termsEndAt)
-                .boardSchedules(createBoardSchedule())
                 .etc(this.etc)
                 .status(StudyStatus.READY)
                 .subjects(this.subjects)
@@ -87,16 +85,7 @@ public class BoardSaveRequestDto {
                 .build();
     }
 
-    private List<BoardSchedule> createBoardSchedule() {
-        List<BoardSchedule> boardScheduleList = new ArrayList<>();
-        for (BoardScheduleDto boardScheduleDto : boardSchedules) {
-            BoardSchedule boardSchedule=boardScheduleDto.toEntity();
-            boardScheduleList.add(boardSchedule);
-        }
-        return boardScheduleList;
-    }
-
-    public List<BoardImageDto> toBoardImageDto() {
+    public List<BoardImageDto> toBoardImageDtoList() {
         List<BoardImageDto> boardImageDtos = new ArrayList<>();
         for (MultipartFile multipartFile : fileList) {
             boardImageDtos.add(new BoardImageDto(multipartFile));
