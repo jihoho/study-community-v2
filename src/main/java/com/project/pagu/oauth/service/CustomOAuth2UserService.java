@@ -34,10 +34,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member findMember(OAuthAttributes attributes) {
-        Member member = memberService
+        return memberService
                 .findById(MemberId.of(attributes.getEmail(), attributes.getMemberType()))
-                .map(entity -> entity.updateImage(attributes.getPicture()))
-                .orElse(attributes.toEntity());
-        return member;
+                .updateImage(attributes.getPicture());
     }
 }

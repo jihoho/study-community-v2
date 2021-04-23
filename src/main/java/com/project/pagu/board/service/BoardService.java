@@ -36,8 +36,7 @@ public class BoardService {
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
         // Member엔티티 조회
-        Member findMember = memberService.findById(member.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException());
+        Member findMember = memberService.findById(member.getMemberId());
         Board board = dto.toEntity();
         board.setMember(findMember);
         board.addBoardScheduleList(createBoardSchedule(dto.getBoardSchedules()));

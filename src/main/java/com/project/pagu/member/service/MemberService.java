@@ -18,7 +18,7 @@ public interface MemberService {
 
     boolean existsByNickname(String nickname);
 
-    Optional<Member> findById(MemberId memberId);
+    Member findById(MemberId memberId);
 
     void login(Member member);
 

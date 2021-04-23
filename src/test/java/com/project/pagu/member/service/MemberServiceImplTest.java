@@ -115,12 +115,11 @@ public class MemberServiceImplTest {
         given(memberRepository.findById(any())).willReturn(Optional.of(dto.toEntity()));
 
         // when
-        Optional<Member> byId = memberService
-                .findById(MemberId.of(dto.getEmail(), MemberType.NORMAL));
+        Member member = memberService.findById(MemberId.of(dto.getEmail(), MemberType.NORMAL));
 
         // then
         verify(memberRepository, times(1)).findById(any());
-        assertNotNull(byId);
+        assertNotNull(member);
     }
     
     @Test

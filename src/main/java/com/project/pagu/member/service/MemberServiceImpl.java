@@ -12,7 +12,6 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,8 +42,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final FileManager fileManager;
 
     @Override
-    public Optional<Member> findById(MemberId memberId) {
-        return memberRepository.findById(memberId);
+    public Member findById(MemberId memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException(memberId.toString()));
     }
 
     @Override
@@ -84,14 +84,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("## loadUserByUsername ##");
-        Member member = findById(MemberId.of(email, MemberType.NORMAL))
-                .orElseThrow(() -> new UsernameNotFoundException(email));
-        return new UserMember(member);
+        return new UserMember(findById(MemberId.of(email, MemberType.NORMAL)));
     }
 
     @Override
     public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
-        Member findMember = findMember(member);
+        Member findMember = findById(member.getMemberId());
 
         return ProfileRequestDto.builder()
                 .email(findMember.getEmail())
@@ -105,13 +103,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
                 .career(findMember.getCareer())
                 .position(findMember.getPostion())
                 .build();
-    }
-
-    public Member findMember(Member member) {
-        return memberRepository
-                .findById(MemberId.of(member.getEmail(), member.getMemberType()))
-                /** todo: exception handing */
-                .orElseThrow(() -> new UsernameNotFoundException(member.getMemberId().toString()));
     }
 
     @Override
