@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface MemberService {
 
-    boolean existsByMemberId(MemberId memberId);
+    boolean existsById(MemberId memberId);
 
     boolean existsByNickname(String nickname);
 

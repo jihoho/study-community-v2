@@ -35,7 +35,7 @@ public class SignUpValidation implements Validator {
     }
 
     private void isExistedNormalEmail(String email,Errors errors) {
-        if (memberService.existsByMemberId(MemberId.of(email,MemberType.NORMAL))) {
+        if (memberService.existsById(MemberId.of(email,MemberType.NORMAL))) {
             errors.rejectValue("email", "UniqueEmail", "이미 존재하는 이메일입니다.");
         }
     }

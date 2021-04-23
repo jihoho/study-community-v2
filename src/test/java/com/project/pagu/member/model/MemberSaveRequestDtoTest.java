@@ -50,7 +50,7 @@ public class MemberSaveRequestDtoTest {
         dto.setAuthKey("123456");
         dto.setAuthKeyInput("123456");
         errors = new BeanPropertyBindingResult(dto, "MemberSaveRequestDto");
-        when(memberService.existsByMemberId(any())).thenReturn(false); // 이메일 unique
+        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
         when(memberService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
     }
 
@@ -74,7 +74,7 @@ public class MemberSaveRequestDtoTest {
     @Test
     @DisplayName("이메일 중복 실패 테스트")
     void input_fail_email_unique() throws Exception {
-        when(memberService.existsByMemberId(any())).thenReturn(true); // 이메일 중복
+        when(memberService.existsById(any())).thenReturn(true); // 이메일 중복
 
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 

@@ -27,7 +27,6 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
 import com.project.pagu.member.service.MemberServiceImpl;
 import java.util.List;
-import com.project.pagu.member.service.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -119,7 +118,7 @@ class MemberControllerTest {
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
         // when
-        when(memberService.existsByMemberId(any())).thenReturn(true);
+        when(memberService.existsById(any())).thenReturn(true);
 
         // then
         mockMvc.perform(post("/sign-up/valid")

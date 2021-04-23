@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public boolean existsByMemberId(MemberId memberId) {
+    public boolean existsById(MemberId memberId) {
         return memberRepository.existsById(memberId);
     }
 

@@ -89,7 +89,7 @@ public class MemberServiceImplTest {
         given(memberRepository.existsById(memberId)).willReturn(true);
 
         // when
-        assertTrue(memberService.existsByMemberId(memberId));
+        assertTrue(memberService.existsById(memberId));
 
         // then
         verify(memberRepository, times(1)).existsById(memberId);
