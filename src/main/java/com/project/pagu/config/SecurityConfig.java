@@ -5,9 +5,11 @@ import com.project.pagu.handler.OAuth2SuccessHandler;
 import com.project.pagu.member.service.MemberServiceImpl;
 import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,5 +85,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("USER");
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .mvcMatchers("/node_modules/**")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
 }
