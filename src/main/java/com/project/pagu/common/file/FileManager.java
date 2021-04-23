@@ -1,13 +1,14 @@
 package com.project.pagu.common.file;
 
-import com.project.pagu.board.model.BoardImageDto;
-import com.project.pagu.member.model.ProfileImageDto;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,46 +21,39 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileManager {
 
+    @Value("${profile.image.filepath}")
+    private String profilePath;
+
+    @Value("${board.image.filepath}")
+    private String boardPath;
+
     private static final String ABSOLUTE_PATH = System.getProperty("user.home");
 
     public String createFileName() {
         return UUID.randomUUID().toString() + System.nanoTime();
     }
 
-    public String creatSubPathProfile(ProfileImageDto profileImageDto) {
-        return profileImageDto.getType() + File.separator + profileImageDto.getEmail()
-                + File.separator + profileImageDto.getFilename();
+    public void uploadProfileImage(MultipartFile multipartFile, String filename, String... paths) {
+        String fullPath = profilePath + createSubPath(paths) + filename;
+        uploadImage(multipartFile, fullPath);
     }
 
-    public String creatSubPathBoardImage(BoardImageDto boardImageDto) {
-        return boardImageDto.getBoardId() + File.separator + boardImageDto.getFilename();
+    private void uploadImage(MultipartFile multipartFile, String fullPath) {
+        File file = newFile(fullPath);
+        isExistedDirectory(file);
+        upload(multipartFile, file);
     }
 
-    public void uploadProfileImage(ProfileImageDto profileImageDto) {
-        File file = newFileProfileImage(profileImageDto);
-        findDirectory(file);
-        upload(profileImageDto.getMultipartFile(), file);
+    private String createSubPath(String[] paths) {
+        return Arrays.stream(paths).map(path -> path + File.separator)
+                .collect(Collectors.joining());
     }
 
-    public void uploadBoardImage(BoardImageDto boardImageDto) {
-        File file = newFileBoardImage(boardImageDto);
-        findDirectory(file);
-        upload(boardImageDto.getMultipartFile(), file);
+    private File newFile(String path) {
+        return new File(ABSOLUTE_PATH + path);
     }
 
-    private File newFileProfileImage(ProfileImageDto profileImageDto) {
-        String subPath = creatSubPathProfile(profileImageDto);
-        String filePath = FilePath.PROFILE_IMAGE + subPath;
-        return new File(ABSOLUTE_PATH + filePath);
-    }
-
-    private File newFileBoardImage(BoardImageDto boardImageDto) {
-        String subPath = creatSubPathBoardImage(boardImageDto);
-        String filePath = FilePath.BOARD_IMAGE + subPath;
-        return new File(ABSOLUTE_PATH + filePath);
-    }
-
-    private void findDirectory(File file) {
+    private void isExistedDirectory(File file) {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
         }
@@ -73,9 +67,13 @@ public class FileManager {
         }
     }
 
-    public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
-            throws Exception {
-        File image = newFileProfileImage(profileImageDto);
+    public void uploadBoardImage(MultipartFile multipartFile, String filename, String... paths) {
+        String fullPath = boardPath + createSubPath(paths) + filename;
+        uploadImage(multipartFile, fullPath);
+    }
+
+    public void profileThumbnails(HttpServletResponse response, String filename, String... paths) throws Exception {
+        File image = newFile(profilePath + createSubPath(paths) + filename);
         try (OutputStream out = response.getOutputStream()) {
             isExistImageMakeThumbnail(image, out);
             byte[] buffer = new byte[1024 * 12];

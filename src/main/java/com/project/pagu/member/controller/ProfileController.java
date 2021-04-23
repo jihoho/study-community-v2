@@ -3,7 +3,6 @@ package com.project.pagu.member.controller;
 import com.project.pagu.annotation.CurrentMember;
 import com.project.pagu.common.file.FileManager;
 import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.validation.ProfileValidation;
@@ -16,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
@@ -54,10 +54,12 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/profileThumbnails/{email}/{type}/{filename}")
-    public void profileThumbnails(ProfileImageDto profileImageDto, HttpServletResponse response)
-            throws Exception {
-        fileManager.profileThumbnails(profileImageDto, response);
+    @GetMapping("/profileThumbnails/{type}/{email}/{filename}")
+    public void profileThumbnails(@PathVariable String type,
+            @PathVariable String email,
+            @PathVariable String filename,
+            HttpServletResponse response) throws Exception {
+        fileManager.profileThumbnails(response, filename, type, email);
     }
 
 }

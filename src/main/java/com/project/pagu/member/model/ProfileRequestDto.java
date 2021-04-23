@@ -49,12 +49,4 @@ public class ProfileRequestDto {
 
     private String position;
 
-    public ProfileImageDto toProfileImageDto() {
-        return ProfileImageDto.builder()
-                .email(this.email)
-                .type(this.memberType)
-                .filename(this.imageFile)
-                .multipartFile(this.multipartFile)
-                .build();
-    }
 }

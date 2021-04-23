@@ -68,7 +68,7 @@
                                     <!--todo: 임시적으로 filename으로 설정해둠 -->
                                     <img
                                         th:if="${!#strings.isEmpty(profileRequestDto.imageFile)}"
-                                        th:src="@{/profileThumbnails/{email}/{type}/{filename}(email=${profileRequestDto.email},type=${profileRequestDto.memberType},filename=${profileRequestDto.imageFile})}"
+                                        th:src="@{/profileThumbnails/{type}/{email}/{filename}(type=${profileRequestDto.memberType},email=${profileRequestDto.email},filename=${profileRequestDto.imageFile})}"
                                         class="profile-img"
                                     />
                                     <svg

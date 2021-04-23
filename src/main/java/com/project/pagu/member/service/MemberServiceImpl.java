@@ -7,7 +7,6 @@ import com.project.pagu.member.domain.MemberType;
 
 import com.project.pagu.member.domain.UserMember;
 import com.project.pagu.member.model.OauthMemberSaveDto;
-import com.project.pagu.member.model.ProfileImageDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
@@ -156,8 +155,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         if (profileRequestDto.getMultipartFile().getSize() != 0) {
             String fileName = fileManager.createFileName();
             profileRequestDto.setImageFile(fileName);
-            ProfileImageDto profileImageDto = profileRequestDto.toProfileImageDto();
-            fileManager.uploadProfileImage(profileImageDto);
+            fileManager.uploadProfileImage(profileRequestDto.getMultipartFile(), fileName, profileRequestDto.getMemberType(), profileRequestDto.getEmail());
         }
     }
 }

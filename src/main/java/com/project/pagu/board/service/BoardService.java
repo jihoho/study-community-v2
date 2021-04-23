@@ -78,7 +78,8 @@ public class BoardService {
         if (boardImageDto.getMultipartFile().getSize() != 0) {
             String filename = fileManager.createFileName();
             boardImageDto.setFilename(filename);
-            fileManager.uploadBoardImage(boardImageDto);
+            fileManager.uploadBoardImage(boardImageDto.getMultipartFile(), filename,
+                    String.valueOf(boardImageDto.getBoardId()));
         }
 
     }
