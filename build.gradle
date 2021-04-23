@@ -47,7 +47,7 @@ dependencies {
  * npm install start
  */
 node {
-    version = '12.13.1'
+    version = '15.11.0'
     download = true
     nodeModulesDir = file("${projectDir}/src/main/resources/static")
 }
@@ -57,6 +57,5 @@ task copyFrontLib(type: Copy) {
     into "${projectDir}/build/resources/main/static/."
 }
 
-test {
-    useJUnitPlatform()
-}
+copyFrontLib.dependsOn npmInstall
+compileJava.dependsOn copyFrontLib
