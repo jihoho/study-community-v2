@@ -58,6 +58,7 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @OneToMany(mappedBy = "member")
+    @Builder.Default
     private List<Board> boards = new ArrayList<>();
 
     public Member updateImage(String imageUrl) {
