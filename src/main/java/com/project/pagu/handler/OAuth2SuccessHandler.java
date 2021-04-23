@@ -42,8 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private String getRedirectUrl(String email, MemberType memberType) {
-        Optional<Member> findMember = memberService.findById(MemberId.of(email, memberType));
-        if (findMember.isPresent()) {
+        if (memberService.existsById(MemberId.of(email, memberType))) {
             log.info(String.format("OAuth2 login success email: %s, type: %s ", email, memberType));
             return HOME;
         }
