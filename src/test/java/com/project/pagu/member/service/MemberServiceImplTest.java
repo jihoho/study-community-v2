@@ -85,7 +85,7 @@ public class MemberServiceImplTest {
     @DisplayName("memberId가 존재하는지")
     void exists_by_memberId() {
         // given
-        MemberId memberId = new MemberId(dto.getEmail(), MemberType.NORMAL);
+        MemberId memberId = MemberId.of(dto.getEmail(), MemberType.NORMAL);
         given(memberRepository.existsById(memberId)).willReturn(true);
 
         // when

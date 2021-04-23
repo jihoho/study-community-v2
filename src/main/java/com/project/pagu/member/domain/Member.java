@@ -89,5 +89,7 @@ public class Member extends BaseTimeEntity {
         return this.memberType.getKey();
     }
 
-    public MemberId getMemberId() { return new MemberId(email, memberType); }
+    public MemberId getMemberId() {
+        return MemberId.of(email, memberType);
+    }
 }

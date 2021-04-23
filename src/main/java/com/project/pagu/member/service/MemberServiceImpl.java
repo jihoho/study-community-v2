@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
-        return new MemberId(saveMember.getEmail(), saveMember.getMemberType());
+        return MemberId.of(saveMember.getEmail(), saveMember.getMemberType());
     }
 
     @Override
@@ -96,8 +96,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("## loadUserByUsername ##");
-        Member member = findById(new MemberId(email,
-                MemberType.NORMAL)).orElseThrow(() -> new UsernameNotFoundException(email));
+        Member member = findById(MemberId.of(email, MemberType.NORMAL))
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         return new UserMember(member);
     }
 
@@ -121,9 +121,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     public Member findMember(Member member) {
         return memberRepository
-                .findById(new MemberId(member.getEmail(), member.getMemberType()))
+                .findById(MemberId.of(member.getEmail(), member.getMemberType()))
                 /** todo: exception handing */
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(() -> new UsernameNotFoundException(member.getMemberId().toString()));
     }
 
     @Override
