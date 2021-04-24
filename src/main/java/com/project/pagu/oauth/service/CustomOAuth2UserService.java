@@ -1,9 +1,8 @@
 package com.project.pagu.oauth.service;
 
 import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.domain.MemberId;
 import com.project.pagu.member.service.MemberService;
-import com.project.pagu.oauth.model.OAuthAttributes;
+import com.project.pagu.oauth.model.OauthFactory;
 import com.project.pagu.oauth.model.OauthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -29,13 +28,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
         // 현재 로그인 진행 중인 서비스
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, oAuth2User.getAttributes());
-        return new OauthMember(findMember(attributes));
+        Member loginMember = OauthFactory.of(registrationId, oAuth2User.getAttributes());
+        return new OauthMember(find(loginMember));
     }
 
-    private Member findMember(OAuthAttributes attributes) {
-        return memberService
-                .findById(MemberId.of(attributes.getEmail(), attributes.getMemberType()))
-                .updateImage(attributes.getPicture());
+    /**
+     * todo: 다른 방법 찾아보기
+     */
+    private Member find(Member member) {
+        if (memberService.existsById(member.getMemberId())) {
+            return memberService.findById(member.getMemberId());
+        }
+        return member;
     }
 }
