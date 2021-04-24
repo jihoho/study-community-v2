@@ -2,8 +2,8 @@ package com.project.pagu.config;
 
 import com.project.pagu.handler.CustomLoginSuccessHandler;
 import com.project.pagu.handler.OAuth2SuccessHandler;
+import com.project.pagu.member.service.MemberService;
 import com.project.pagu.member.service.MemberServiceImpl;
-import com.project.pagu.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,9 +25,7 @@ import com.project.pagu.member.domain.Role;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-
-    private final MemberServiceImpl memberService;
+    private final MemberService memberService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -63,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/oauth-login")
                 .failureUrl("/sign-up")
                 .userInfoEndpoint()
-                .userService(customOAuth2UserService);
+                .userService(memberService);
     }
 
     @Bean
