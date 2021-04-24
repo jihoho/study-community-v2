@@ -9,7 +9,7 @@ import com.project.pagu.member.model.MemberSaveRequestDto;
  */
 public interface SignUpManager {
 
-    void sendMessageToMemberDto(MemberSaveRequestDto memberSaveRequestDto);
+    void sendAuthMessage(String email, String authKey);
 
     void encryptPassword(MemberSaveRequestDto memberSaveRequestDto);
 

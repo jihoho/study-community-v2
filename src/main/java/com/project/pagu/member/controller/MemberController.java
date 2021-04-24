@@ -1,9 +1,5 @@
 package com.project.pagu.member.controller;
 
-import com.project.pagu.annotation.CurrentMember;
-import com.project.pagu.member.domain.Member;
-import com.project.pagu.member.domain.MemberId;
-import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.service.MemberService;
 import com.project.pagu.signup.SignUpManager;
@@ -70,7 +66,7 @@ public class MemberController {
             return "sign-up";
         }
 
-        signUpManager.sendMessageToMemberDto(memberSaveRequestDto);
+        signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
         signUpManager.encryptPassword(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/email-check";

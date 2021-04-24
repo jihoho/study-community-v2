@@ -26,9 +26,8 @@ public class SignUpManagerImpl implements SignUpManager {
     private final JavaMailSender memberMailSender;
 
     @Override
-    public void sendMessageToMemberDto(MemberSaveRequestDto memberSaveRequestDto) {
-        memberSaveRequestDto.createEmailAuthKey();
-        SimpleMailMessage simpleMessage = createMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
+    public void sendAuthMessage(String email, String authKey) {
+        SimpleMailMessage simpleMessage = createMessage(email, authKey);
         memberMailSender.send(simpleMessage);
     }
 
@@ -47,7 +46,7 @@ public class SignUpManagerImpl implements SignUpManager {
     public void encryptPassword(MemberSaveRequestDto memberSaveRequestDto) {
         String password = memberSaveRequestDto.getPassword();
         memberSaveRequestDto.setPassword(passwordEncoder.encode(password));
-        memberSaveRequestDto.setPasswordCheck(passwordEncoder.encode(password));
+        memberSaveRequestDto.setPasswordCheck(memberSaveRequestDto.getPassword());
     }
 
 }
