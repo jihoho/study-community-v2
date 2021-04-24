@@ -10,6 +10,8 @@ import com.project.pagu.member.model.OauthMemberSaveDto;
 import com.project.pagu.member.model.ProfileRequestDto;
 import com.project.pagu.member.model.MemberSaveRequestDto;
 import com.project.pagu.member.repository.MemberRepository;
+import com.project.pagu.oauth.model.OauthFactory;
+import com.project.pagu.oauth.model.OauthMember;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class MemberServiceImpl implements MemberService, UserDetailsService {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final FileManager fileManager;
@@ -136,5 +141,20 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             profileRequestDto.setImageFile(fileName);
             fileManager.uploadProfileImage(profileRequestDto.getMultipartFile(), fileName, profileRequestDto.getMemberType(), profileRequestDto.getEmail());
         }
+    }
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+        // 현재 로그인 진행 중인 서비스
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        Member loginMember = OauthFactory.of(registrationId, oAuth2User.getAttributes());
+        return new OauthMember(getOrSyncImage(loginMember));
+    }
+
+    private Member getOrSyncImage(Member member) {
+        return memberRepository.findById(member.getMemberId())
+                .map(entity -> entity.updateImage(member.getImageUrl()))
+                .orElse(member);
     }
 }
