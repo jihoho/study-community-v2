@@ -78,7 +78,7 @@ public class BoardSaveRequestDto {
                 .termsEndAt(this.termsEndAt)
                 .etc(this.etc)
                 .status(StudyStatus.READY)
-                .subjects(this.subjects)
+//                .subjects(this.subjects)
                 .techStacks(this.techStacks)
                 .build();
     }

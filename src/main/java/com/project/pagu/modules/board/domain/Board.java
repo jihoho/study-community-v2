@@ -4,15 +4,19 @@ import static javax.persistence.FetchType.LAZY;
 
 import com.project.pagu.common.domain.BaseTimeEntity;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.tag.BoardSubject;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -37,7 +41,7 @@ import lombok.NoArgsConstructor;
 public class Board extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "study_board_id")
     private Long id;
 
@@ -80,7 +84,9 @@ public class Board extends BaseTimeEntity {
     /**
      * 추후 해시태그 기반으로 수정
      */
-    private String subjects;
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<BoardSubject> boardSubjects = new HashSet<>();
 
     private String techStacks;
 
@@ -111,4 +117,12 @@ public class Board extends BaseTimeEntity {
         this.boardImages.add(boardImage);
         boardImage.setBoard(this);
     }
+
+    public void addSubject(BoardSubject... boardSubjects) {
+        for (BoardSubject boardSubject : boardSubjects) {
+            this.boardSubjects.add(boardSubject);
+            boardSubject.addBoard(this);
+        }
+    }
+
 }
