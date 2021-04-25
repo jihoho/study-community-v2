@@ -10,8 +10,15 @@ import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.tag.BoardSubject;
+import com.project.pagu.modules.tag.Subject;
+import com.project.pagu.modules.tag.SubjectService;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,18 +39,36 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final FileManager fileManager;
     private final MemberService memberService;
+    private final SubjectService subjectService;
 
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
         // Member엔티티 조회
         Member findMember = memberService.findById(member.getMemberId());
+        List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
+        Set<Subject> subject = createSubject(dto.getSubjects());
+
         Board board = dto.toEntity();
         board.setMember(findMember);
-        board.addBoardScheduleList(createBoardSchedule(dto.getBoardSchedules()));
+        board.addBoardScheduleList(boardSchedule);
+
+        for (Subject subject1 : subject) {
+            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
+            board.addSubject(boardSubject);
+        }
+
         Board savedBoard = saveBoard(board);
-        savedBoard.addBoardImageList(uploadBoardImageDto(savedBoard.getId(), dto));
+
+        List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
+        savedBoard.addBoardImageList(boardImageList);
 
         return savedBoard.getId();
+    }
+
+    private Set<Subject> createSubject(String subject) {
+        return Arrays.stream(subject.split(","))
+                .map(subjectService::getOrSave)
+                .collect(Collectors.toSet());
     }
 
     public List<BoardSchedule> createBoardSchedule(List<BoardScheduleDto> boardSchedules) {

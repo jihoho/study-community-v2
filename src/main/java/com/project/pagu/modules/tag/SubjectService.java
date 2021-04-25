@@ -16,10 +16,10 @@ public class SubjectService {
 
     private final SubjectRepository subjectRepository;
 
-    @Transactional
-    public Subject getOrSave(SubjectForm subjectForm) {
-        return subjectRepository.findByName(subjectForm.getName())
-                .orElseGet(() -> subjectRepository.save(subjectForm.toEntity()));
+//    @Transactional
+    public Subject getOrSave(String name) {
+        return subjectRepository.findByName(name)
+                .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
     }
 
 }
