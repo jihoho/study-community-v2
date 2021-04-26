@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-6 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <a class="card-title text-center" href="">
+                            <h1 class="logo">PAGU</h1>
+                        </a>
+                        <div class="mt-4">
+                            <h3 class="text-center">게시물을 보려면 로그인이 필요합니다.</h3>
+                        </div>
+                        <!-- todo: 링크 이동 -->
+                        <div>
+                            <button class="btn btn-lg btn-sign-in btn-block mt-5">
+                                <a class="button-link" href="">로그인</a>
+                            </button>
+                        </div>
+                        <!-- todo: 링크 이동 -->
+                        <div>
+                            <button class="btn btn-lg btn-sign-in btn-block mt-5 mb-5">
+                                <a class="button-link" href="">회원가입</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

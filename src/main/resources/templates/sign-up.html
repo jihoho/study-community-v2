@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+<!-- todo: 페이지 이동 -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-7 col-lg-10 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <!-- 로고 -->
+                    <a class="card-title text-center" href="">
+                        <h1 class="logo">PAGU</h1>
+                    </a>
+                    <div class="form-signin">
+                        <!-- 회원가입 폼 -->
+                        <form th:action="@{/sign-up/valid}" method="post" th:object="${memberSaveRequestDto}">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <!-- 이메일 -->
+                            <div class="form-label-group mt-5">
+                                <input type="email" id="inputEmail" name="memberId" class="form-control" th:field="*{email}" placeholder="Email address" required autofocus />
+                                <label for="inputEmail">이메일을 입력해주세요</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                            </div>
+                            <!-- 닉네임 -->
+                            <div class="form-label-group">
+                                <input type="text" id="inputNickname" name="nickname" class="form-control" th:field="*{nickname}" placeholder="nickname" required />
+                                <label for="inputNickname">2 ~ 8 글자 사이의 닉네임을 입력해주세요</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></small>
+                                <!--                                    <small class="form-text text-danger"  > 2 ~ 8 글자 사이의 닉네임을 입력해주세요</small>-->
+                            </div>
+                            <!-- 비밀번호 -->
+                            <div class="form-label-group">
+                                <input type="password" id="inputPassword" name="password" class="form-control" th:field="*{password}" placeholder="Password" required />
+                                <label for="inputPassword"> 공백을 제외한 8 ~ 20자의 영문 대 소문자, 숫자, 특수문자를 포함해야합니다 </label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                            </div>
+                            <!-- 비밀번호 확인 -->
+                            <div class="form-label-group">
+                                <input type="password" id="inputPasswordCheck" name="password" class="form-control" th:field="*{passwordCheck}" placeholder="Password-check" required />
+                                <label for="inputPasswordCheck">비밀번호 확인을 위해 다시 한번 입력해주세요</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}"></small>
+                            </div>
+                            <button class="btn btn-lg btn-sign-in btn-block mt-4" type="submit">
+                                이메일 인증하고 가입하기
+                            </button>
+                            <hr class="my-4" />
+                        </form>
+                        <!-- 구글 로그인 이동 페이지 버튼 -->
+                        <button class="btn btn-lg btn-google btn-block" onclick="location.href='/oauth2/authorization/google'">
+                            구글 계정으로 가입하기
+                        </button>
+                        <hr class="my-4" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

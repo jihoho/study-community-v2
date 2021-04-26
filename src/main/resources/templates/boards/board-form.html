@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+
+<link rel="stylesheet" href="/node_modules/bootstrap-tagsinput/src/bootstrap-tagsinput.css" />
+<link href="/css/board-form.css" rel="stylesheet" type="text/css" media="screen" />
+<!-- 해시태그 관련 라이브러리 -->
+<script src="/typeahead/typeahead.bundle.js"></script>
+<!-- 해시태그 관련 라이브러리 end-->
+<body>
+<div th:replace="fragments :: pagu-nav"></div>
+
+<div id="header-txt-div">
+            <span id="header-txt">
+                스터디 모집 공고 등록
+            </span>
+</div>
+<div id="board-form-body">
+    <form id="board-create-form" th:action="@{/boards}" method="post" th:object="${boardSaveRequestDto}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title-input">제목</label>
+            <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="제목 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+        </div>
+        <div class="form-group">
+            <label for="subject-input">주제</label>
+            <input type="text" class="form-control" data-role="tagsinput" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('subjects')}" th:errors="*{subjects}"></small>
+        </div>
+        <div class="form-group">
+            <label for="tech-input">기술</label>
+            <input type="text" class="form-control" id="tech-input" th:field="*{techStacks}" placeholder="기술 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('techStacks')}" th:errors="*{techStacks}"></small>
+        </div>
+        <div class="form-group">
+            <label for="goal-input">목표</label>
+            <input type="text" class="form-control" id="goal-input" th:field="*{goal}" placeholder="목표 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('goal')}" th:errors="*{goal}"></small>
+        </div>
+        <div class="form-group">
+            <label for="place-input">장소</label>
+            <input type="text" class="form-control" id="place-input" th:field="*{place}" placeholder="장소 입력해주세요." required />
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('place')}" th:errors="*{place}"></small>
+        </div>
+        <div class="form-group">
+            <label for="time-table">시간</label>
+            <div>
+                <table id="time-table">
+                    <thead>
+                    <!--     table header      -->
+                    <tr>
+                        <th>
+                            <button class="day-butt" type="button" id="day-0">월</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-1">화</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-2">수</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-3">목</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-4">금</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-5">토</button>
+                        </th>
+                        <th>
+                            <button class="day-butt" type="button" id="day-6">일</button>
+                        </th>
+                    </tr>
+                    <!--     table header end      -->
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="time-0"></td>
+                        <td id="time-1"></td>
+                        <td id="time-2"></td>
+                        <td id="time-3"></td>
+                        <td id="time-4"></td>
+                        <td id="time-5"></td>
+                        <td id="time-6"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="schedule-input"></div>
+            </div>
+
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('boardSchedules')}" th:errors="*{boardSchedules}"></small>
+        </div>
+        <div class="form-group">
+            <label for="recruitment-term-div">모집 기간</label>
+            <div id="recruitment-term-div"><input type="date" th:field="*{recruitmentStartAt}" /> ~ <input type="date" th:field="*{recruitmentEndAt}" required /></div>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitmentStartAt')} and !${#fields.hasErrors('recruitmentEndAt')}" th:errors="*{recruitmentStartAt}"></small>
+            <small class="form-text text-danger" th:if="!${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}" th:errors="*{recruitmentEndAt}"></small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}">모집 기간 등록해주세요.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="study-term-div">스터디 기간</label>
+            <div id="study-term-div"><input type="date" th:field="*{termsStartAt}" /> ~ <input type="date" th:field="*{termsEndAt}" required /></div>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and !${#fields.hasErrors('termsEndAt')}" th:errors="*{termsStartAt}"></small>
+            <small class="form-text text-danger" th:if="!${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}" th:errors="*{termsEndAt}"></small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('termsStartAt')} and ${#fields.hasErrors('termsEndAt')}">스터디 기간 등록해주세요.</small>
+        </div>
+        <div class="form-group">
+            <label for="etc-input">기타 사항</label>
+            <textarea id="etc-input" class="form-control" cols="50" rows="10" th:field="*{etc}"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="study-img">스터디 관련 이미지</label>
+            <input type="file" class="form-control-file" id="study-img" th:field="*{fileList}" multiple />
+        </div>
+        <div class="align-center">
+            <button id="board-create-butt" type="button" class="btn btn-primary btn-lg">공고 등록</button>
+        </div>
+    </form>
+</div>
+
+<!-- Time Form Modal -->
+<div class="modal fade" id="timeFormModal" tabindex="-1" aria-labelledby="timeFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="md-day-span"></span><span>요일 스터디 시간 입력</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <input type="hidden" id="md-day-input" />
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="start-time-input">시작 시간</label>
+                    <input type="time" step="600" required class="form-control" id="start-time-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="end-time-input">종료 시간</label>
+                    <input type="time" step="600" required class="form-control" id="end-time-input" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="time-delete-butt">삭제</button>
+                <button type="button" class="btn btn-primary" id="time-register-butt">등록</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end-->
+<script src="/js/board-form.js"></script>
+
+</body>
+</html>
