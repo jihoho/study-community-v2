@@ -103,7 +103,7 @@ public class BoardService {
     private void uploadImage(BoardImageDto boardImageDto) {
 
         if (boardImageDto.getMultipartFile().getSize() != 0) {
-            String filename = fileManager.createFileName();
+            String filename = FileUtil.createFileName();
             boardImageDto.setFilename(filename);
             fileManager.uploadBoardImage(boardImageDto.getMultipartFile(), filename,
                     String.valueOf(boardImageDto.getBoardId()));
