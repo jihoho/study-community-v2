@@ -13,9 +13,11 @@ import com.project.pagu.modules.member.service.MemberService;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
+import com.project.pagu.modules.teckstack.BoardTechStack;
+import com.project.pagu.modules.teckstack.TechStackService;
+import com.project.pagu.modules.teckstack.TechStack;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,6 +42,7 @@ public class BoardService {
     private final FileManager fileManager;
     private final MemberService memberService;
     private final SubjectService subjectService;
+    private final TechStackService techStackService;
 
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
@@ -47,6 +50,7 @@ public class BoardService {
         Member findMember = memberService.findById(member.getMemberId());
         List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
         Set<Subject> subject = createSubject(dto.getSubjects());
+        Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
 
         Board board = dto.toEntity();
         board.setMember(findMember);
@@ -57,18 +61,18 @@ public class BoardService {
             board.addSubject(boardSubject);
         }
 
+        for (TechStack techStack : techStacks) {
+            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
+            board.addTechStack(boardTechStack);
+        }
+
+        //Board savedBoard = boardRepository.save(board);
         Board savedBoard = saveBoard(board);
 
         List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
 
         return savedBoard.getId();
-    }
-
-    private Set<Subject> createSubject(String subject) {
-        return Arrays.stream(subject.split(","))
-                .map(subjectService::getOrSave)
-                .collect(Collectors.toSet());
     }
 
     public List<BoardSchedule> createBoardSchedule(List<BoardScheduleDto> boardSchedules) {
@@ -78,6 +82,18 @@ public class BoardService {
             boardScheduleList.add(boardSchedule);
         }
         return boardScheduleList;
+    }
+
+    private Set<Subject> createSubject(String subject) {
+        return Arrays.stream(subject.split(","))
+                .map(subjectService::getOrSave)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<TechStack> createTechStack(String techStacks) {
+        return Arrays.stream(techStacks.split(","))
+                .map(techStackService::getOrSave)
+                .collect(Collectors.toSet());
     }
 
     private Board saveBoard(Board board) {
