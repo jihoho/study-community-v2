@@ -1,5 +1,6 @@
 package com.project.pagu.modules.board.service;
 
+import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
@@ -15,12 +16,13 @@ import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,4 +109,12 @@ public class BoardService {
         }
 
     }
+
+    public Page<Board> getPagedBoardList(Pageable pageable) {
+
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        return boardPage;
+
+    }
+
 }

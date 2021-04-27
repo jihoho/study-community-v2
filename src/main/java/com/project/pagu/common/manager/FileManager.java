@@ -69,6 +69,16 @@ public class FileManager {
         }
     }
 
+    public void boardThumbnails(HttpServletResponse response, String filename, String... paths)
+            throws Exception {
+        File image = newFile(boardPath + FileUtil.createSubPath(filename,paths));
+        try (OutputStream out = response.getOutputStream()) {
+            isExistImageMakeThumbnail(image, out);
+            byte[] buffer = new byte[1024 * 12];
+            out.write(buffer);
+        }
+    }
+
     private void isExistImageMakeThumbnail(File image, OutputStream out) throws IOException {
         if (image.exists()) {
             Thumbnails.of(image).size(200, 200).outputFormat("png").toOutputStream(out);
