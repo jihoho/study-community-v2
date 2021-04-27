@@ -84,7 +84,7 @@ public class Board extends BaseTimeEntity {
     /**
      * 추후 해시태그 기반으로 수정
      */
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<BoardSubject> boardSubjects = new HashSet<>();
 
