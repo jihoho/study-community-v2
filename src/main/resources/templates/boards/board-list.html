@@ -2,79 +2,98 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head"></head>
 <body>
-    <div th:replace="fragments :: pagu-nav"></div>
-    <div class="container">
-        <div id="board-list-body">
-            <div id="register-board-div" class="align-right">
-                <a th:href="@{/boards/board-form}" onClick='' class="btn btn-success">스터디 등록하기</a>
-            </div>
-            <table class="table table-striped table-hover">
-                <thead>
-                <!--     table header      -->
-                <tr>
-                    <th>no</th>
-                    <th>title</th>
-                    <th>location</th>
-                    <th>writer</th>
-                    <th>reg date</th>
-                    <th>tag</th>
-                    <th>status</th>
-                </tr>
-                <!--     table header end      -->
-                </thead>
-                <tbody>
+<div th:replace="fragments :: pagu-nav"></div>
+<div class="container">
+    <div id="board-list-body">
+        <div id="register-board-div" class="align-right">
+            <a th:href="@{/boards/board-form}" onClick="" class="btn btn-success">스터디 등록하기</a>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <!--     table header      -->
+            <tr>
+                <th>no</th>
+                <th>title</th>
+                <th>location</th>
+                <th>writer</th>
+                <th>reg date</th>
+                <th>tag</th>
+                <th>status</th>
+            </tr>
+            <!--     table header end      -->
+            </thead>
+            <tbody>
+            <!--     table row      -->
+            <tr th:each="board ,i : ${boardList}">
+                <td th:text="${(i.index+1)+boardList.pageable.pageNumber*10}">
+                    1
+                </td>
+                <td>
+                    <a th:href="@{/boards/{id}(id=${board.id})}"><span th:text="${board.title}"></span></a>
+                </td>
+                <td><span th:text="${board.place}">강남역 인근 ...</span></td>
+                <td th:text="${board.member.nickname}">nickname</td>
+                <td th:text="${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">2021-03-21 12:30:00</td>
 
-                <!--     table row      -->
-                <tr th:each="boardNumber : ${#numbers.sequence(1, 10)}">
-                    <td th:text="${boardNumber}">0</td>
-                    <div th:replace="fragments :: boards-head-example"></div>
-                </tr>
-                <!--     table row end      -->
-                </tbody>
-            </table>
+                <td class="align-center">
+                    <button type="button" class="btn btn-primary btn-sm active tag-butt" th:each="subject :${board.boardSubjects}" th:text="${subject.getSubject().getName()}"></button>
+                    <span th:if="${board.boardSubjects.isEmpty()}">태그 없음</span>
+                </td>
 
-            <div id="search-bar">
-                <!-- Example single danger button -->
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        제목
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">제목</a>
-                        <a class="dropdown-item" href="#">주제+기술</a>
-                        <a class="dropdown-item" href="#">상태</a>
-                    </div>
+                <td class="align-center">
+                    <button type="button" class="btn btn-success active" th:text="${board.status}"></button>
+                </td>
+            </tr>
+            <!--     table row end      -->
+            </tbody>
+        </table>
+
+        <div id="search-bar">
+            <!-- Example single danger button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    제목
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">제목</a>
+                    <a class="dropdown-item" href="#">주제+기술</a>
+                    <a class="dropdown-item" href="#">상태</a>
                 </div>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">Search</button>
-                    </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Search</button>
                 </div>
-
             </div>
-            <div id="paginationBox">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}')">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#" onClick="">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">5</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">6</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">7</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">8</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">9</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onClick="">10</a></li>
+        </div>
+        <div
+            id="paginationBox"
+            th:with="
+                pageNumber=${boardList.pageable.pageNumber},
+                pageSize=${boardList.pageable.pageSize},
+                totalPages=${boardList.totalPages},
+                startPage= ${T(Math).floor(pageNumber/ pageSize)*pageSize+1},
+                endPage= (${startPage + pageSize - 1 > totalPages ? totalPages : startPage + pageSize - 1}),
+                hasPrevious=${pageNumber - pageSize >= 0 },
+                hasNext=${T(Math).floor(totalPages/10)*10 > startPage}"
+            aria-label="Page navigation"
+        >
+            <ul class="pagination">
+                <li class="page-item" th:if="${hasPrevious}">
+                    <a class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage -1 , 0, -1)})}">Previous</a>
+                </li>
 
-                    <li class="page-item">
-                        <a class="page-link" href="#" onClick="" >Next</a>
-                    </li>
-                </ul>
+                <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1 }? 'active'">
+                    <a th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
+                </li>
 
-            </div>
-
+                <li class="page-item" th:if="${hasNext}">
+                    <a class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage + pageSize ,0,-1)})}" onClick="">Next</a>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
 </body>
 </html>
