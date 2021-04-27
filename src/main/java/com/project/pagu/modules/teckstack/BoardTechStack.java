@@ -1,4 +1,4 @@
-package com.project.pagu.modules.tag;
+package com.project.pagu.modules.teckstack;
 
 import com.project.pagu.modules.board.domain.Board;
 import javax.persistence.Column;
@@ -17,20 +17,19 @@ import lombok.NoArgsConstructor;
 /**
  * Created by IntelliJ IDEA
  * User: yhh1056@naver.com
- * Date: 2021/04/25 Time: 4:13 오후
+ * Date: 2021/04/27 Time: 2:11 오전
  */
-
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "subject")
-public class BoardSubject {
+@EqualsAndHashCode(of = "techStack")
+public class BoardTechStack {
 
     @Id
     @GeneratedValue
-    @Column(name = "board_subject")
+    @Column(name = "board_techStack")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,19 +37,18 @@ public class BoardSubject {
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
+    @JoinColumn(name = "techStack_id")
+    private TechStack techStack;
 
-    // 네이밍 of로 변경하는건 어떨지
-    public static BoardSubject createBoardSubject(Subject subject) {
-        return BoardSubject
+    public static BoardTechStack of(TechStack techStack) {
+        return BoardTechStack
                 .builder()
-                .subject(subject)
+                .techStack(techStack)
                 .build();
     }
 
     public void addBoard(Board board) {
         this.board = board;
-        this.subject.addBoardSubject(this);
+        this.techStack.addBoardTechStack(this);
     }
 }

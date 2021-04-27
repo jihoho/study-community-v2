@@ -16,10 +16,16 @@ public class SubjectService {
 
     private final SubjectRepository subjectRepository;
 
-//    @Transactional
+    //    @Transactional
     public Subject getOrSave(String name) {
         return subjectRepository.findByName(name)
                 .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
     }
+
+//    @Transactional
+//    public Subject getOrSave(String name) {
+//        return subjectRepository.findByName(name)
+//                .orElseGet(() -> subjectRepository.save(Subject.of(name)));
+//    }
 
 }

@@ -1,4 +1,4 @@
-package com.project.pagu.modules.tag;
+package com.project.pagu.modules.teckstack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,35 +18,34 @@ import lombok.NoArgsConstructor;
 /**
  * Created by IntelliJ IDEA
  * User: yhh1056@naver.com
- * Date: 2021/04/22 Time: 7:05 오후
+ * Date: 2021/04/27 Time: 2:12 오전
  */
-
 @Entity
-@Builder
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "name")
-public class Subject {
+public class TechStack {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subejct_id")
+    @Column(name = "techStack_id")
     private Long id;
 
     private String name;
 
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<BoardSubject> boards = new ArrayList<>();
+    private List<BoardTechStack> techStacks = new ArrayList<>();
 
-    public void addBoardSubject(BoardSubject boardSubject) {
-        this.boards.add(boardSubject);
-    }
-
-    public static Subject of(String name) {
-        return Subject.builder()
+    public static TechStack of(String name) {
+        return TechStack.builder()
                 .name(name)
                 .build();
+    }
+
+    public void addBoardTechStack(BoardTechStack boardTechStack) {
+        this.techStacks.add(boardTechStack);
     }
 }

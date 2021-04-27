@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.LAZY;
 import com.project.pagu.common.domain.BaseTimeEntity;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.tag.BoardSubject;
+import com.project.pagu.modules.teckstack.BoardTechStack;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -88,7 +89,9 @@ public class Board extends BaseTimeEntity {
     @Builder.Default
     private Set<BoardSubject> boardSubjects = new HashSet<>();
 
-    private String techStacks;
+    @OneToMany(mappedBy = "techStack", cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<BoardTechStack> boardTechStacks = new HashSet<>();
 
     //==연관관계 편의 메서드==//
     public void addBoardScheduleList(List<BoardSchedule> boardSchedules) {
@@ -122,6 +125,13 @@ public class Board extends BaseTimeEntity {
         for (BoardSubject boardSubject : boardSubjects) {
             this.boardSubjects.add(boardSubject);
             boardSubject.addBoard(this);
+        }
+    }
+
+    public void addTechStack(BoardTechStack... boardTechStacks) {
+        for (BoardTechStack boardTechStack : boardTechStacks) {
+            this.boardTechStacks.add(boardTechStack);
+            boardTechStack.addBoard(this);
         }
     }
 

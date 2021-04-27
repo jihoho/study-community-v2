@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum StudyDay {
+    //todo: 키 숫자로 되어있는거 수정
     MON(0, "월요일"),
     TUES(1, "화요일"),
     WED(2, "수요일"),
