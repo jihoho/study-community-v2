@@ -6,6 +6,7 @@ import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardImageDto;
+import com.project.pagu.modules.board.model.BoardPageDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,12 +113,25 @@ public class BoardService {
 
     }
 
-    public Page<Board> getPagedBoardList(Pageable pageable) {
+    public PageImpl<BoardPageDto> getPagedBoardList(Pageable pageable) {
 
         Page<Board> boardPage = boardRepository.findAll(pageable);
-        return boardPage;
+        PageImpl<BoardPageDto> boardPageDto = convertBoardPageToBoardPageDto(boardPage,pageable);
+        return boardPageDto;
 
     }
+
+    /**
+     * Mapper로 변환 예정
+     */
+    private PageImpl<BoardPageDto> convertBoardPageToBoardPageDto(Page<Board> boardPage,Pageable pageable) {
+        List<BoardPageDto> boardPageDtos = new ArrayList<>();
+        for (Board board : boardPage) {
+            boardPageDtos.add(BoardPageDto.creatBoardPageDto(board));
+        }
+        return new PageImpl<BoardPageDto>(boardPageDtos,pageable,boardPage.getTotalElements());
+    }
+
 
     public BoardDetailDto getBoardDetailDto(Long id) {
 

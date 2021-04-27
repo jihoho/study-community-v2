@@ -38,8 +38,7 @@ public class BoardController {
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
             Model model) {
 
-        Page<Board> boardList = boardService.getPagedBoardList(pageable);
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("boardList", boardService.getPagedBoardList(pageable));
         return "boards/board-list";
 
     }
@@ -80,6 +79,6 @@ public class BoardController {
     @GetMapping("/boardImageThumbnails/{id}/{filename}")
     public void boardImageThumbnails(@PathVariable String id, @PathVariable String filename,
             HttpServletResponse response) throws Exception {
-        fileManager.boardThumbnails(response,filename,id);
+        fileManager.boardThumbnails(response, filename, id);
     }
 }
