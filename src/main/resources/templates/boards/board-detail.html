@@ -32,7 +32,7 @@
         </div>
         <div class="board-info">
             <span class="board-info-field">기술: </span>
-            <button type="button" class="btn btn-primary btn-sm active tag-butt" th:text="${board.techs}"></button>
+            <button type="button" class="btn btn-primary btn-sm active tag-butt" th:each="techStack: ${board.techStacks}" th:text="${techStack}"></button>
         </div>
         <div class="board-info">
             <span class="board-info-field">목표</span>

@@ -6,6 +6,7 @@ import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.tag.BoardSubject;
+import com.project.pagu.modules.teckstack.BoardTechStack;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class BoardDetailDto {
     @Builder.Default
     private List<String> subjects = new ArrayList<>();
 
-    private String techs;
+    @Builder.Default
+    private List<String> techStacks = new ArrayList<>();
 
     private String goal;
 
@@ -68,7 +70,6 @@ public class BoardDetailDto {
         BoardDetailDto boardDetailDto = BoardDetailDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
-                .techs(board.getTechStacks())
                 .goal(board.getGoal())
                 .place(board.getPlace())
                 .recruitmentStartAt(board.getRecruitmentStartAt())
@@ -82,9 +83,16 @@ public class BoardDetailDto {
                 .build();
         boardDetailDto.addImageUrls(board.getId(), board.getBoardImages());
         boardDetailDto.addSubjects(board.getBoardSubjects());
+        boardDetailDto.addTechStacks(board.getBoardTechStacks());
         boardDetailDto.addSchedules(board.getBoardSchedules());
         return boardDetailDto;
 
+    }
+
+    private void addTechStacks(Set<BoardTechStack> boardTechStacks) {
+        for (BoardTechStack boardTechStack : boardTechStacks) {
+            this.techStacks.add(boardTechStack.getTechStack().getName());
+        }
     }
 
     private void addImageUrls(Long boardId, List<BoardImage> boardImages) {
