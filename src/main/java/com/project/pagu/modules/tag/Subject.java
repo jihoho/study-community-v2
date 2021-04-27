@@ -36,7 +36,7 @@ public class Subject {
 
     private String name;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     @Builder.Default
     private List<BoardSubject> boards = new ArrayList<>();
 
