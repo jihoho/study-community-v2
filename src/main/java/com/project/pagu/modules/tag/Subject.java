@@ -43,4 +43,10 @@ public class Subject {
     public void addBoardSubject(BoardSubject boardSubject) {
         this.boards.add(boardSubject);
     }
+
+    public static Subject of(String name) {
+        return Subject.builder()
+                .name(name)
+                .build();
+    }
 }

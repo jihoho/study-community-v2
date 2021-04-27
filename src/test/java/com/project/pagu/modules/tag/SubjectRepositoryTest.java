@@ -9,6 +9,7 @@ import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -29,22 +30,13 @@ class SubjectRepositoryTest {
     private BoardRepository boardRepository;
 
     @Test
-    void test() {
-        Subject subject1 = Subject.builder().name("Web").build();
-        Subject subject2 = Subject.builder().name("Backend").build();
-        Subject subject3 = Subject.builder().name("Frontend").build();
-        subjectRepository.save(subject1);
-        subjectRepository.save(subject2);
-        subjectRepository.save(subject3);
-
-
+    @DisplayName("주제를 저장하고 게시물 등록시 주제를 등록한다.")
+    void save_subject_in_board() {
+        Subject subject = Subject.of("Web");
+        subjectRepository.save(subject);
         Subject web = subjectRepository.findByName("Web").get();
-        Subject backend = subjectRepository.findByName("Backend").get();
-        Subject frontend = subjectRepository.findByName("Frontend").get();
 
-        BoardSubject boardSubject1 = BoardSubject.createBoardSubject(web);
-        BoardSubject boardSubject2 = BoardSubject.createBoardSubject(backend);
-        BoardSubject boardSubject3 = BoardSubject.createBoardSubject(frontend);
+        BoardSubject boardSubject = BoardSubject.createBoardSubject(web);
 
         Board board = Board.builder()
                 .title("제목")
@@ -52,16 +44,14 @@ class SubjectRepositoryTest {
                 .place("장소")
                 .status(StudyStatus.READY)
                 .build();
-        board.addSubject(boardSubject1, boardSubject3, boardSubject2);
+        board.addSubject(boardSubject);
 
         boardRepository.save(board);
 
         List<Board> boards = boardRepository.findAll();
         Set<BoardSubject> findSubjects = boards.get(0).getBoardSubjects();
 
-        assertTrue(findSubjects.contains(boardSubject1));
-        assertTrue(findSubjects.contains(boardSubject2));
-        assertTrue(findSubjects.contains(boardSubject3));
+        assertTrue(findSubjects.contains(boardSubject));
 
     }
 }
