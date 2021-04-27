@@ -3,9 +3,6 @@ package com.project.pagu.common.manager;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,12 +26,8 @@ public class FileManager {
 
     private static final String ABSOLUTE_PATH = System.getProperty("user.home");
 
-    public String createFileName() {
-        return UUID.randomUUID().toString() + System.nanoTime();
-    }
-
     public void uploadProfileImage(MultipartFile multipartFile, String filename, String... paths) {
-        String fullPath = profilePath + createSubPath(paths) + filename;
+        String fullPath = profilePath + FileUtil.createSubPath(filename, paths);
         uploadImage(multipartFile, fullPath);
     }
 
@@ -42,11 +35,6 @@ public class FileManager {
         File file = newFile(fullPath);
         isExistedDirectory(file);
         upload(multipartFile, file);
-    }
-
-    private String createSubPath(String[] paths) {
-        return Arrays.stream(paths).map(path -> path + File.separator)
-                .collect(Collectors.joining());
     }
 
     private File newFile(String path) {
@@ -68,12 +56,12 @@ public class FileManager {
     }
 
     public void uploadBoardImage(MultipartFile multipartFile, String filename, String... paths) {
-        String fullPath = boardPath + createSubPath(paths) + filename;
+        String fullPath = boardPath + FileUtil.createSubPath(filename, paths);
         uploadImage(multipartFile, fullPath);
     }
 
     public void profileThumbnails(HttpServletResponse response, String filename, String... paths) throws Exception {
-        File image = newFile(profilePath + createSubPath(paths) + filename);
+        File image = newFile(profilePath + FileUtil.createSubPath(filename, paths));
         try (OutputStream out = response.getOutputStream()) {
             isExistImageMakeThumbnail(image, out);
             byte[] buffer = new byte[1024 * 12];
