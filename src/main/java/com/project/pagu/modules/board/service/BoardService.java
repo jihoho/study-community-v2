@@ -4,6 +4,7 @@ import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
+import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardImageDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
@@ -114,6 +115,14 @@ public class BoardService {
 
         Page<Board> boardPage = boardRepository.findAll(pageable);
         return boardPage;
+
+    }
+
+    public BoardDetailDto getBoardDetailDto(Long id) {
+
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        return BoardDetailDto.CreateBoardDetailDto(board);
 
     }
 

@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileManager fileManager;
 
     @GetMapping("/boards")
     public String boards(
@@ -74,5 +75,11 @@ public class BoardController {
          * todo : 로그인 상태, 게시물 수정 폼
          */
         return "boards/board-update";
+    }
+
+    @GetMapping("/boardImageThumbnails/{id}/{filename}")
+    public void boardImageThumbnails(@PathVariable String id, @PathVariable String filename,
+            HttpServletResponse response) throws Exception {
+        fileManager.boardThumbnails(response,filename,id);
     }
 }
