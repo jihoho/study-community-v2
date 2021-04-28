@@ -63,18 +63,18 @@ public class ProfileController {
         fileManager.profileThumbnails(response, filename, type, email);
     }
 
-    @GetMapping("/members/{nickname}")
+    @GetMapping("/profile/{nickname}")
     public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
         ProfileRequestDto profileRequestDto = memberService.getBy(nickname);
         //자기 자신을 조회하면 프로필 관리로 이동
         MemberId currentMemberId = MemberId.of(member.getEmail(), member.getMemberType());
         MemberId findMemberId = MemberId.of(profileRequestDto.getEmail(), member.getMemberType());
         if (currentMemberId.equals(findMemberId)) {
-            return "profile";
+            return "redirect:/profile";
         }
 
         model.addAttribute(profileRequestDto);
-        return "profile/detail";
+        return "/profile/detail";
     }
 
 }
