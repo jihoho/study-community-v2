@@ -2,165 +2,148 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head"></head>
 <body>
-    <div th:replace="fragments :: pagu-nav"></div>
-    <div id="board-detail-wrapper">
-        <div id="board-detail-header">
-            <table>
-                <thead>
-                <tr>
-                    <th class="padding-left">
-                        <span id="title-span">~~~~~~~~~ 스터디 모집합니다.</span>
-                    </th>
-                    <th class="align-right">
-                        <button type="button" class="btn btn-success btn-lg active">모집중</button>
-                    </th>
-                    <th class="padding-right">
-                        <div class="align-right">
-                            <img id="profile-img" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-                            <a href=""><span id="nickname-span">닉네임</span></a>
-                        </div>
-                        <div class="align-right"><span id="reg-date-span">2021-03-27 18:53:11</span></div>
-                    </th>
-                </tr>
-                </thead>
-            </table>
+<div th:replace="fragments :: pagu-nav"></div>
+<div id="board-detail-wrapper">
+    <div id="board-detail-header">
+        <table>
+            <thead>
+            <tr>
+                <th class="padding-left" id="title-td">
+                    <span id="title-span" th:text="${board.title}"></span>
+                </th>
+                <th class="align-right">
+                    <button type="button" class="btn btn-success btn-lg active" th:text="${board.status.getStatusName()}"></button>
+                </th>
+                <th class="padding-right">
+                    <div class="align-right">
+                        <img id="profile-img" th:src="${board.writer.imageUrl}" />
+                        <a href=""><span id="nickname-span" th:text="${board.writer.nickname}"></span></a>
+                    </div>
+                    <div class="align-right"><span id="reg-date-span" th:text="${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span></div>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="board-detail-body">
+        <div class="board-info">
+            <span class="board-info-field">주제: </span>
+            <button type="button" class="btn btn-primary btn-sm active tag-butt" th:each="subject: ${board.subjects}" th:text="${subject}">Web</button>
         </div>
-        <div id="board-detail-body">
-            <div class="board-info">
-                <span class="board-info-field">주제: </span>
-                <button type="button" class="btn btn-primary btn-sm active">Web</button>
-                <button type="button" class="btn btn-primary btn-sm active">Backend</button>
+        <div class="board-info">
+            <span class="board-info-field">기술: </span>
+            <button type="button" class="btn btn-primary btn-sm active tag-butt" th:each="techStack: ${board.techStacks}" th:text="${techStack}"></button>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">목표</span>
+            <div class="board-info-value">
+                <span class="board-info-value-span" th:text="${board.goal}"> </span>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">기술: </span>
-                <button type="button" class="btn btn-primary btn-sm active">Spring</button>
-                <button type="button" class="btn btn-primary btn-sm active">JPA</button>
-                <button type="button" class="btn btn-primary btn-sm active">Docker</button>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">장소</span>
+            <div class="board-info-value">
+                <span class="board-info-value-span" th:text="${board.place}"> </span>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">목표</span>
-                <div class="board-info-value">
-                            <span class="board-info-value-span">
-                                Spring mvc, JPA의 대한 학습 및 취업용 포르폴리오 제작
-                            </span>
-                </div>
-            </div>
-            <div class="board-info">
-                <span class="board-info-field">장소</span>
-                <div class="board-info-value">
-                            <span class="board-info-value-span">
-                                강남역 인근 스터디룸
-                            </span>
-                </div>
-            </div>
+        </div>
 
-            <div class="board-info">
-                <span class="board-info-field">시간</span>
-                <div class="board-info-value">
-                            <span class="board-info-value-span">
-                                수요일 : 10:30 ~ 12:30
-                            </span>
-                    <br />
-                    <span class="board-info-value-span">
-                                금요일 : 12:00 ~ 14:00
-                            </span>
-                </div>
+        <div class="board-info">
+            <span class="board-info-field">시간</span>
+            <div class="board-info-value">
+                        <span class="board-info-value-span" th:each="schedule: ${board.schedules}">
+                            <span th:text="${schedule.studyDay.getDayName()}">수요일</span> : <span th:text="${schedule.startTime}">10:30</span> ~ <span th:text="${schedule.endTime}">12:30</span>
+                            <br />
+                        </span>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">모집 기간</span>
-                <div class="board-info-value">
-                            <span class="board-info-value-span">
-                                2021-03-27 ~ 2021-04-07
-                            </span>
-                </div>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">모집 기간</span>
+            <div class="board-info-value">
+                <span class="board-info-value-span"> <span th:text="${board.recruitmentStartAt}">2021-03-27</span> ~ <span th:text="${board.recruitmentEndAt}">2021-04-07</span> </span>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">스터디 기간</span>
-                <div class="board-info-value">
-                            <span class="board-info-value-span">
-                                2021-04-08 ~ 2021-05-31
-                            </span>
-                </div>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">스터디 기간</span>
+            <div class="board-info-value">
+                <span class="board-info-value-span"> <span th:text="${board.termsStartAt}">2021-04-08</span> ~ <span th:text="${board.termsEndAt}">2021-05-31</span> </span>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">기타 사항</span>
-                <div class="board-info-value">
-                            <textarea rows="10" disabled>
-                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-                            </textarea>
-                </div>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">기타 사항</span>
+            <div class="board-info-value">
+                <textarea rows="10" readonly th:text="${board.etc}"> </textarea>
             </div>
-            <div class="board-info">
-                <span class="board-info-field">스터디 관련 이미지</span>
-                <div class="board-info-value">
-                    <img src="/image/image-tmp.png" />
-                </div>
+        </div>
+        <div class="board-info">
+            <span class="board-info-field">스터디 관련 이미지</span>
+            <div class="board-info-value">
+                <img th:each="imageUrl :${board.imageUrls}" th:src="${imageUrl}" />
             </div>
         </div>
     </div>
-    <div id="board-comment-wrapper">
-        <div class="board-comment-list">
-            <div class="board-comment-header">
-                <div class="board-comment-img-div">
-                    <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-                </div>
-                <div class="board-comment-nick-div">
-                    <a href=""><span>닉네임</span></a>
-                    <br />
-                    <span>2021-03-28 09:53:02</span>
-                </div>
+</div>
+<div id="board-comment-wrapper">
+    <div class="board-comment-list">
+        <div class="board-comment-header">
+            <div class="board-comment-img-div">
+                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
             </div>
-            <div class="board-comment-body">
-                <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+            <div class="board-comment-nick-div">
+                <a href=""><span>닉네임</span></a>
+                <br />
+                <span>2021-03-28 09:53:02</span>
             </div>
         </div>
-        <div class="board-comment-list">
-            <div class="board-comment-header">
-                <div class="board-comment-img-div">
-                    <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-                </div>
-                <div class="board-comment-nick-div">
-                    <a href=""><span>닉네임</span></a>
-                    <br />
-                    <span>2021-03-28 09:53:02</span>
-                </div>
+        <div class="board-comment-body">
+            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+        </div>
+    </div>
+    <div class="board-comment-list">
+        <div class="board-comment-header">
+            <div class="board-comment-img-div">
+                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
             </div>
-            <div class="board-comment-body">
-                <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+            <div class="board-comment-nick-div">
+                <a href=""><span>닉네임</span></a>
+                <br />
+                <span>2021-03-28 09:53:02</span>
             </div>
         </div>
-        <div class="board-comment-list">
-            <div class="board-comment-header">
-                <div class="board-comment-img-div">
-                    <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-                </div>
-                <div class="board-comment-nick-div">
-                    <a href=""><span>닉네임</span></a>
-                    <br />
-                    <span>2021-03-28 09:53:02</span>
-                </div>
+        <div class="board-comment-body">
+            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+        </div>
+    </div>
+    <div class="board-comment-list">
+        <div class="board-comment-header">
+            <div class="board-comment-img-div">
+                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
             </div>
-            <div class="board-comment-body">
-                <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+            <div class="board-comment-nick-div">
+                <a href=""><span>닉네임</span></a>
+                <br />
+                <span>2021-03-28 09:53:02</span>
             </div>
         </div>
-        <div class="board-comment-write">
-            <div class="board-comment-header">
-                <div class="board-comment-img-div">
-                    <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-                </div>
-                <div class="board-comment-nick-div">
-                    <a href=""><span>닉네임</span></a>
-                </div>
+        <div class="board-comment-body">
+            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+        </div>
+    </div>
+    <div class="board-comment-write">
+        <div class="board-comment-header">
+            <div class="board-comment-img-div">
+                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
             </div>
-            <div class="board-comment-body">
-                <textarea class="board-comment-text" rows="5" placeholder="문의하기..."></textarea>
-                <div class="align-right">
-                    <button type="button" class="btn btn-primary">등록</button>
-                </div>
+            <div class="board-comment-nick-div">
+                <a href=""><span>닉네임</span></a>
+            </div>
+        </div>
+        <div class="board-comment-body">
+            <textarea class="board-comment-text" rows="5" placeholder="문의하기..."></textarea>
+            <div class="align-right">
+                <button type="button" class="btn btn-primary">등록</button>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

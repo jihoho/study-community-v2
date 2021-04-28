@@ -18,13 +18,17 @@
     height: 100px;
 }
 .padding-left {
-    padding-left: 10%;
+    padding-left: 3%;
 }
 .padding-right {
-    padding-right: 5%;
+    padding-right: 3%;
 }
 #title-span {
     font-size: 1.2em;
+}
+#title-td {
+    width: 60%;
+    text-align: center;
 }
 .align-right {
     text-align: right;
@@ -52,6 +56,9 @@
 
 .board-info-value {
     padding: 0.5em 1em;
+}
+.tag-butt {
+    margin: 0 0.2em;
 }
 .board-info-value textarea {
     width: 90%;

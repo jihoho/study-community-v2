@@ -1,6 +1,7 @@
 package com.project.pagu.modules.member.service;
 
 import com.project.pagu.common.manager.FileManager;
+import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
@@ -137,7 +138,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         if (profileRequestDto.getMultipartFile().getSize() != 0) {
-            String fileName = fileManager.createFileName();
+            String fileName = FileUtil.createFileName();
             profileRequestDto.setImageFile(fileName);
             fileManager.uploadProfileImage(profileRequestDto.getMultipartFile(), fileName, profileRequestDto.getMemberType(), profileRequestDto.getEmail());
         }

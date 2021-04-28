@@ -1,13 +1,11 @@
 package com.project.pagu.modules.board.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
-import com.project.pagu.modules.board.domain.Board;
-import com.project.pagu.modules.board.repository.BoardRepository;
+import com.project.pagu.modules.board.service.BoardService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.service.MemberService;
 import com.project.pagu.common.validation.OauthSignUpValidation;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
@@ -39,7 +37,7 @@ public class MainController {
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final MemberService memberService;
     private final OauthSignUpValidation oauthSignUpValidation;
-    private final BoardRepository boardRepository;
+    private final BoardService boardService;
 
     @InitBinder("oauthMemberSaveDto")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -47,12 +45,8 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String mainPage() {
-        List<Board> all = boardRepository.findAll();
-        if (!all.isEmpty()) {
-            Board board = all.get(0);
-            board.getBoardSubjects();
-        }
+    public String mainPage(Model model) {
+        model.addAttribute("boardList",boardService.getLatestBoard(10));
         return "main-body";
     }
 
