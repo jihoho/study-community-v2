@@ -132,6 +132,24 @@ public class MemberServiceImpl implements MemberService {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
+    @Override
+    public ProfileRequestDto getBy(String nickname) {
+        Member findMember = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException(nickname));
+
+        return ProfileRequestDto.builder()
+                .email(findMember.getEmail())
+                .memberType(findMember.getMemberType().getKey())
+                .nickname(findMember.getNickname())
+                .imageFile(findMember.getImageFile())
+                .imageUrl(findMember.getImageUrl())
+                .link(findMember.getLink())
+                .info(findMember.getInfo())
+                .career(findMember.getCareer())
+                .position(findMember.getPostion())
+                .build();
+    }
+
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
         if (profileRequestDto.getMultipartFile() == null) {
             return;

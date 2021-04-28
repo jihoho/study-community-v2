@@ -11,6 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberType;
+import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
@@ -88,6 +91,27 @@ class ProfileControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    @DisplayName("상대방 프로필 페이지로 이동한다.")
+    void get_profile() throws Exception {
+        memberRepository.save(givenMember());
+
+        mockMvc.perform(get("/members/{nickname}", "tester"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile/detail"));
+    }
+
+    @WithMember
+    @Test
+    @DisplayName("본인을 조회할 경우 프로필관리 페이지로 이동한다.")
+    void go_to_my_page() throws Exception {
+        mockMvc.perform(get("/members/{nickname}", "tester"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile/detail"));
+    }
+
     private ProfileRequestDto givenDto() {
         return ProfileRequestDto.builder()
                 .nickname("tester")
@@ -97,6 +121,20 @@ class ProfileControllerTest {
                 .changeNickname("nickname")
                 .career("취준생")
                 .position("백엔드")
+                .link("test@gi.com")
+                .info("안녕하세요")
+                .build();
+    }
+
+    public Member givenMember() {
+        return Member.builder()
+                .email("test@email.com")
+                .memberType(MemberType.NORMAL)
+                .nickname("tester")
+                .role(Role.GUEST)
+                .imageUrl(null)
+                .career("취준생")
+                .postion("백엔드")
                 .link("test@gi.com")
                 .info("안녕하세요")
                 .build();

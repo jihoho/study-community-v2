@@ -35,4 +35,5 @@ public interface MemberService extends UserDetailsService, OAuth2UserService<OAu
 
     void update(Member findMember, ProfileRequestDto profileRequestDto);
 
+    ProfileRequestDto getBy(String nickname);
 }
