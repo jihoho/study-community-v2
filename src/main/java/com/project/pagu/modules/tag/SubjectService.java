@@ -1,8 +1,9 @@
 package com.project.pagu.modules.tag;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA
@@ -22,10 +23,14 @@ public class SubjectService {
                 .orElseGet(() -> subjectRepository.save(Subject.builder().name(name).build()));
     }
 
-//    @Transactional
-//    public Subject getOrSave(String name) {
-//        return subjectRepository.findByName(name)
-//                .orElseGet(() -> subjectRepository.save(Subject.of(name)));
-//    }
+    //    @Transactional
+    //    public Subject getOrSave(String name) {
+    //        return subjectRepository.findByName(name)
+    //                .orElseGet(() -> subjectRepository.save(Subject.of(name)));
+    //    }
 
+    public List<SubjectDto> getAllSubjects() {
+        List<Subject> subjects = subjectRepository.findAll();
+        return subjects.stream().map(s -> SubjectDto.of(s.getName())).collect(Collectors.toList());
+    }
 }

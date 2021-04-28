@@ -24,7 +24,7 @@
         </div>
         <div class="form-group">
             <label for="subject-input">주제</label>
-            <input type="text" class="form-control" data-role="tagsinput" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
+            <input type="text" class="form-control" id="subject-input" th:field="*{subjects}" placeholder="주제 입력해주세요." required />
             <small class="form-text text-danger" th:if="${#fields.hasErrors('subjects')}" th:errors="*{subjects}"></small>
         </div>
         <div class="form-group">
@@ -151,7 +151,7 @@
     </div>
 </div>
 <!-- Modal end-->
-<script src="/js/board-form.js"></script>
-
 </body>
+
+<script src="/js/board-form.js"></script>
 </html>
