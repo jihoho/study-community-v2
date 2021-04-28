@@ -9,6 +9,7 @@ import com.project.pagu.modules.board.model.BoardImageDto;
 import com.project.pagu.modules.board.model.BoardPageDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
+import com.project.pagu.modules.board.model.LatestBoardDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
@@ -28,7 +29,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -158,4 +161,22 @@ public class BoardService {
 
     }
 
+    public PageImpl<LatestBoardDto> getLatestBoard(int size) {
+
+        Pageable pageable = PageRequest.of(0, size, Sort.by("modifiedDate").descending());
+        Page<Board> latestBoard = boardRepository.findAll(pageable);
+        return convertLatestBoardToLatestBoardDto(latestBoard, pageable);
+
+    }
+
+    private PageImpl<LatestBoardDto> convertLatestBoardToLatestBoardDto(Page<Board> latestBoard,
+            Pageable pageable) {
+
+        List<LatestBoardDto> latestBoardDtos = new ArrayList<>();
+        for (Board board : latestBoard) {
+            latestBoardDtos.add(LatestBoardDto.createLatestBoardDto(board));
+        }
+        return new PageImpl<>(latestBoardDtos, pageable, latestBoard.getTotalElements());
+
+    }
 }

@@ -36,8 +36,29 @@
             <div class="body-content">
                 <span class="menu-title">최근 모집 공고</span>
                 <div class="list-box">
-                    <ul class="list-group" th:each="boardNumber : ${#numbers.sequence(1, 10)}">
-                        <div th:replace="fragments :: board-head-example"></div>
+                    <ul class="list-group" th:each="board : ${boardList}">
+                        <li class="list-group-item list-group-small">
+                            <div>
+                                <div style="float: left;">
+                                    <a th:href="@{/boards/{id}(id=${board.id})}">
+                                                <span class="list-field" th:text="${board.title}">
+                                                    여기는 스터디 제목~~~
+                                                </span>
+                                    </a>
+                                </div>
+                                <div style="float: right;">
+                                    <img class="list-profile-img" th:src="${board.writer.imageUrl}" />
+                                    <a href="">
+                                                <span class="list-field" th:text="${board.writer.nickname}">
+                                                    닉네임
+                                                </span>
+                                    </a>
+                                    <span class="list-field list-write-time" th:text="${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">
+                                                2021-03-19 오후 3시 34분
+                                            </span>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div>
