@@ -17,7 +17,7 @@
                 <th class="padding-right">
                     <div class="align-right">
                         <img id="profile-img" th:src="${board.writer.imageUrl}" />
-                        <a href=""><span id="nickname-span" th:text="${board.writer.nickname}"></span></a>
+                        <a th:href="@{/profile/{nickname}(nickname=${board.writer.nickname})}"><span id="nickname-span" th:text="${board.writer.nickname}"></span></a>
                     </div>
                     <div class="align-right"><span id="reg-date-span" th:text="${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span></div>
                 </th>

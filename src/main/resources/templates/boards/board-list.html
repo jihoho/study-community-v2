@@ -32,7 +32,7 @@
                     <a th:href="@{/boards/{id}(id=${board.id})}"><span th:text="${board.title}"></span></a>
                 </td>
                 <td><span th:text="${board.place}">강남역 인근 ...</span></td>
-                <td th:text="${board.writerDto.nickname}">nickname</td>
+                <td th:text="${board.writerDto.nickname}"><a th:href="@{/profile/{nickname}(nickname=${board.writerDto.nickname})}">nickname</a></td>
                 <td th:text="${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">2021-03-21 12:30:00</td>
 
                 <td class="align-center">

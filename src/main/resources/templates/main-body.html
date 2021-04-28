@@ -48,7 +48,7 @@
                                 </div>
                                 <div style="float: right;">
                                     <img class="list-profile-img" th:src="${board.writer.imageUrl}" />
-                                    <a href="">
+                                    <a th:href="@{/profile/{nickname}(nickname=${board.writer.nickname})}">
                                                 <span class="list-field" th:text="${board.writer.nickname}">
                                                     닉네임
                                                 </span>

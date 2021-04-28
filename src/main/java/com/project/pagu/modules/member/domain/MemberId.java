@@ -26,4 +26,16 @@ public class MemberId implements Serializable {
         return new MemberId(email, memberType);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        MemberId memberId = (MemberId) obj;
+        return email.equals(memberId.email) && memberType == memberId.memberType;
+    }
+
 }

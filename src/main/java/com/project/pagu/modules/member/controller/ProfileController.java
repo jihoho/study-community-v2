@@ -3,6 +3,7 @@ package com.project.pagu.modules.member.controller;
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import com.project.pagu.modules.member.service.MemberService;
 import com.project.pagu.common.validation.ProfileValidation;
@@ -60,6 +61,20 @@ public class ProfileController {
             @PathVariable String filename,
             HttpServletResponse response) throws Exception {
         fileManager.profileThumbnails(response, filename, type, email);
+    }
+
+    @GetMapping("/profile/{nickname}")
+    public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
+        ProfileRequestDto profileRequestDto = memberService.getBy(nickname);
+        //자기 자신을 조회하면 프로필 관리로 이동
+        MemberId currentMemberId = MemberId.of(member.getEmail(), member.getMemberType());
+        MemberId findMemberId = MemberId.of(profileRequestDto.getEmail(), member.getMemberType());
+        if (currentMemberId.equals(findMemberId)) {
+            return "redirect:/profile";
+        }
+
+        model.addAttribute(profileRequestDto);
+        return "/profile/detail";
     }
 
 }

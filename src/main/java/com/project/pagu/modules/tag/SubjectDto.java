@@ -1,5 +1,6 @@
 package com.project.pagu.modules.tag;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubjectForm {
+@Builder
+public class SubjectDto {
 
     private String name;
 
@@ -19,5 +21,9 @@ public class SubjectForm {
         return Subject.builder()
                 .name(name)
                 .build();
+    }
+
+    public static SubjectDto of(String name) {
+        return SubjectDto.builder().name(name).build();
     }
 }

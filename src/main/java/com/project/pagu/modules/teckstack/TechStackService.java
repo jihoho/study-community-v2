@@ -1,5 +1,9 @@
 package com.project.pagu.modules.teckstack;
 
+import com.project.pagu.modules.tag.Subject;
+import com.project.pagu.modules.tag.SubjectDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,12 @@ public class TechStackService {
     public TechStack getOrSave(String name) {
         return techStackRepository.findByName(name)
                 .orElseGet(() -> techStackRepository.save(TechStack.of(name)));
+    }
+
+    public List<TechStackDto> getAllTechStacks() {
+        List<TechStack> techStacks = techStackRepository.findAll();
+        return techStacks.stream().map(t -> TechStackDto.of(t.getName()))
+                .collect(Collectors.toList());
     }
 
 

@@ -2,6 +2,7 @@ package com.project.pagu.modules.member.repository;
 
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,4 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
 
     boolean existsByNickname(String nickname);
 
+    Optional<Member> findByNickname(String nickname);
 }
