@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -46,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final FileManager fileManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member findById(MemberId memberId) {
@@ -148,6 +150,13 @@ public class MemberServiceImpl implements MemberService {
                 .career(findMember.getCareer())
                 .position(findMember.getPostion())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(MemberId memberId, String newPassword) {
+        Member findMember = findById(memberId);
+        findMember.changePassword(passwordEncoder.encode(newPassword));
     }
 
     private void updateImageFile(ProfileRequestDto profileRequestDto) {

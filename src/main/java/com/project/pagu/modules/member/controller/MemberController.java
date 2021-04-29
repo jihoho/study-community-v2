@@ -9,6 +9,7 @@ import com.project.pagu.common.validation.SignUpValidation;
 
 import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -106,26 +105,54 @@ public class MemberController {
         return "sign-up-success";
     }
 
-    @GetMapping("/members/password")
-    public String getEmailForm(Model model) {
+    @GetMapping("/members/password-find")
+    public String getPasswordFindForm(Model model) {
         model.addAttribute(new MemberSaveRequestDto());
-        return "/members/password";
+        return "/members/email-check";
+    }
+
+    @PostMapping("/members/email-check")
+    public String sendEmailAuthKey(HttpSession session, MemberSaveRequestDto memberSaveRequestDto) {
+        String email = memberSaveRequestDto.getEmail();
+        if (memberService.existsById(MemberId.of(email, MemberType.NORMAL))) {
+            memberSaveRequestDto.createEmailAuthKey();
+            signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
+            session.setAttribute("memberSaveRequestDto", memberSaveRequestDto);
+            return "redirect:/members/email-form";
+        }
+
+        return "redirect:/members/email-form";
+    }
+
+    /**
+     * 세션에 담겨있는 memberSaveRequestDto 가져온다
+     */
+    @GetMapping("/members/email-form")
+    public String getEmailAuthKeyForm(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute(memberSaveRequestDto);
+        return "/members/email-check-password";
     }
 
     @PostMapping("/members/email-check-password")
-    public String getEmailCheckToPassword(Model model, MemberSaveRequestDto memberSaveRequestDto) {
-        String email = memberSaveRequestDto.getEmail();
-        if (memberService.existsById(MemberId.of(email, MemberType.NORMAL))) {
-//            signUpManager.sendAuthMessage();
+    public String sendNewPassword(MemberSaveRequestDto memberSaveRequestDto,
+            BindingResult result, SessionStatus sessionStatus) {
+
+        if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
+                memberSaveRequestDto.getAuthKeyInput(), result)) {
+            return "/members/email-check-password";
         }
 
-        model.addAttribute(memberSaveRequestDto);
-        return "redirect:/members/email-check-password";
+        String newPassword = signUpManager.sendNewPassword(memberSaveRequestDto.getEmail());
+        memberService.changePassword(MemberId.of(memberSaveRequestDto.getEmail(), MemberType.NORMAL),
+                        newPassword);
+
+        sessionStatus.isComplete();
+        return "redirect:/members/password-success";
     }
 
-    @GetMapping("/members/email-check-password")
-    public String asdf(MemberSaveRequestDto memberSaveRequestDto) {
-        System.out.println(memberSaveRequestDto);
-        return "redirect:/";
+    @GetMapping("/members/password-success")
+    public String passwordSuccess() {
+        return "/members/password-success";
     }
+
 }

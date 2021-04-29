@@ -13,4 +13,5 @@ public interface SignUpManager {
 
     void encryptPassword(MemberSaveRequestDto memberSaveRequestDto);
 
+    String sendNewPassword(String email);
 }

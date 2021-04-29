@@ -92,4 +92,8 @@ public class Member extends BaseTimeEntity {
     public MemberId getMemberId() {
         return MemberId.of(email, memberType);
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }
