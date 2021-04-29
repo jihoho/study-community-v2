@@ -1,5 +1,7 @@
 package com.project.pagu.modules.member.controller;
 
+import com.project.pagu.modules.member.domain.MemberId;
+import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
 import com.project.pagu.modules.member.service.MemberService;
 import com.project.pagu.common.manager.SignUpManager;
@@ -15,7 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -66,6 +70,7 @@ public class MemberController {
             return "sign-up";
         }
 
+        memberSaveRequestDto.createEmailAuthKey();
         signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
         signUpManager.encryptPassword(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
@@ -101,4 +106,26 @@ public class MemberController {
         return "sign-up-success";
     }
 
+    @GetMapping("/members/password")
+    public String getEmailForm(Model model) {
+        model.addAttribute(new MemberSaveRequestDto());
+        return "/members/password";
+    }
+
+    @PostMapping("/members/email-check-password")
+    public String getEmailCheckToPassword(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        String email = memberSaveRequestDto.getEmail();
+        if (memberService.existsById(MemberId.of(email, MemberType.NORMAL))) {
+//            signUpManager.sendAuthMessage();
+        }
+
+        model.addAttribute(memberSaveRequestDto);
+        return "redirect:/members/email-check-password";
+    }
+
+    @GetMapping("/members/email-check-password")
+    public String asdf(MemberSaveRequestDto memberSaveRequestDto) {
+        System.out.println(memberSaveRequestDto);
+        return "redirect:/";
+    }
 }
