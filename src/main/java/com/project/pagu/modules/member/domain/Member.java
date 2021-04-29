@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import org.hibernate.annotations.Where;
 
 /**
  * Created by IntelliJ IDEA
@@ -24,6 +25,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @IdClass(MemberId.class)
+@Where(clause = "is_delete = false")
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -52,6 +54,8 @@ public class Member extends BaseTimeEntity {
     private String career;
 
     private String postion;
+
+    private boolean isDelete;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -95,5 +99,9 @@ public class Member extends BaseTimeEntity {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void delete() {
+        this.isDelete = true;
     }
 }

@@ -159,6 +159,13 @@ public class MemberServiceImpl implements MemberService {
         findMember.changePassword(passwordEncoder.encode(newPassword));
     }
 
+    @Override
+    @Transactional
+    public void deleteMember(Member member) {
+        Member findMember = findById(MemberId.of(member.getEmail(), MemberType.NORMAL));
+        findMember.delete();
+    }
+
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
         if (profileRequestDto.getMultipartFile() == null) {
             return;

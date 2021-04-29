@@ -152,7 +152,7 @@ public class MemberController {
 
     @GetMapping("/members/password-success")
     public String passwordSuccess() {
-        return "/members/password-success";
+        return "members/password-success";
     }
 
 }

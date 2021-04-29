@@ -4,6 +4,7 @@ import com.project.pagu.modules.member.model.ProfileRequestDto;
 import com.project.pagu.modules.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -18,6 +19,7 @@ import org.springframework.validation.Validator;
 public class ProfileValidation implements Validator {
 
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -36,5 +38,13 @@ public class ProfileValidation implements Validator {
         if (memberService.existsByNickname(nickname)) {
             errors.rejectValue("nickname", "UniqueNickname", "이미 존재하는 닉네임입니다.");
         }
+    }
+
+    public boolean isCurrentMemberPassword(String inputPassword, String memberPassword, Errors errors) {
+        if (!passwordEncoder.matches(inputPassword, memberPassword)) {
+            errors.rejectValue("password", "NotEqualsPassword", "비밀번호가 일치하지 않습니다.");
+            return true;
+        }
+        return false;
     }
 }

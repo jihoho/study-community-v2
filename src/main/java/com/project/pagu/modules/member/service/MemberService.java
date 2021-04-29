@@ -38,4 +38,6 @@ public interface MemberService extends UserDetailsService, OAuth2UserService<OAu
     ProfileRequestDto getBy(String nickname);
 
     void changePassword(MemberId of, String newPassword);
+
+    void deleteMember(Member member);
 }
