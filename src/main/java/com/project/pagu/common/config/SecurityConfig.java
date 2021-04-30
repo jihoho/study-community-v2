@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/sign-up/**", "/login/**", "/email-check", "/sign-up-success").permitAll()
-                .antMatchers("/profile").hasAnyAuthority(Role.GUEST.getKey(), Role.USER.getKey())
+                .antMatchers("/profile/**").hasAnyAuthority(Role.GUEST.getKey(), Role.USER.getKey())
                 .antMatchers("/boards/board-form").hasAuthority(Role.USER.getKey())
                 .anyRequest().permitAll();
 

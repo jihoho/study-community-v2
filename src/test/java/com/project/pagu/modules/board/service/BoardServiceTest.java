@@ -3,13 +3,14 @@ package com.project.pagu.modules.board.service;
 import static java.time.Month.APRIL;
 import static java.time.Month.MAY;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.project.pagu.modules.board.domain.Board;
+import com.project.pagu.modules.board.domain.StudyStatus;
+import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
@@ -23,7 +24,9 @@ import com.project.pagu.modules.teckstack.TechStack;
 import com.project.pagu.modules.teckstack.TechStackService;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +36,13 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 
 /**
  * Created by IntelliJ IDEA
@@ -61,6 +71,9 @@ class BoardServiceTest {
     @Captor
     private ArgumentCaptor<Board> argumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<Pageable> pageableArgumentCaptor;
+
     @Test
     @DisplayName("게시물을 등록한다.")
     void save_board() {
@@ -87,7 +100,57 @@ class BoardServiceTest {
         then(argumentCaptor.getValue().getEtc()).isEqualTo("기타 사항");
     }
 
-    public Member givenMember() {
+    @Test
+    @DisplayName("페이징 처리 된 게시물들을 가져온다.")
+    void get_paged_board_list() {
+
+        // given
+        Pageable pageable = givenPageable(0, 10, Sort.by("modifiedDate").descending());
+        given(boardRepository.findAll(pageable)).willReturn(givenPagedBoard(pageable));
+
+        // when
+        boardService.getPagedBoardList(pageable);
+
+        // then
+        verify(boardRepository, times(1)).findAll(pageableArgumentCaptor.capture());
+        then(pageableArgumentCaptor.getValue()).isNotNull();
+        then(pageableArgumentCaptor.getValue().getPageSize()).isEqualTo(10);
+        then(pageableArgumentCaptor.getValue().getPageNumber()).isEqualTo(0);
+        then(pageableArgumentCaptor.getValue().getSort())
+                .isEqualTo(Sort.by("modifiedDate").descending());
+
+    }
+
+    @Test
+    @DisplayName("게시물 상세 조회 한다.")
+    void get_board_detail() throws Exception {
+        // given
+        Board board = givenBoard(1L);
+        given(boardRepository.findById(any())).willReturn(Optional.of(board));
+
+        // when
+        BoardDetailDto boardDetailDto = boardService.getBoardDetailDto(1L);
+
+        // then
+        verify(boardRepository, times(1)).findById(1L);
+
+        then(boardDetailDto.getId()).isEqualTo(board.getId());
+        then(boardDetailDto.getTitle()).isEqualTo(board.getTitle());
+        then(boardDetailDto.getGoal()).isEqualTo(board.getGoal());
+        then(boardDetailDto.getPlace()).isEqualTo(board.getPlace());
+        then(boardDetailDto.getWriter().getNickname()).isEqualTo(board.getMember().getNickname());
+        then(boardDetailDto.getWriter().getEmail()).isEqualTo(board.getMember().getEmail());
+        then(boardDetailDto.getRecruitmentStartAt()).isEqualTo(board.getRecruitmentStartAt());
+        then(boardDetailDto.getRecruitmentEndAt()).isEqualTo(board.getRecruitmentEndAt());
+        then(boardDetailDto.getTermsEndAt()).isEqualTo(board.getTermsEndAt());
+        then(boardDetailDto.getTermsStartAt()).isEqualTo(board.getTermsStartAt());
+        then(boardDetailDto.getStatus()).isEqualTo(board.getStatus());
+        then(boardDetailDto.getModifiedDate()).isEqualTo(board.getModifiedDate());
+        then(boardDetailDto.getEtc()).isEqualTo(board.getEtc());
+    }
+
+
+    private Member givenMember() {
         return Member.builder()
                 .email("test@email.com")
                 .memberType(MemberType.NORMAL)
@@ -119,6 +182,39 @@ class BoardServiceTest {
         dto.setTermsEndAt(LocalDate.of(2021, 05, 24));
         dto.setEtc("기타 사항");
         return dto;
+    }
+
+    private Pageable givenPageable(int page, int size, Sort sort) {
+        return PageRequest.of(page, size, sort);
+    }
+
+    private PageImpl<Board> givenPagedBoard(Pageable pageable) {
+        List<Board> boards = givenBoardList();
+        return new PageImpl<>(boards, pageable, boards.size());
+    }
+
+    private List<Board> givenBoardList() {
+        List<Board> boards = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            boards.add(givenBoard((long) i));
+        }
+        return boards;
+    }
+
+    private Board givenBoard(Long id) {
+        return Board.builder()
+                .id(id)
+                .title("제목")
+                .goal("목표")
+                .place("강남역 ")
+                .member(givenMember())
+                .recruitmentStartAt(LocalDate.now())
+                .recruitmentEndAt(LocalDate.now().plusDays(30))
+                .termsStartAt(LocalDate.now().plusDays(30))
+                .termsEndAt(LocalDate.now().plusDays(30))
+                .status(StudyStatus.READY)
+                .etc("기타 사항").build();
+
     }
 
 }

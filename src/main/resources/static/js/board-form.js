@@ -69,7 +69,7 @@ $("#board-create-butt").click(function () {
   form.submit();
 });
 
-<!-- typeahead 관련 script -->
+// typeahead 관련 script
 var substringMatcher = function (strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
@@ -96,16 +96,57 @@ var subjects = ["Web", "Backend", "Frontent", "Embeded", "DataEngineering", "Dat
 
 var techStacks = ["Spring", "JPA", "Flutter", "Docker", "HTML", "JavaScript", "CSS", "React", "Vue.js", "MyBatis", "struts", "Java", "C++", "C", "Python"];
 
-$("#subject-input").tagsinput({
-  typeaheadjs: {
-    name: "subjects",
-    source: substringMatcher(subjects),
-  },
+/**
+ * window.onload와 다르게 태그 로드만을 감지
+ * (즉 DOM 트리의 로드만을 감지, 이미지, 영상의 로드 X)
+ * 페이지 로드 후 동적으로 태그 데이터 호출
+ */
+$(document).ready(function () {
+  $.ajax({
+    type: "get",
+    url: "/subjects",
+    success: function (jsonArr) {
+      console.log("subjects response: " + jsonArr);
+      subjects = [];
+      jsonArr.forEach(function (json, idx) {
+        subjects.push(json["name"]);
+      });
+      console.log("subjects: " + subjects);
+    },
+    error: function () {
+      alert("주제 관련 태그 로딩 실패!");
+    },
+  });
+
+  $.ajax({
+    type: "get",
+    url: "/tech-stacks",
+    success: function (jsonArr) {
+      console.log("techstacks response: " + jsonArr);
+      techStacks = [];
+      jsonArr.forEach(function (json, idx) {
+        techStacks.push(json["name"]);
+      });
+      console.log("techStacks: " + techStacks);
+    },
+    error: function () {
+      alert("기술 관련 태그 로딩 실패!");
+    },
+  });
 });
 
-$("#tech-input").tagsinput({
-  typeaheadjs: {
-    name: "techStachs",
-    source: substringMatcher(techStacks),
-  },
+$(document).ajaxComplete(function () {
+  $("#subject-input").tagsinput({
+    typeaheadjs: {
+      name: "subjects",
+      source: substringMatcher(subjects),
+    },
+  });
+
+  $("#tech-input").tagsinput({
+    typeaheadjs: {
+      name: "techStachs",
+      source: substringMatcher(techStacks),
+    },
+  });
 });
