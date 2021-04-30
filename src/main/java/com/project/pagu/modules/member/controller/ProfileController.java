@@ -6,6 +6,7 @@ import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.PasswordDto;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import com.project.pagu.modules.member.service.MemberService;
 import com.project.pagu.common.validation.ProfileValidation;
@@ -101,7 +102,7 @@ public class ProfileController {
         }
 
         if (name.equals("change-password")) {
-            return "redirect:/members/change-passowd";
+            return "redirect:/members/change-password";
         }
 
         if (name.equals("secession")) {
@@ -110,6 +111,26 @@ public class ProfileController {
         }
         return "/error";
 
+    }
+
+    @GetMapping("/members/change-password")
+    public String changePassword(Model model) {
+        model.addAttribute(new PasswordDto());
+        return "members/change-password";
+    }
+
+    @PostMapping("/members/change-password")
+    public String submitPassword(@CurrentMember Member member, @Valid PasswordDto dto, BindingResult result) {
+        profileValidation.isNotEqualToPassword(dto.getPassword(), dto.getPasswordCheck(), result);
+
+        if (result.hasErrors()) {
+            return "members/change-password";
+        }
+
+        memberService.changePassword(MemberId.of(member.getEmail(), member.getMemberType()), dto.getPassword());
+        memberService.login(member);
+
+        return "redirect:/members/password-success";
     }
 
     @GetMapping("/members/delete-success")

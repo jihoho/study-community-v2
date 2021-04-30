@@ -47,4 +47,10 @@ public class ProfileValidation implements Validator {
         }
         return false;
     }
+
+    public void isNotEqualToPassword(String password, String passwordCheck, Errors errors) {
+        if (password != null && !password.equals(passwordCheck)) {
+            errors.rejectValue("passwordCheck", "NotEqualsPassword", "비밀번호가 다릅니다.");
+        }
+    }
 }
