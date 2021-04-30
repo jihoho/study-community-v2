@@ -1,7 +1,6 @@
 package com.project.pagu.modules.board.model;
 
 import com.project.pagu.common.manager.FileUtil;
-import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
@@ -65,7 +64,8 @@ public class BoardDetailDto {
 
     private WriterDto writer;
 
-    public static BoardDetailDto CreateBoardDetailDto(Board board) {
+    public static BoardDetailDto CreateBoardDetailDto(
+            com.project.pagu.modules.board.domain.Board board) {
 
         BoardDetailDto boardDetailDto = BoardDetailDto.builder()
                 .id(board.getId())

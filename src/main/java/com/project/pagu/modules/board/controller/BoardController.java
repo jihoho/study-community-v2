@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Created by IntelliJ IDEA
@@ -80,5 +81,14 @@ public class BoardController {
     public void boardImageThumbnails(@PathVariable String id, @PathVariable String filename,
             HttpServletResponse response) throws Exception {
         fileManager.boardThumbnails(response, filename, id);
+    }
+
+    @GetMapping("/boards/search")
+    public String search(@RequestParam(value = "keyword") String keyword,
+            @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
+            Model model) {
+
+        model.addAttribute("boardList", boardService.getSearchBoards(keyword, pageable));
+        return "boards/board-list";
     }
 }

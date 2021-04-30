@@ -50,22 +50,25 @@
 
         <div id="search-bar">
             <!-- Example single danger button -->
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    제목
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">제목</a>
-                    <a class="dropdown-item" href="#">주제+기술</a>
-                    <a class="dropdown-item" href="#">상태</a>
+            <form th:action="@{/boards/search}">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        제목
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">제목</a>
+                        <a class="dropdown-item" href="#">주제+기술</a>
+                        <a class="dropdown-item" href="#">상태</a>
+                    </div>
                 </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Search</button>
+                <div class="input-group mb-3">
+                    <input type="text" th:name="keyword" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">Search</button>
+                    </div>
                 </div>
-            </div>
+            </form>
+
         </div>
         <div
             id="paginationBox"

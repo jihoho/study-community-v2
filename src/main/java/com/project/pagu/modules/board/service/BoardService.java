@@ -1,7 +1,6 @@
 package com.project.pagu.modules.board.service;
 
 import com.project.pagu.common.manager.FileUtil;
-import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.model.BoardDetailDto;
@@ -61,7 +60,7 @@ public class BoardService {
         Set<Subject> subject = createSubject(dto.getSubjects());
         Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
 
-        Board board = dto.toEntity();
+        com.project.pagu.modules.board.domain.Board board = dto.toEntity();
         board.setMember(findMember);
         board.addBoardScheduleList(boardSchedule);
 
@@ -76,7 +75,7 @@ public class BoardService {
         }
 
         //Board savedBoard = boardRepository.save(board);
-        Board savedBoard = saveBoard(board);
+        com.project.pagu.modules.board.domain.Board savedBoard = saveBoard(board);
 
         List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
@@ -105,7 +104,8 @@ public class BoardService {
                 .collect(Collectors.toSet());
     }
 
-    private Board saveBoard(Board board) {
+    private com.project.pagu.modules.board.domain.Board saveBoard(
+            com.project.pagu.modules.board.domain.Board board) {
         return boardRepository.save(board);
     }
 
@@ -135,7 +135,7 @@ public class BoardService {
 
     public PageImpl<BoardPageDto> getPagedBoardList(Pageable pageable) {
 
-        Page<Board> boardPage = boardRepository.findAll(pageable);
+        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository.findAll(pageable);
         PageImpl<BoardPageDto> boardPageDto = convertBoardPageToBoardPageDto(boardPage,pageable);
         return boardPageDto;
 
@@ -144,9 +144,9 @@ public class BoardService {
     /**
      * Mapper로 변환 예정
      */
-    private PageImpl<BoardPageDto> convertBoardPageToBoardPageDto(Page<Board> boardPage,Pageable pageable) {
+    private PageImpl<BoardPageDto> convertBoardPageToBoardPageDto(Page<com.project.pagu.modules.board.domain.Board> boardPage,Pageable pageable) {
         List<BoardPageDto> boardPageDtos = new ArrayList<>();
-        for (Board board : boardPage) {
+        for (com.project.pagu.modules.board.domain.Board board : boardPage) {
             boardPageDtos.add(BoardPageDto.creatBoardPageDto(board));
         }
         return new PageImpl<BoardPageDto>(boardPageDtos,pageable,boardPage.getTotalElements());
@@ -155,7 +155,7 @@ public class BoardService {
 
     public BoardDetailDto getBoardDetailDto(Long id) {
 
-        Board board = boardRepository.findById(id)
+        com.project.pagu.modules.board.domain.Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException());
         return BoardDetailDto.CreateBoardDetailDto(board);
 
@@ -164,19 +164,24 @@ public class BoardService {
     public PageImpl<LatestBoardDto> getLatestBoard(int size) {
 
         Pageable pageable = PageRequest.of(0, size, Sort.by("modifiedDate").descending());
-        Page<Board> latestBoard = boardRepository.findAll(pageable);
+        Page<com.project.pagu.modules.board.domain.Board> latestBoard = boardRepository.findAll(pageable);
         return convertLatestBoardToLatestBoardDto(latestBoard, pageable);
 
     }
 
-    private PageImpl<LatestBoardDto> convertLatestBoardToLatestBoardDto(Page<Board> latestBoard,
+    private PageImpl<LatestBoardDto> convertLatestBoardToLatestBoardDto(Page<com.project.pagu.modules.board.domain.Board> latestBoard,
             Pageable pageable) {
 
         List<LatestBoardDto> latestBoardDtos = new ArrayList<>();
-        for (Board board : latestBoard) {
+        for (com.project.pagu.modules.board.domain.Board board : latestBoard) {
             latestBoardDtos.add(LatestBoardDto.createLatestBoardDto(board));
         }
         return new PageImpl<>(latestBoardDtos, pageable, latestBoard.getTotalElements());
 
+    }
+
+    public PageImpl<BoardPageDto> getSearchBoards(String keyword, Pageable pageable) {
+        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository.findByTitleContaining(keyword, pageable);
+        return convertBoardPageToBoardPageDto(boardPage, pageable);
     }
 }

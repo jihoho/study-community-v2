@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
@@ -27,7 +26,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,13 +34,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 
 /**
  * Created by IntelliJ IDEA
@@ -69,7 +64,7 @@ class BoardServiceTest {
     private TechStackService techStackService;
 
     @Captor
-    private ArgumentCaptor<Board> argumentCaptor;
+    private ArgumentCaptor<com.project.pagu.modules.board.domain.Board> argumentCaptor;
 
     @Captor
     private ArgumentCaptor<Pageable> pageableArgumentCaptor;
@@ -125,7 +120,7 @@ class BoardServiceTest {
     @DisplayName("게시물 상세 조회 한다.")
     void get_board_detail() throws Exception {
         // given
-        Board board = givenBoard(1L);
+        com.project.pagu.modules.board.domain.Board board = givenBoard(1L);
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
         // when
@@ -188,21 +183,21 @@ class BoardServiceTest {
         return PageRequest.of(page, size, sort);
     }
 
-    private PageImpl<Board> givenPagedBoard(Pageable pageable) {
-        List<Board> boards = givenBoardList();
+    private PageImpl<com.project.pagu.modules.board.domain.Board> givenPagedBoard(Pageable pageable) {
+        List<com.project.pagu.modules.board.domain.Board> boards = givenBoardList();
         return new PageImpl<>(boards, pageable, boards.size());
     }
 
-    private List<Board> givenBoardList() {
-        List<Board> boards = new ArrayList<>();
+    private List<com.project.pagu.modules.board.domain.Board> givenBoardList() {
+        List<com.project.pagu.modules.board.domain.Board> boards = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             boards.add(givenBoard((long) i));
         }
         return boards;
     }
 
-    private Board givenBoard(Long id) {
-        return Board.builder()
+    private com.project.pagu.modules.board.domain.Board givenBoard(Long id) {
+        return com.project.pagu.modules.board.domain.Board.builder()
                 .id(id)
                 .title("제목")
                 .goal("목표")
