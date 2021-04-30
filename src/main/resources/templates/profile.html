@@ -53,7 +53,7 @@
                     </a>
                     <a class="nav-link" id="secession-tab" data-toggle="pill" href="#secession" role="tab" aria-selected="false">
                         <i class="fa fa-tv text-center mr-1"></i>
-                        회원 탈퇴
+                        설정
                     </a>
                 </div>
             </div>
@@ -418,8 +418,13 @@
                     <h3 class="mb-4">준비중인 서비스입니다.</h3>
                 </div>
                 <div class="tab-pane fade" id="secession" role="tabpanel" aria-labelledby="application-tab">
-                    <h3 class="mb-4">회원 탈퇴하기</h3>
-                    <a class="btn btn-primary" th:href="@{/members/password-check}">탈퇴하기</a>
+                    <h3 class="mb-4">설정</h3>
+                    <div class="mb-5">
+                        <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='change-password')}">비밀번호 변경하기</a>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='secession')}">탈퇴하기</a>
+                    </div>
                 </div>
             </div>
         </div>

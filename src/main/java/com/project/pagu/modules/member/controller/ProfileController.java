@@ -82,24 +82,34 @@ public class ProfileController {
         return "profile/detail";
     }
 
-    @GetMapping("/members/password-check")
-    public String passwordForm(@CurrentMember Member member, Model model) {
+    @GetMapping("/members/password-check/{name}")
+    public String passwordForm(@CurrentMember Member member, @PathVariable String name, Model model) {
         //todo : 구글 계정일 경우 회원탈퇴
 //        if (member.getMemberType().equals(MemberType.GOOGLE)) {
 //            memberService.deleteMember(member);
 //            return "redirect:/members/delete-success";
 //        }
         model.addAttribute(new MemberSaveRequestDto());
+        model.addAttribute("view", name);
         return "members/password-check";
     }
 
-    @PostMapping("/members/password-check")
-    public String checkPassword(@CurrentMember Member member,  MemberSaveRequestDto dto, BindingResult result) {
+    @PostMapping("/members/password-check/{name}")
+    public String checkPassword(@CurrentMember Member member, @PathVariable String name, MemberSaveRequestDto dto, BindingResult result) {
         if (profileValidation.isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
             return "members/password-check";
         }
-        memberService.deleteMember(member);
-        return "redirect:/members/delete-success";
+
+        if (name.equals("change-password")) {
+            return "redirect:/members/change-passowd";
+        }
+
+        if (name.equals("secession")) {
+            memberService.deleteMember(member);
+            return "redirect:/members/delete-success";
+        }
+        return "/error";
+
     }
 
     @GetMapping("/members/delete-success")
