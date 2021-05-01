@@ -229,7 +229,7 @@ class MemberControllerTest2 {
                 .nickname("tester")
                 .password(passwordEncoder.encode("abcde1234!"))
                 .role(Role.GUEST)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

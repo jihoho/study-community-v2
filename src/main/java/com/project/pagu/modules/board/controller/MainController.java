@@ -64,7 +64,7 @@ public class MainController {
             return "sign-up-google";
         }
 
-        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getImageUrl());
+        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
 
         memberService.saveMember(oAuthMemberSaveDto);
         return "redirect:/";

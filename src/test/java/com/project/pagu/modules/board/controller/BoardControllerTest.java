@@ -168,7 +168,7 @@ class BoardControllerTest {
                 .nickname("tester")
                 .password(passwordEncoder.encode("abcde1234!"))
                 .role(role)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

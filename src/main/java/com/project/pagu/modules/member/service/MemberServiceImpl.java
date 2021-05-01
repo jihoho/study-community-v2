@@ -102,8 +102,9 @@ public class MemberServiceImpl implements MemberService {
                 .memberType(findMember.getMemberType().getKey())
                 .nickname(findMember.getNickname())
                 .changeNickname(findMember.getNickname())
-                .imageFile(findMember.getImageFile())
-                .imageUrl(findMember.getImageUrl())
+                .imageFilename(findMember.getImageFilename())
+                .oauthImageUrl(findMember.getOauthImageUrl())
+                .profileImageUrl(findMember.getProfileImageUrl())
                 .link(findMember.getLink())
                 .info(findMember.getInfo())
                 .career(findMember.getCareer())
@@ -141,8 +142,8 @@ public class MemberServiceImpl implements MemberService {
                 .email(findMember.getEmail())
                 .memberType(findMember.getMemberType().getKey())
                 .nickname(findMember.getNickname())
-                .imageFile(findMember.getImageFile())
-                .imageUrl(findMember.getImageUrl())
+                .imageFilename(findMember.getImageFilename())
+                .oauthImageUrl(findMember.getOauthImageUrl())
                 .link(findMember.getLink())
                 .info(findMember.getInfo())
                 .career(findMember.getCareer())
@@ -157,7 +158,7 @@ public class MemberServiceImpl implements MemberService {
 
         if (profileRequestDto.getMultipartFile().getSize() != 0) {
             String fileName = FileUtil.createFileName();
-            profileRequestDto.setImageFile(fileName);
+            profileRequestDto.setImageFilename(fileName);
             fileManager.uploadProfileImage(profileRequestDto.getMultipartFile(), fileName, profileRequestDto.getMemberType(), profileRequestDto.getEmail());
         }
     }
@@ -173,7 +174,7 @@ public class MemberServiceImpl implements MemberService {
 
     private Member getOrSyncImage(Member member) {
         return memberRepository.findById(member.getMemberId())
-                .map(entity -> entity.updateImage(member.getImageUrl()))
+                .map(entity -> entity.updateImage(member.getOauthImageUrl()))
                 .orElse(member);
     }
 }

@@ -27,7 +27,7 @@ public class OauthMember implements OAuth2User {
     public Map<String, Object> getAttributes() {
         return Map.of("email", member.getEmail(),
                 "nickname", member.getNickname(),
-                "picture", member.getImageUrl());
+                "picture", member.getOauthImageUrl());
     }
 
     @Override

@@ -27,18 +27,10 @@ public class WriterDto {
     private String nickname;
 
     public static WriterDto createWriterDto(Member member) {
-        WriterDto writerDto = WriterDto.builder()
+        return WriterDto.builder()
                 .email(member.getEmail())
                 .memberType(member.getMemberType())
-                .imageUrl(member.getImageUrl())
+                .imageUrl(member.getProfileImageUrl())
                 .nickname(member.getNickname()).build();
-
-        if (member.getImageFile() != null && !member.getImageFile().equals("")) {
-            writerDto.setImageUrl(
-                    FileUtil.createImageUrl("profileThumbnails", member.getMemberTypeKey(),
-                            member.getEmail(),
-                            member.getImageFile()));
-        }
-        return writerDto;
     }
 }

@@ -1,5 +1,6 @@
 package com.project.pagu.modules.member.domain;
 
+import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.common.domain.BaseTimeEntity;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
@@ -21,7 +22,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @IdClass(MemberId.class)
 public class Member extends BaseTimeEntity {
@@ -40,9 +40,11 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String imageFile;
+    private String imageFilename;
 
-    private String imageUrl;
+    private String oauthImageUrl;
+
+    private String profileImageUrl;
 
     private String link;
 
@@ -58,18 +60,52 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @OneToMany(mappedBy = "member")
-    @Builder.Default
     private List<Board> boards = new ArrayList<>();
 
+    @Builder
+    public Member(String email, MemberType memberType, String nickname, String password,
+            String imageFilename, String oauthImageUrl, String link, String info, String career,
+            String postion,
+            Role role) {
+        this.email = email;
+        this.memberType = memberType;
+        this.nickname = nickname;
+        this.password = password;
+        this.imageFilename = imageFilename;
+        this.oauthImageUrl = oauthImageUrl;
+        this.link = link;
+        this.info = info;
+        this.career = career;
+        this.postion = postion;
+        this.role = role;
+
+        if (imageFilename != null && !imageFilename.equals("")) {
+            this.profileImageUrl = FileUtil
+                    .createImageUrl("profileThumbnails", memberType.getKey(), email, imageFilename);
+        } else {
+            this.profileImageUrl = oauthImageUrl;
+        }
+    }
+
     public Member updateImage(String imageUrl) {
-        this.imageUrl = imageUrl;
+        if (profileImageUrl.equals(oauthImageUrl)) {
+            profileImageUrl = imageUrl;
+        }
+        oauthImageUrl = imageUrl;
         return this;
     }
 
     public void updateProfile(ProfileRequestDto dto) {
         this.nickname = dto.getChangeNickname();
-        this.imageUrl = dto.getImageUrl();
-        this.imageFile = dto.getImageFile();
+        this.oauthImageUrl = dto.getOauthImageUrl();
+        this.imageFilename = dto.getImageFilename();
+        if (imageFilename != null && !imageFilename.equals("")) {
+            profileImageUrl = FileUtil
+                    .createImageUrl("profileThumbnails", dto.getMemberType(), dto.getEmail(),
+                            imageFilename);
+        } else {
+            profileImageUrl = oauthImageUrl;
+        }
         this.link = dto.getLink();
         this.info = dto.getInfo();
         this.career = dto.getCareer();
