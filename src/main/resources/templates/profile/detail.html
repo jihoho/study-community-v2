@@ -18,16 +18,12 @@
                     <div class="col-md-4">
                         <div id="img-box">
                             <img
-                                th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${!#strings.isEmpty(profileRequestDto.imageUrl)}"
-                                th:src="${profileRequestDto.imageUrl}" class="profile-img"/>
-                            <!--todo: 임시적으로 filename으로 설정해둠 -->
-                            <img
-                                th:if="${!#strings.isEmpty(profileRequestDto.imageFile)}"
-                                th:src="@{/profileThumbnails/{type}/{email}/{filename}(type=${profileRequestDto.memberType},email=${profileRequestDto.email},filename=${profileRequestDto.imageFile})}"
+                                th:if="${!#strings.isEmpty(profileRequestDto.profileImageUrl)}"
+                                th:src="${profileRequestDto.profileImageUrl}"
                                 class="profile-img"
                             />
                             <svg
-                                th:if="${#strings.isEmpty(profileRequestDto.imageFile)} and ${#strings.isEmpty(profileRequestDto.imageUrl)}"
+                                th:if="${#strings.isEmpty(profileRequestDto.profileImageUrl)}"
                                 th:data-jdenticon-value="${profileRequestDto.nickname}"
                                 class="profile-image"
                             ></svg>

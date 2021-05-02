@@ -144,6 +144,7 @@ public class MemberServiceImpl implements MemberService {
                 .nickname(findMember.getNickname())
                 .imageFilename(findMember.getImageFilename())
                 .oauthImageUrl(findMember.getOauthImageUrl())
+                .profileImageUrl(findMember.getProfileImageUrl())
                 .link(findMember.getLink())
                 .info(findMember.getInfo())
                 .career(findMember.getCareer())
