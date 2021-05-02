@@ -19,6 +19,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -42,14 +43,16 @@ public class MemberController {
         webDataBinder.addValidators(signUpValidation);
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login(HttpServletRequest request, Principal principal) {
-        if (principal != null) {
-            return "redirect:/error";
-        }
-
+        //todo: 로그인 이슈
+//        if (principal != null) {
+//            return "redirect:/error";
+//        }
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("prevPage", referrer);
+        if(!referrer.contains("/login")) {
+            request.getSession().setAttribute("prevPage", referrer);
+        }
 
         return "login";
     }
