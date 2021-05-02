@@ -34,6 +34,11 @@ $("#time-register-butt").click(function () {
   var startTime = $("#start-time-input").val();
   var endTime = $("#end-time-input").val();
   var dayIndex = $("#md-day-input").val();
+  setScheduleElement(dayIndex, startTime, endTime);
+  $("#timeFormModal").modal("hide");
+});
+
+function setScheduleElement(dayIndex, startTime, endTime) {
   var html = "<div class='day-schedule'>" + "<input type='hidden' class='day-key' value='" + dayIndex + "'/>" + "<p class='start-time'>" + startTime + "</p>" + "<p>~</p>" + "<p class='end-time'>" + endTime + "</p>" + "</div>";
   var targetTimeId = "time-" + dayIndex;
   $("#" + targetTimeId).empty();
@@ -41,10 +46,8 @@ $("#time-register-butt").click(function () {
 
   var targetDayId = "day-" + dayIndex;
   $("#" + targetDayId).css("background-color", "#42F9CD");
-  console.log(startTime + "," + endTime);
-  $("#timeFormModal").modal("hide");
-});
-
+  console.log("Set Schedule element: " + dayIndex + "," + startTime + "~" + endTime);
+}
 /**
  * 공고 등록 버튼 클릭 시
  * 스케줄 정보 input태그로 동적 생성 및 submit
@@ -67,6 +70,18 @@ $("#board-create-butt").click(function () {
     scheduleInput.append(inputEndTime);
   }
   form.submit();
+});
+
+/**
+ * 페이지 로딩 시 스케줄 관련 데이터 셋팅
+ */
+$(document).ready(function () {
+  $(".hidden-schedule-list").each(function (index, schedule) {
+    var dayIndex = $(schedule).find(".hidden-schedule-daykey").val();
+    var startTime = $(schedule).find(".hidden-schedule-starttime").val();
+    var endTime = $(schedule).find(".hidden-schedule-endtime").val();
+    setScheduleElement(dayIndex, startTime, endTime);
+  });
 });
 
 // typeahead 관련 script
