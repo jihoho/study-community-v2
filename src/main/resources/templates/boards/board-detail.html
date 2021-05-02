@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments :: head"></head>
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
@@ -10,6 +10,7 @@
             <tr>
                 <th class="padding-left" id="title-td">
                     <span id="title-span" th:text="${board.title}"></span>
+                    <input id="board-id" type="hidden" th:value="${board.id}" />
                 </th>
                 <th class="align-right">
                     <button type="button" class="btn btn-success btn-lg active" th:text="${board.status.getStatusName()}"></button>
@@ -82,68 +83,200 @@
         </div>
     </div>
 </div>
+<!-- comment list start -->
 <div id="board-comment-wrapper">
-    <div class="board-comment-list">
-        <div class="board-comment-header">
-            <div class="board-comment-img-div">
-                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
+    <!-- comment level 1 start  -->
+    <div class="comment-level-1" th:each="comment_level1: ${board.commentList}">
+        <div class="board-comment-list">
+            <div class="board-comment-header">
+                <input class="comment-id" type="hidden" th:value="${comment_level1.commentId}" />
+                <input class="comment-email" type="hidden" th:value="${comment_level1.email}" />
+                <input class="comment-member-type" type="hidden" th:value="${comment_level1.memberType}" />
+                <table>
+                    <thead>
+                    <th class="board-comment-img">
+                        <img th:src="${comment_level1.imageUrl}" class="test" />
+                    </th>
+                    <th class="board-comment-nick">
+                        <a th:href="@{/profile/{nickname}(nickname=${comment_level1.nickname})}"><span th:text="${comment_level1.nickname}">닉네임</span></a>
+                        <br />
+                        <span th:text="${#temporals.format(comment_level1.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">2021-03-28 09:53:02</span>
+                    </th>
+                    <th class="board-comment-butt" sec:authorize="isAuthenticated()" th:if="!${comment_level1.isRemoved()} and ${comment_level1.email}==${member.email} and ${comment_level1.memberType}==${member.memberType}">
+                        <a>수정</a>
+                        <a onclick="commentDeleteConfirm(this);">삭제</a>
+                    </th>
+                    </thead>
+                </table>
             </div>
-            <div class="board-comment-nick-div">
-                <a href=""><span>닉네임</span></a>
-                <br />
-                <span>2021-03-28 09:53:02</span>
+            <div class="board-comment-body">
+                <p class="board-comment-p" th:text="${comment_level1.content}"></p>
+            </div>
+            <div class="board-comment-footer" sec:authorize="hasRole('USER')" th:if="!${comment_level1.isRemoved()}">
+                <a onclick="commentReplyClick(this);">comment</a>
             </div>
         </div>
-        <div class="board-comment-body">
-            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+
+        <!-- comment level 2 start  -->
+        <div class="comment-level-2" th:each="comment_level2: ${comment_level1.subComment}">
+            <div class="board-comment-list">
+                <div class="board-comment-header">
+                    <input class="comment-id" type="hidden" th:value="${comment_level2.commentId}" />
+                    <input class="comment-email" type="hidden" th:value="${comment_level2.email}" />
+                    <input class="comment-member-type" type="hidden" th:value="${comment_level2.memberType}" />
+                    <table>
+                        <thead>
+                        <th class="board-comment-img">
+                            <img th:src="${comment_level2.imageUrl}" class="test" />
+                        </th>
+                        <th class="board-comment-nick">
+                            <a th:href="@{/profile/{nickname}(nickname=${comment_level2.nickname})}"><span th:text="${comment_level2.nickname}">닉네임</span></a>
+                            <br />
+                            <span th:text="${#temporals.format(comment_level2.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">2021-03-28 09:53:02</span>
+                        </th>
+                        <th class="board-comment-butt" sec:authorize="isAuthenticated()" th:if="!${comment_level2.isRemoved()} and ${comment_level2.email}==${member.email} and ${comment_level2.memberType}==${member.memberType}">
+                            <a>수정</a>
+                            <a onclick="commentDeleteConfirm(this);">삭제</a>
+                        </th>
+                        </thead>
+                    </table>
+                </div>
+                <div class="board-comment-body">
+                    <p class="board-comment-p" th:text="${comment_level2.content}"></p>
+                </div>
+                <div class="board-comment-footer" sec:authorize="hasRole('USER')" th:if="!${comment_level2.isRemoved()}">
+                    <a onclick="commentReplyClick(this);">comment</a>
+                </div>
+            </div>
+
+            <!-- comment level 2 start  -->
+            <div class="comment-level-2" th:each="comment_level3: ${comment_level2.subComment}">
+                <div class="board-comment-list">
+                    <div class="board-comment-header">
+                        <input class="comment-id" type="hidden" th:value="${comment_level3.commentId}" />
+                        <input class="comment-email" type="hidden" th:value="${comment_level3.email}" />
+                        <input class="comment-member-type" type="hidden" th:value="${comment_level3.memberType}" />
+                        <table>
+                            <thead>
+                            <th class="board-comment-img">
+                                <img th:src="${comment_level3.imageUrl}" class="test" />
+                            </th>
+                            <th class="board-comment-nick">
+                                <a th:href="@{/profile/{nickname}(nickname=${comment_level3.nickname})}"><span th:text="${comment_level3.nickname}">닉네임</span></a>
+                                <br />
+                                <span th:text="${#temporals.format(comment_level3.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">2021-03-28 09:53:02</span>
+                            </th>
+                            <th
+                                class="board-comment-butt"
+                                sec:authorize="isAuthenticated()"
+                                th:if="!${comment_level3.isRemoved()} and ${comment_level3.email}==${member.email} and ${comment_level3.memberType}==${member.memberType}"
+                            >
+                                <a>수정</a>
+                                <a onclick="commentDeleteConfirm(this);">삭제</a>
+                            </th>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="board-comment-body">
+                        <p class="board-comment-p" th:text="${comment_level3.content}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="board-comment-list">
-        <div class="board-comment-header">
-            <div class="board-comment-img-div">
-                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
+
+    <div sec:authorize="hasRole('USER')" class="board-comment-write">
+        <form th:action="@{/comments}" method="post" th:object="${commentSaveForm}">
+            <div class="board-comment-header">
+                <div class="board-comment-img-div">
+                    <img style="width: 3em; height: 3em;" th:src="${member.imageUrl}" />
+                </div>
+                <div class="board-comment-nick-div">
+                    <a th:href="@{/profile/{nickname}(nickname=${member.nickname})}" th:text="${member.nickname}"><span>닉네임</span></a>
+                </div>
             </div>
-            <div class="board-comment-nick-div">
-                <a href=""><span>닉네임</span></a>
-                <br />
-                <span>2021-03-28 09:53:02</span>
+            <div class="board-comment-body">
+                <input type="hidden" th:value="${board.id}" name="boardId" />
+                <textarea class="board-comment-text" th:field="*{content}" rows="5" placeholder="문의하기..."></textarea>
+                <div class="align-right">
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </div>
             </div>
-        </div>
-        <div class="board-comment-body">
-            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+        </form>
+    </div>
+
+    <div sec:authorize="!isAuthenticated()"><a href="/login">로그인</a>을 하시면 댓글을 등록할 수 있습니다.</div>
+    <div sec:authorize="hasRole('GUEST') and !hasRole('USER')"><a href="/profile">프로필</a> 작성을 완료하면 댓글을 등록할 수 있습니다.</div>
+</div>
+<!-- comment list end -->
+
+<!-- Comment Form Modal -->
+<div class="modal fade" id="commentFormModal" tabindex="-1" aria-labelledby="commentFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:if="${commentSaveForm!=null}" th:action="@{/comments}" method="post" th:object="${commentSaveForm}">
+                <input type="hidden" th:value="${board.id}" name="boardId" />
+                <input type="hidden" id="comment-md-super-id" name="superCommentId" />
+                <div class="modal-header">
+                    <span>답글 입력</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <input type="hidden" id="md-day-input" />
+                </div>
+                <div class="modal-body">
+                    <div class="board-comment-list">
+                        <div class="board-comment-header">
+                            <table>
+                                <thead>
+                                <th class="board-comment-img">
+                                    <img id="comment-md-img" />
+                                </th>
+                                <th class="board-comment-nick">
+                                    <span id="comment-md-nick">닉네임</span>
+                                    <br />
+                                    <span id="comment-md-date">2021-03-28 09:53:02</span>
+                                </th>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="board-comment-body">
+                            <p class="board-comment-p" id="comment-md-content">
+                                asdasdasdasdasdasd
+                            </p>
+                        </div>
+                    </div>
+                    <textarea th:field="*{content}" placeholder="답글을 등록해주세요." style="width: 100%;" rows="5"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="board-comment-list">
-        <div class="board-comment-header">
-            <div class="board-comment-img-div">
-                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
+</div>
+<!-- Modal end-->
+
+<!-- Comment Delete Confirm Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="md-day-span"></span><span>삭제 확인</span>
+                <input type="hidden" id="delete-comment-id" />
             </div>
-            <div class="board-comment-nick-div">
-                <a href=""><span>닉네임</span></a>
-                <br />
-                <span>2021-03-28 09:53:02</span>
+            <div class="modal-body">
+                <span>삭제 하시겠습니까?</span>
             </div>
-        </div>
-        <div class="board-comment-body">
-            <p class="board-comment-p">~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
-        </div>
-    </div>
-    <div class="board-comment-write">
-        <div class="board-comment-header">
-            <div class="board-comment-img-div">
-                <img style="width: 3em; height: 3em;" src="//www.gravatar.com/avatar/1bbf97a7b3196de80d0e29223ba0b30c?d=identicon&s=10" />
-            </div>
-            <div class="board-comment-nick-div">
-                <a href=""><span>닉네임</span></a>
-            </div>
-        </div>
-        <div class="board-comment-body">
-            <textarea class="board-comment-text" rows="5" placeholder="문의하기..."></textarea>
-            <div class="align-right">
-                <button type="button" class="btn btn-primary">등록</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" onclick="commentDeleteClick($('#delete-comment-id').val())" class="btn btn-danger">삭제</button>
             </div>
         </div>
     </div>
 </div>
+<!-- Modal end-->
 </body>
+<script src="/js/board-detail.js"></script>
 </html>
