@@ -2,14 +2,14 @@ package com.project.pagu.modules.board.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
-import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
+import com.project.pagu.modules.board.model.WriterDto;
 import com.project.pagu.modules.board.service.BoardService;
+import com.project.pagu.modules.comment.model.CommentSaveDto;
 import com.project.pagu.modules.member.domain.Member;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -63,8 +63,14 @@ public class BoardController {
     }
 
     @GetMapping("/boards/{id}")
-    public String getBoard(@PathVariable Long id, Model model) {
+    public String getBoard(@CurrentMember Member member, @PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.getBoardDetailDto(id));
+
+        if (member != null) {
+            model.addAttribute("member", WriterDto.createWriterDto(member));
+            model.addAttribute("commentSaveForm", new CommentSaveDto());
+        }
+
         return "boards/board-detail";
     }
 

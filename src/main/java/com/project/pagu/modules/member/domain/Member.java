@@ -3,15 +3,15 @@ package com.project.pagu.modules.member.domain;
 import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.common.domain.BaseTimeEntity;
+import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA
@@ -59,8 +59,11 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Member(String email, MemberType memberType, String nickname, String password,
@@ -127,5 +130,9 @@ public class Member extends BaseTimeEntity {
 
     public MemberId getMemberId() {
         return MemberId.of(email, memberType);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 }

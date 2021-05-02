@@ -5,6 +5,7 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
+import com.project.pagu.modules.comment.model.CommentResponseDto;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import java.time.LocalDate;
@@ -65,7 +66,9 @@ public class BoardDetailDto {
 
     private WriterDto writer;
 
-    public static BoardDetailDto CreateBoardDetailDto(Board board) {
+    private List<CommentResponseDto> commentList;
+
+    public static BoardDetailDto createBoardDetailDto(Board board) {
 
         BoardDetailDto boardDetailDto = BoardDetailDto.builder()
                 .id(board.getId())
