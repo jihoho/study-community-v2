@@ -78,7 +78,7 @@ public class Board extends BaseTimeEntity {
     private List<BoardImage> boardImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    @OrderBy("comment_id asc")
+    @OrderBy("depth asc")
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
