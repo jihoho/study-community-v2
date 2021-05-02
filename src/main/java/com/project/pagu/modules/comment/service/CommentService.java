@@ -4,6 +4,10 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.comment.model.CommentResponseDto;
+import com.project.pagu.modules.comment.model.CommentSaveDto;
+import com.project.pagu.modules.comment.repository.CommentRepository;
+import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +28,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     public List<CommentResponseDto> findCommentsByBoardId(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(IllegalArgumentException::new);
         List<Comment> comments = board.getComments();
         return convertNestedStructure(comments);
+    }
+
+    @Transactional
+    public Long saveComment(Member writer, CommentSaveDto commentSaveDto) {
+
+        // MemberNotFoundException, BoardNotFoundException 추후 추가
+        Member findMember = memberRepository.findById(writer.getMemberId())
+                .orElseThrow(IllegalArgumentException::new);
+        Board board = boardRepository.findById(commentSaveDto.getBoardId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        Comment comment = commentSaveDto.toEnity();
+        comment.registerMember(findMember);
+        comment.registerBoard(board);
+        if (commentSaveDto.getSuperCommentId() != null) {
+            commentRepository.findById(commentSaveDto.getSuperCommentId()).ifPresent(
+                    superComment -> comment.registerSuperComment(superComment)
+            );
+        }
+        return commentRepository.save(comment).getId();
+    }
+
+
+    @Transactional
+    public void deleteComment(long commentId) {
+        Comment targetComment = commentRepository.findById(commentId)
+                .orElseThrow(IllegalArgumentException::new);
+        if (targetComment.isRemove() == false) {
+            targetComment.remove();
+        }
     }
 
     private List<CommentResponseDto> convertNestedStructure(List<Comment> comments) {
