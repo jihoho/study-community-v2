@@ -69,12 +69,23 @@ public class BoardController {
         return "boards/board-detail";
     }
 
-    @GetMapping("/boards/{id}/form")
-    public String getBoardForUpdate(@PathVariable Long id) {
-        /**
-         * todo : 로그인 상태, 게시물 수정 폼
-         */
+    @GetMapping("/boards/{id}/update")
+    public String getBoardForUpdate(@PathVariable Long id, Model model) {
+        model.addAttribute("board", boardService.getBoardSaveDto(id));
         return "boards/board-update";
+    }
+
+    @PostMapping("/boards/{id}/update")
+    public String update(@CurrentMember Member member, @PathVariable Long id, @Valid BoardSaveRequestDto dto,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "boards/board-form";
+        }
+
+        boardService.update(member, id, dto);
+
+        return "redirect:/";
     }
 
     @GetMapping("/boardImageThumbnails/{id}/{filename}")

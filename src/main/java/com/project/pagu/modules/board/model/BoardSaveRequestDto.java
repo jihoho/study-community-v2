@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 public class BoardSaveRequestDto {
 
+    private Long id;
+
     @NotBlank
     @Size(max = 50, message = "50글자 이내만 가능 합니다.")
     private String title;
@@ -90,4 +92,7 @@ public class BoardSaveRequestDto {
         return boardImageDtos;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

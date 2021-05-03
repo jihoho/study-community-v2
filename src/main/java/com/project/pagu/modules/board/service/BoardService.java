@@ -1,6 +1,7 @@
 package com.project.pagu.modules.board.service;
 
 import com.project.pagu.common.manager.FileUtil;
+import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.model.BoardDetailDto;
@@ -19,11 +20,14 @@ import com.project.pagu.modules.tag.SubjectService;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import com.project.pagu.modules.teckstack.TechStackService;
 import com.project.pagu.modules.teckstack.TechStack;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +35,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,5 +188,54 @@ public class BoardService {
     public PageImpl<BoardPageDto> getSearchBoards(String keyword, Pageable pageable) {
         Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository.findByTitleContaining(keyword, pageable);
         return convertBoardPageToBoardPageDto(boardPage, pageable);
+    }
+
+    @Transactional
+    public void update(Member member, Long id, BoardSaveRequestDto dto) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        if (member.getBoards().contains(board)) {
+            List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
+            Set<Subject> subject = createSubject(dto.getSubjects());
+            Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
+
+            board.addBoardScheduleList(boardSchedule);
+
+            for (Subject subject1 : subject) {
+                BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
+                board.addSubject(boardSubject);
+            }
+
+            for (TechStack techStack : techStacks) {
+                BoardTechStack boardTechStack = BoardTechStack.of(techStack);
+                board.addTechStack(boardTechStack);
+            }
+
+//            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
+//            savedBoard.addBoardImageList(boardImageList);
+
+        }
+
+    }
+
+    public BoardSaveRequestDto getBoardSaveDto(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        BoardSaveRequestDto dto = new BoardSaveRequestDto();
+        dto.setId(board.getId());
+        dto.setTitle(board.getTitle());
+        dto.setSubjects(board.getBoardSubjects().toString());
+        dto.setTechStacks(board.getBoardTechStacks().toString());
+        dto.setGoal(board.getGoal());
+        dto.setPlace(board.getPlace());
+        dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
+        dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
+        dto.setTermsStartAt(board.getTermsStartAt());
+        dto.setTermsEndAt(board.getTermsEndAt());
+        dto.setEtc(board.getEtc());
+
+        return dto;
     }
 }

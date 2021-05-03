@@ -80,6 +80,9 @@
                 <img th:each="imageUrl :${board.imageUrls}" th:src="${imageUrl}" />
             </div>
         </div>
+        <div>
+            <a class="btn btn-primary" th:href="@{/boards/{id}/update(id=${board.id})}">수정하기</a>
+        </div>
     </div>
 </div>
 <div id="board-comment-wrapper">
