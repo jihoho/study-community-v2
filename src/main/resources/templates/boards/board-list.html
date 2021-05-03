@@ -62,13 +62,12 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" th:name="keyword" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
+                    <input type="text" th:name="keyword" th:value="*{keyword}" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">Search</button>
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
                     </div>
                 </div>
             </form>
-
         </div>
         <div
             id="paginationBox"
@@ -88,7 +87,8 @@
                 </li>
 
                 <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1 }? 'active'">
-                    <a th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
+                    <a th:if="${keyword == null || keyword == ''}" th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
+                    <a th:if="${keyword != null && keyword != ''}" th:text="${page}" class="page-link" th:href="@{/boards/search(page=${page},keyword=${keyword})}"></a>
                 </li>
 
                 <li class="page-item" th:if="${hasNext}">

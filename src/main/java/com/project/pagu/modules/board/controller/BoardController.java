@@ -106,6 +106,7 @@ public class BoardController {
             Model model) {
 
         model.addAttribute("boardList", boardService.getSearchBoards(keyword, pageable));
+        model.addAttribute("keyword", keyword);
         return "boards/board-list";
     }
 }
