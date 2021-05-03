@@ -69,6 +69,7 @@ public class BoardService {
 
         com.project.pagu.modules.board.domain.Board board = dto.toEntity();
         board.setMember(findMember);
+//        board.setMember(member);
         board.addBoardScheduleList(boardSchedule);
 
         for (Subject subject1 : subject) {
@@ -229,8 +230,8 @@ public class BoardService {
         BoardSaveRequestDto dto = new BoardSaveRequestDto();
         dto.setId(board.getId());
         dto.setTitle(board.getTitle());
-        dto.setSubjects(board.getBoardSubjects().toString());
-        dto.setTechStacks(board.getBoardTechStacks().toString());
+        dto.setSubjects(subjectToString(board.getBoardSubjects()));
+        dto.setTechStacks(techStackToString(board.getBoardTechStacks()));
         dto.setGoal(board.getGoal());
         dto.setPlace(board.getPlace());
         dto.setBoardSchedules(dto.getBoardSchedules());
@@ -242,4 +243,23 @@ public class BoardService {
 
         return dto;
     }
+
+    private String subjectToString(Set<BoardSubject> boardSubjects) {
+        // todo : 로직 깔끔하게 수정할것
+        String subject = "";
+        for (BoardSubject boardSubject : boardSubjects) {
+            subject += boardSubject.getSubject().getName() + ",";
+        }
+        return subject;
+    }
+
+    private String techStackToString(Set<BoardTechStack> boardTechStacks) {
+        String techStack = "";
+        for (BoardTechStack boardTechStack : boardTechStacks) {
+            techStack += boardTechStack.getTechStack().getName() + ",";
+        }
+        return techStack;
+    }
+
+
 }
