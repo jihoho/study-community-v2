@@ -117,6 +117,13 @@
         <div class="align-center">
             <button id="board-create-butt" type="button" class="btn btn-primary btn-lg">공고 등록</button>
         </div>
+
+        <div class="hidden-schedule-list" th:each="boardSchedule:${boardSaveRequestDto.boardSchedules}">
+            <input class="hidden-schedule-daykey" type="hidden" th:value="${boardSchedule.dayKey}"/>
+            <input class="hidden-schedule-starttime" type="hidden" th:value="${boardSchedule.startTime}"/>
+            <input class="hidden-schedule-endtime" type="hidden" th:value="${boardSchedule.endTime}"/>
+
+        </div>
     </form>
 </div>
 
