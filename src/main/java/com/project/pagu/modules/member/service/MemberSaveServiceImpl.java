@@ -76,9 +76,15 @@ public class MemberSaveServiceImpl implements MemberSaveService {
         member.updateProfile(profileRequestDto);
         memberRepository.save(member);
 
+        updateAuthentication(member);
+    }
+
+    private void updateAuthentication(Member member) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
         updatedAuthorities.add(new SimpleGrantedAuthority(member.getRoleKey()));
+
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
