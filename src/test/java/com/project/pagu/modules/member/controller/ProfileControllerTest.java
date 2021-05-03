@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 /**
@@ -93,23 +94,24 @@ class ProfileControllerTest {
 
     @Test
     @DisplayName("상대방 프로필 페이지로 이동한다.")
+    @Transactional
+    @WithMember("tester2")
     void get_profile() throws Exception {
         memberRepository.save(givenMember());
-
-        mockMvc.perform(get("/members/{nickname}", "tester"))
+        mockMvc.perform(get("/profile/{nickname}", "tester"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("profile/detail"));
+                .andExpect(view().name("/profile/detail"));
     }
 
-    @WithMember
     @Test
     @DisplayName("본인을 조회할 경우 프로필관리 페이지로 이동한다.")
+    @WithMember
     void go_to_my_page() throws Exception {
-        mockMvc.perform(get("/members/{nickname}", "tester"))
+        mockMvc.perform(get("/profile/{nickname}", "tester"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/detail"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile"));
     }
 
     private ProfileRequestDto givenDto() {
@@ -128,11 +130,11 @@ class ProfileControllerTest {
 
     public Member givenMember() {
         return Member.builder()
-                .email("test@email.com")
+                .email("tester@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .role(Role.GUEST)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

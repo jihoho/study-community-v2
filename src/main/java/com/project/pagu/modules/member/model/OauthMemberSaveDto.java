@@ -31,14 +31,14 @@ public class OauthMemberSaveDto {
         return Member.builder()
                 .email(email)
                 .memberType(MemberType.GOOGLE)
-                .imageUrl(imageUrl)
+                .oauthImageUrl(imageUrl)
                 .nickname(nickname)
                 .role(Role.GUEST)
                 .build();
     }
 
-    public void updateEmailAndImage(String email, String filename) {
+    public void updateEmailAndImage(String email, String imageUrl) {
         this.email = email;
-        this.imageUrl = filename;
+        this.imageUrl = imageUrl;
     }
 }

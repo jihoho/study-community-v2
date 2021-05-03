@@ -33,7 +33,7 @@ public class OauthFactory {
         return Member.builder()
                 .email((String) attributes.get("email"))
                 .memberType(MemberType.GOOGLE)
-                .imageUrl((String) attributes.get("picture"))
+                .oauthImageUrl((String) attributes.get("picture"))
                 .role(Role.GUEST)
                 .build();
     }

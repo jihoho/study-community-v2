@@ -23,9 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.modules.member.domain.UserMember;
+import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
-import com.project.pagu.modules.member.service.MemberServiceImpl;
+import com.project.pagu.modules.member.service.MemberSaveServiceImpl;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +65,10 @@ class MemberControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MemberServiceImpl memberService;
+    private MemberSaveServiceImpl memberService;
+
+    @MockBean
+    private MemberViewService memberViewService;
 
     private MemberSaveRequestDto memberSaveDto;
 
@@ -118,7 +123,7 @@ class MemberControllerTest {
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
         // when
-        when(memberService.existsById(any())).thenReturn(true);
+        when(memberViewService.existsById(any())).thenReturn(true);
 
         // then
         mockMvc.perform(post("/sign-up/valid")
@@ -140,7 +145,7 @@ class MemberControllerTest {
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
 
         // when
-        when(memberService.existsByNickname(any())).thenReturn(true);
+        when(memberViewService.existsByNickname(any())).thenReturn(true);
 
         // then
         mockMvc.perform(post("/sign-up/valid")
@@ -292,7 +297,7 @@ class MemberControllerTest {
     @Test
     void login_success() throws Exception {
         String encode = passwordEncoder.encode(memberSaveDto.getPassword());
-        given(memberService.loadUserByUsername(any())).willReturn(new User("yy123@email.com", encode,
+        given(memberViewService.loadUserByUsername(any())).willReturn(new User("yy123@email.com", encode,
                 List.of(new SimpleGrantedAuthority("ROLE_GUEST"))));
 
         MultiValueMap<String, String> params = convert(objectMapper, memberSaveDto);
@@ -310,7 +315,7 @@ class MemberControllerTest {
     @Test
     void login_fail() throws Exception {
         memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
-        given(memberService.loadUserByUsername(anyString()))
+        given(memberViewService.loadUserByUsername(anyString()))
                 .willReturn(new UserMember(memberSaveDto.toEntity()));
         mockMvc.perform(post("/login-process")
                 .param("email", "yy123@email.com")
@@ -338,8 +343,6 @@ class MemberControllerTest {
         passwordEncoder.equals(ss);
         passwordEncoder.equals(ss);
         System.out.println(passwordEncoder.matches(aa, ss));
-
-
 
     }
 

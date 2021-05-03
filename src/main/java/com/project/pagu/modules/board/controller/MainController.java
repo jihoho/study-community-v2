@@ -4,7 +4,7 @@ import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.modules.board.service.BoardService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.model.OauthMemberSaveDto;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.OauthSignUpValidation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class MainController {
     private static final String authorizationRequestBaseUri = "oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
     private final OauthSignUpValidation oauthSignUpValidation;
     private final BoardService boardService;
 
@@ -64,9 +64,9 @@ public class MainController {
             return "sign-up-google";
         }
 
-        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getImageUrl());
+        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
 
-        memberService.saveMember(oAuthMemberSaveDto);
+        memberSaveService.saveMember(oAuthMemberSaveDto);
         return "redirect:/";
     }
 

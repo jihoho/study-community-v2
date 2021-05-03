@@ -32,9 +32,11 @@ public class ProfileRequestDto {
 
     private MultipartFile multipartFile;
 
-    private String imageFile;
+    private String imageFilename;
 
-    private String imageUrl;
+    private String oauthImageUrl;
+
+    private String profileImageUrl;
 
     private String link;
 

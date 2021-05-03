@@ -1,12 +1,16 @@
 package com.project.pagu.modules.member.controller;
 
+import com.project.pagu.modules.member.domain.MemberId;
+import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.manager.SignUpManager;
 import com.project.pagu.common.validation.SignUpValidation;
 
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -30,7 +34,8 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("memberSaveRequestDto")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
+    private final MemberViewService memberViewService;
     private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
@@ -39,14 +44,18 @@ public class MemberController {
         webDataBinder.addValidators(signUpValidation);
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login(HttpServletRequest request, Principal principal) {
+        //todo: 로그인 이슈
         if (principal != null) {
             return "redirect:/error";
         }
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("prevPage", referrer);
+
+        if (referrer != null && referrer.contains("/login")) {
+            request.getSession().setAttribute("prevPage", referrer);
+        }
 
         return "login";
     }
@@ -66,7 +75,9 @@ public class MemberController {
             return "sign-up";
         }
 
-        signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(), memberSaveRequestDto.getAuthKey());
+        memberSaveRequestDto.createEmailAuthKey();
+        signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(),
+                memberSaveRequestDto.getAuthKey());
         signUpManager.encryptPassword(memberSaveRequestDto);
         model.addAttribute(memberSaveRequestDto);
         return "redirect:/email-check";
@@ -90,8 +101,8 @@ public class MemberController {
             return "email-check";
         }
 
-        memberService.saveMember(memberSaveRequestDto);
-        memberService.login(memberSaveRequestDto.toEntity());
+        memberSaveService.saveMember(memberSaveRequestDto);
+        memberViewService.login(memberSaveRequestDto.toEntity());
         sessionStatus.isComplete();
         return "redirect:/sign-up-success";
     }
@@ -99,6 +110,58 @@ public class MemberController {
     @GetMapping("/sign-up-success")
     public String signUpSuccess() {
         return "sign-up-success";
+    }
+
+    @GetMapping("/members/password-find")
+    public String getPasswordFindForm(Model model) {
+        model.addAttribute(new MemberSaveRequestDto());
+        return "/members/email-check";
+    }
+
+    @PostMapping("/members/email-check")
+    public String sendEmailAuthKey(HttpSession session, MemberSaveRequestDto memberSaveRequestDto) {
+        String email = memberSaveRequestDto.getEmail();
+        if (memberViewService.existsById(MemberId.of(email, MemberType.NORMAL))) {
+            memberSaveRequestDto.createEmailAuthKey();
+            signUpManager.sendAuthMessage(memberSaveRequestDto.getEmail(),
+                    memberSaveRequestDto.getAuthKey());
+            session.setAttribute("memberSaveRequestDto", memberSaveRequestDto);
+            return "redirect:/members/email-form";
+        }
+
+        return "redirect:/members/email-form";
+    }
+
+    /**
+     * 세션에 담겨있는 memberSaveRequestDto 가져온다
+     */
+    @GetMapping("/members/email-form")
+    public String getEmailAuthKeyForm(Model model, MemberSaveRequestDto memberSaveRequestDto) {
+        model.addAttribute(memberSaveRequestDto);
+        return "/members/email-check-password";
+    }
+
+    @PostMapping("/members/email-check-password")
+    public String sendNewPassword(MemberSaveRequestDto memberSaveRequestDto,
+            BindingResult result, SessionStatus sessionStatus) {
+
+        if (signUpValidation.validateEmailAuth(memberSaveRequestDto.getAuthKey(),
+                memberSaveRequestDto.getAuthKeyInput(), result)) {
+            return "/members/email-check-password";
+        }
+
+        String newPassword = signUpManager.sendNewPassword(memberSaveRequestDto.getEmail());
+        memberSaveService
+                .changePassword(MemberId.of(memberSaveRequestDto.getEmail(), MemberType.NORMAL),
+                        newPassword);
+
+        sessionStatus.isComplete();
+        return "redirect:/members/password-success";
+    }
+
+    @GetMapping("/members/password-success")
+    public String passwordSuccess() {
+        return "members/password-success";
     }
 
 }

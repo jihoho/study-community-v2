@@ -16,6 +16,8 @@
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
 <!--    <script src="/node_modules/popper/dist/umd/popper.min.js"></script>-->
     <script src="/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div th:fragment="pagu-nav">
@@ -30,9 +32,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- 검색창 -->
             <div class="form-box">
-                <form class="form-inline my-2 my-lg-0 navbar-form mr-auto">
+                <form th:action="@{/boards/search}" class="form-inline my-2 my-lg-0 navbar-form mr-auto">
                     <div class="input-group input-group-search mx-auto">
-                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-button-addon" />
+                        <input type="search" th:name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-button-addon" />
                         <button class="btn btn-" type="submit" id="search-button-addon">&#128269;</button>
                     </div>
                 </form>

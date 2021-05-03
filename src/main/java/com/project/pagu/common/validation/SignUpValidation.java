@@ -3,7 +3,8 @@ package com.project.pagu.common.validation;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Errors;
@@ -19,7 +20,7 @@ import org.springframework.validation.Validator;
 @Configuration
 public class SignUpValidation implements Validator {
 
-    private final MemberService memberService;
+    private final MemberViewService memberViewService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -35,13 +36,13 @@ public class SignUpValidation implements Validator {
     }
 
     private void isExistedNormalEmail(String email,Errors errors) {
-        if (memberService.existsById(MemberId.of(email,MemberType.NORMAL))) {
+        if (memberViewService.existsById(MemberId.of(email,MemberType.NORMAL))) {
             errors.rejectValue("email", "UniqueEmail", "이미 존재하는 이메일입니다.");
         }
     }
 
     private void isExistedNickname(String nickname, Errors errors) {
-        if (memberService.existsByNickname(nickname)) {
+        if (memberViewService.existsByNickname(nickname)) {
             errors.rejectValue("nickname", "UniqueNickname", "이미 존재하는 닉네임입니다.");
         }
     }

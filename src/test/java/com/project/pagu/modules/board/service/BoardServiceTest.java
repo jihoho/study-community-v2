@@ -14,10 +14,12 @@ import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
+import com.project.pagu.modules.comment.service.CommentService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
 import com.project.pagu.modules.teckstack.TechStack;
@@ -27,7 +29,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,13 +37,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 
 /**
  * Created by IntelliJ IDEA
@@ -60,7 +58,10 @@ class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private MemberService memberService;
+    private MemberSaveService memberSaveService;
+
+    @Mock
+    private MemberViewService memberViewService;
 
     @Mock
     private SubjectService subjectService;
@@ -68,8 +69,11 @@ class BoardServiceTest {
     @Mock
     private TechStackService techStackService;
 
+    @Mock
+    private CommentService commentService;
+
     @Captor
-    private ArgumentCaptor<Board> argumentCaptor;
+    private ArgumentCaptor<com.project.pagu.modules.board.domain.Board> argumentCaptor;
 
     @Captor
     private ArgumentCaptor<Pageable> pageableArgumentCaptor;
@@ -78,7 +82,7 @@ class BoardServiceTest {
     @DisplayName("게시물을 등록한다.")
     void save_board() {
         Member member = givenMember();
-        given(memberService.findById(any())).willReturn(member);
+        given(memberViewService.findById(any())).willReturn(member);
         given(subjectService.getOrSave(any())).willReturn(Subject.of("Spring"));
         given(techStackService.getOrSave(any())).willReturn(TechStack.of("Spring"));
         given(boardRepository.save(any())).willReturn(givenBoardDto().toEntity());
@@ -127,7 +131,7 @@ class BoardServiceTest {
         // given
         Board board = givenBoard(1L);
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
-
+        given(commentService.findCommentsByBoardId(any())).willReturn(null);
         // when
         BoardDetailDto boardDetailDto = boardService.getBoardDetailDto(1L);
 
@@ -156,7 +160,7 @@ class BoardServiceTest {
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .role(Role.GUEST)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")
@@ -189,12 +193,12 @@ class BoardServiceTest {
     }
 
     private PageImpl<Board> givenPagedBoard(Pageable pageable) {
-        List<Board> boards = givenBoardList();
+        List<com.project.pagu.modules.board.domain.Board> boards = givenBoardList();
         return new PageImpl<>(boards, pageable, boards.size());
     }
 
     private List<Board> givenBoardList() {
-        List<Board> boards = new ArrayList<>();
+        List<com.project.pagu.modules.board.domain.Board> boards = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             boards.add(givenBoard((long) i));
         }
@@ -202,7 +206,7 @@ class BoardServiceTest {
     }
 
     private Board givenBoard(Long id) {
-        return Board.builder()
+        return com.project.pagu.modules.board.domain.Board.builder()
                 .id(id)
                 .title("제목")
                 .goal("목표")

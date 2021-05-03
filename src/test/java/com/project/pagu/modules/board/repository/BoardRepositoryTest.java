@@ -11,6 +11,7 @@ import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import com.project.pagu.modules.teckstack.TechStack;
 import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -36,6 +38,11 @@ class BoardRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        boardRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("게시물 등록 및 조회")
@@ -61,6 +68,7 @@ class BoardRepositoryTest {
 
     @Test
     @DisplayName("게시물 페이징 요청")
+    @Transactional
     void get_paged_board() throws Exception {
 
         // given
@@ -84,7 +92,6 @@ class BoardRepositoryTest {
         for (int i = 0; i < totalSize; i++) {
             Board board = givenBoard();
             board.setMember(member);
-            boardRepository.save(givenBoard());
         }
     }
 
@@ -124,7 +131,7 @@ class BoardRepositoryTest {
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .role(Role.GUEST)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

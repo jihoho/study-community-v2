@@ -2,6 +2,7 @@ package com.project.pagu.common.manager;
 
 import com.project.pagu.common.manager.SignUpManager;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,23 @@ public class SignUpManagerImpl implements SignUpManager {
         String password = memberSaveRequestDto.getPassword();
         memberSaveRequestDto.setPassword(passwordEncoder.encode(password));
         memberSaveRequestDto.setPasswordCheck(memberSaveRequestDto.getPassword());
+    }
+
+    @Override
+    public String sendNewPassword(String email) {
+        // todo: createMessage() 메소드 재사용 할 수 있게 리팩토링
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(MAIL_FROM);
+        message.setTo(email);
+        message.setSubject(MAIL_SUBJECT);
+        String newPassword = UUID.randomUUID().toString();
+        message.setText(newPassword);
+
+        log.info("new password" + email + newPassword);
+
+        memberMailSender.send(message);
+
+        return newPassword;
     }
 
 }

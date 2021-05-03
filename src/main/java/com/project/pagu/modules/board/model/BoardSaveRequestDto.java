@@ -26,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 public class BoardSaveRequestDto {
 
+    private Long id;
+
     @NotBlank
     @Size(max = 50, message = "50글자 이내만 가능 합니다.")
     private String title;
@@ -65,6 +67,8 @@ public class BoardSaveRequestDto {
 
     private String etc;
 
+    private StudyStatus status;
+
     private List<MultipartFile> fileList = new ArrayList<>();
 
     public Board toEntity() {
@@ -90,5 +94,4 @@ public class BoardSaveRequestDto {
         }
         return boardImageDtos;
     }
-
 }

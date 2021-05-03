@@ -2,7 +2,8 @@ package com.project.pagu.common.config;
 
 import com.project.pagu.common.handler.CustomLoginSuccessHandler;
 import com.project.pagu.common.handler.OAuth2SuccessHandler;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ import com.project.pagu.modules.member.domain.Role;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MemberService memberService;
+    private final MemberViewService memberViewService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -60,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/oauth-login")
                 .failureUrl("/sign-up")
                 .userInfoEndpoint()
-                .userService(memberService);
+                .userService(memberViewService);
     }
 
     @Bean
@@ -70,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService)
+        auth.userDetailsService(memberViewService)
                 .passwordEncoder(passwordEncoder)
                 .and().inMemoryAuthentication()
                 .withUser("guest")

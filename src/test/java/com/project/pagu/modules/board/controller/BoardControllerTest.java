@@ -18,7 +18,8 @@ import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.repository.MemberRepository;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -29,10 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -52,7 +50,7 @@ class BoardControllerTest {
     private BoardService boardService;
 
     @Autowired
-    private MemberService memberService;
+    private MemberSaveService memberSaveService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -120,7 +118,7 @@ class BoardControllerTest {
     @Test
     void get_board() throws Exception {
         //given
-        Member member = memberService.save(givenMember(Role.USER));
+        Member member = memberRepository.save(givenMember(Role.USER));
         BoardSaveRequestDto boardDto = givenBoardDto();
         Long id = boardService.saveBoardDto(member, boardDto);
 
@@ -144,10 +142,12 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시물 수정페이지로 이동한다.")
     @Test
+    @DisplayName("게시물 수정페이지로 이동한다.")
     void get_board_update_form() throws Exception {
-        mockMvc.perform(get("/boards/{id}/form", 1))
+        Member member = memberRepository.save(givenMember(Role.USER));
+        Long boardId=boardService.saveBoardDto(member,givenBoardDto());
+        mockMvc.perform(get("/boards/{id}/update", boardId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boards/board-update"))
                 .andExpect(content().string(containsString("스터디 모집 공고 수정")))
@@ -163,12 +163,12 @@ class BoardControllerTest {
 
     public Member givenMember(Role role) {
         return Member.builder()
-                .email("test@email.com")
+                .email("tester@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .password(passwordEncoder.encode("abcde1234!"))
                 .role(role)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

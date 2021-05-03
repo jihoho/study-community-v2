@@ -34,6 +34,11 @@ $("#time-register-butt").click(function () {
   var startTime = $("#start-time-input").val();
   var endTime = $("#end-time-input").val();
   var dayIndex = $("#md-day-input").val();
+  setScheduleElement(dayIndex, startTime, endTime);
+  $("#timeFormModal").modal("hide");
+});
+
+function setScheduleElement(dayIndex, startTime, endTime) {
   var html = "<div class='day-schedule'>" + "<input type='hidden' class='day-key' value='" + dayIndex + "'/>" + "<p class='start-time'>" + startTime + "</p>" + "<p>~</p>" + "<p class='end-time'>" + endTime + "</p>" + "</div>";
   var targetTimeId = "time-" + dayIndex;
   $("#" + targetTimeId).empty();
@@ -41,10 +46,8 @@ $("#time-register-butt").click(function () {
 
   var targetDayId = "day-" + dayIndex;
   $("#" + targetDayId).css("background-color", "#42F9CD");
-  console.log(startTime + "," + endTime);
-  $("#timeFormModal").modal("hide");
-});
-
+  console.log("Set Schedule element: " + dayIndex + "," + startTime + "~" + endTime);
+}
 /**
  * 공고 등록 버튼 클릭 시
  * 스케줄 정보 input태그로 동적 생성 및 submit
@@ -96,57 +99,83 @@ var subjects = ["Web", "Backend", "Frontent", "Embeded", "DataEngineering", "Dat
 
 var techStacks = ["Spring", "JPA", "Flutter", "Docker", "HTML", "JavaScript", "CSS", "React", "Vue.js", "MyBatis", "struts", "Java", "C++", "C", "Python"];
 
+
+function getSubjectsAjax() {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "get",
+      url: "/subjects",
+      success: function (jsonArr) {
+        console.log("subjects response: " + jsonArr);
+        subjects = [];
+        jsonArr.forEach(function (json, idx) {
+          subjects.push(json["name"]);
+        });
+        console.log("subjects: " + subjects);
+        resolve();
+      },
+      error: function () {
+        reject("주제 관련 태그 로딩 실패!");
+      },
+    });
+  });
+}
+
+function getTechsAjax() {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "get",
+      url: "/tech-stacks",
+      success: function (jsonArr) {
+        console.log("techstacks response: " + jsonArr);
+        techStacks = [];
+        jsonArr.forEach(function (json, idx) {
+          techStacks.push(json["name"]);
+        });
+        console.log("techStacks: " + techStacks);
+        resolve();
+      },
+      error: function () {
+        reject("기술 관련 태그 로딩 실패!");
+      },
+    });
+  });
+}
+
+function tagsInputSetting() {
+  return new Promise(function (resolve, reject) {
+    $("#subject-input").tagsinput({
+      typeaheadjs: {
+        name: "subjects",
+        source: substringMatcher(subjects),
+      },
+    });
+
+    $("#tech-input").tagsinput({
+      typeaheadjs: {
+        name: "techStacks",
+        source: substringMatcher(techStacks),
+      },
+    });
+  });
+}
+
+function errorFunction(msg) {
+  alert(msg);
+}
+
 /**
  * window.onload와 다르게 태그 로드만을 감지
- * (즉 DOM 트리의 로드만을 감지, 이미지, 영상의 로드 X)
- * 페이지 로드 후 동적으로 태그 데이터 호출
+ * 페이지 loading or reloading 시 스케줄 관련 데이터 셋팅
+ * Subject or techStacks 관련 태그 셋팅
  */
 $(document).ready(function () {
-  $.ajax({
-    type: "get",
-    url: "/subjects",
-    success: function (jsonArr) {
-      console.log("subjects response: " + jsonArr);
-      subjects = [];
-      jsonArr.forEach(function (json, idx) {
-        subjects.push(json["name"]);
-      });
-      console.log("subjects: " + subjects);
-    },
-    error: function () {
-      alert("주제 관련 태그 로딩 실패!");
-    },
+  $(".hidden-schedule-list").each(function (index, schedule) {
+    var dayIndex = $(schedule).find(".hidden-schedule-daykey").val();
+    var startTime = $(schedule).find(".hidden-schedule-starttime").val();
+    var endTime = $(schedule).find(".hidden-schedule-endtime").val();
+    setScheduleElement(dayIndex, startTime, endTime);
   });
-
-  $.ajax({
-    type: "get",
-    url: "/tech-stacks",
-    success: function (jsonArr) {
-      console.log("techstacks response: " + jsonArr);
-      techStacks = [];
-      jsonArr.forEach(function (json, idx) {
-        techStacks.push(json["name"]);
-      });
-      console.log("techStacks: " + techStacks);
-    },
-    error: function () {
-      alert("기술 관련 태그 로딩 실패!");
-    },
-  });
+  getSubjectsAjax().then(getTechsAjax).then(tagsInputSetting).catch(errorFunction);
 });
 
-$(document).ajaxComplete(function () {
-  $("#subject-input").tagsinput({
-    typeaheadjs: {
-      name: "subjects",
-      source: substringMatcher(subjects),
-    },
-  });
-
-  $("#tech-input").tagsinput({
-    typeaheadjs: {
-      name: "techStachs",
-      source: substringMatcher(techStacks),
-    },
-  });
-});

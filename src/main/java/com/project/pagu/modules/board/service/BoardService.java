@@ -12,8 +12,10 @@ import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.model.LatestBoardDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.common.manager.FileManager;
+import com.project.pagu.modules.comment.service.CommentService;
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
@@ -49,20 +51,23 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final FileManager fileManager;
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
+    private final MemberViewService memberViewService;
     private final SubjectService subjectService;
     private final TechStackService techStackService;
+    private final CommentService commentService;
 
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
         // Member엔티티 조회
-        Member findMember = memberService.findById(member.getMemberId());
+        Member findMember = memberViewService.findById(member.getMemberId());
         List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
         Set<Subject> subject = createSubject(dto.getSubjects());
         Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
 
-        Board board = dto.toEntity();
+        com.project.pagu.modules.board.domain.Board board = dto.toEntity();
         board.setMember(findMember);
+//        board.setMember(member);
         board.addBoardScheduleList(boardSchedule);
 
         for (Subject subject1 : subject) {
@@ -76,7 +81,7 @@ public class BoardService {
         }
 
         //Board savedBoard = boardRepository.save(board);
-        Board savedBoard = saveBoard(board);
+        com.project.pagu.modules.board.domain.Board savedBoard = saveBoard(board);
 
         List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
@@ -105,7 +110,8 @@ public class BoardService {
                 .collect(Collectors.toSet());
     }
 
-    private Board saveBoard(Board board) {
+    private com.project.pagu.modules.board.domain.Board saveBoard(
+            com.project.pagu.modules.board.domain.Board board) {
         return boardRepository.save(board);
     }
 
@@ -135,7 +141,7 @@ public class BoardService {
 
     public PageImpl<BoardPageDto> getPagedBoardList(Pageable pageable) {
 
-        Page<Board> boardPage = boardRepository.findAll(pageable);
+        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository.findAll(pageable);
         PageImpl<BoardPageDto> boardPageDto = convertBoardPageToBoardPageDto(boardPage,pageable);
         return boardPageDto;
 
@@ -144,9 +150,9 @@ public class BoardService {
     /**
      * Mapper로 변환 예정
      */
-    private PageImpl<BoardPageDto> convertBoardPageToBoardPageDto(Page<Board> boardPage,Pageable pageable) {
+    private PageImpl<BoardPageDto> convertBoardPageToBoardPageDto(Page<com.project.pagu.modules.board.domain.Board> boardPage,Pageable pageable) {
         List<BoardPageDto> boardPageDtos = new ArrayList<>();
-        for (Board board : boardPage) {
+        for (com.project.pagu.modules.board.domain.Board board : boardPage) {
             boardPageDtos.add(BoardPageDto.creatBoardPageDto(board));
         }
         return new PageImpl<BoardPageDto>(boardPageDtos,pageable,boardPage.getTotalElements());
@@ -155,28 +161,107 @@ public class BoardService {
 
     public BoardDetailDto getBoardDetailDto(Long id) {
 
-        Board board = boardRepository.findById(id)
+        com.project.pagu.modules.board.domain.Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException());
-        return BoardDetailDto.CreateBoardDetailDto(board);
+        BoardDetailDto boardDetailDto=BoardDetailDto.createBoardDetailDto(board);
+        boardDetailDto.setCommentList(commentService.findCommentsByBoardId(board.getId()));
+        return boardDetailDto;
 
     }
 
     public PageImpl<LatestBoardDto> getLatestBoard(int size) {
 
         Pageable pageable = PageRequest.of(0, size, Sort.by("modifiedDate").descending());
-        Page<Board> latestBoard = boardRepository.findAll(pageable);
+        Page<com.project.pagu.modules.board.domain.Board> latestBoard = boardRepository.findAll(pageable);
         return convertLatestBoardToLatestBoardDto(latestBoard, pageable);
 
     }
 
-    private PageImpl<LatestBoardDto> convertLatestBoardToLatestBoardDto(Page<Board> latestBoard,
+    private PageImpl<LatestBoardDto> convertLatestBoardToLatestBoardDto(Page<com.project.pagu.modules.board.domain.Board> latestBoard,
             Pageable pageable) {
 
         List<LatestBoardDto> latestBoardDtos = new ArrayList<>();
-        for (Board board : latestBoard) {
+        for (com.project.pagu.modules.board.domain.Board board : latestBoard) {
             latestBoardDtos.add(LatestBoardDto.createLatestBoardDto(board));
         }
         return new PageImpl<>(latestBoardDtos, pageable, latestBoard.getTotalElements());
 
     }
+
+    public PageImpl<BoardPageDto> getSearchBoards(String keyword, Pageable pageable) {
+        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository.findByTitleContaining(keyword, pageable);
+        return convertBoardPageToBoardPageDto(boardPage, pageable);
+    }
+
+    @Transactional
+    public void update(Member member, Long id, BoardSaveRequestDto dto) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        if (member.getBoards().contains(board)) {
+            List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
+            Set<Subject> subject = createSubject(dto.getSubjects());
+            Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
+
+            board.addBoardScheduleList(boardSchedule);
+
+            for (Subject subject1 : subject) {
+                BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
+                board.addSubject(boardSubject);
+            }
+
+            for (TechStack techStack : techStacks) {
+                BoardTechStack boardTechStack = BoardTechStack.of(techStack);
+                board.addTechStack(boardTechStack);
+            }
+
+            //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
+
+//            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
+//            savedBoard.addBoardImageList(boardImageList);
+
+        }
+
+    }
+
+    //todo: 뷰 dto로 변경
+    public BoardSaveRequestDto getBoardSaveDto(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        BoardSaveRequestDto dto = new BoardSaveRequestDto();
+        dto.setId(board.getId());
+        dto.setTitle(board.getTitle());
+        dto.setSubjects(subjectToString(board.getBoardSubjects()));
+        dto.setTechStacks(techStackToString(board.getBoardTechStacks()));
+        dto.setGoal(board.getGoal());
+        dto.setPlace(board.getPlace());
+        dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setStatus(board.getStatus());
+        dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
+        dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
+        dto.setTermsStartAt(board.getTermsStartAt());
+        dto.setTermsEndAt(board.getTermsEndAt());
+        dto.setEtc(board.getEtc());
+
+        return dto;
+    }
+
+    private String subjectToString(Set<BoardSubject> boardSubjects) {
+        // todo : 로직 깔끔하게 수정할것
+        String subject = "";
+        for (BoardSubject boardSubject : boardSubjects) {
+            subject += boardSubject.getSubject().getName() + ",";
+        }
+        return subject;
+    }
+
+    private String techStackToString(Set<BoardTechStack> boardTechStacks) {
+        String techStack = "";
+        for (BoardTechStack boardTechStack : boardTechStacks) {
+            techStack += boardTechStack.getTechStack().getName() + ",";
+        }
+        return techStack;
+    }
+
+
 }
