@@ -87,8 +87,8 @@
                 </li>
 
                 <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1 }? 'active'">
-                    <a th:if="${keyword == ''}" th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
-                    <a th:if="${keyword != ''}" th:text="${page}" class="page-link" th:href="@{/boards/search(page=${page},keyword=${keyword})}"></a>
+                    <a th:if="${keyword == null || keyword == ''}" th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
+                    <a th:if="${keyword != null && keyword != ''}" th:text="${page}" class="page-link" th:href="@{/boards/search(page=${page},keyword=${keyword})}"></a>
                 </li>
 
                 <li class="page-item" th:if="${hasNext}">
