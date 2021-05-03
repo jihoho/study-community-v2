@@ -6,6 +6,7 @@ import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.WriterDto;
 import com.project.pagu.modules.board.service.BoardService;
 import com.project.pagu.modules.comment.model.CommentSaveDto;
+import com.project.pagu.modules.comment.model.CommentUpdateDto;
 import com.project.pagu.modules.member.domain.Member;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -68,7 +69,6 @@ public class BoardController {
 
         if (member != null) {
             model.addAttribute("member", WriterDto.createWriterDto(member));
-            model.addAttribute("commentSaveForm", new CommentSaveDto());
         }
 
         return "boards/board-detail";
