@@ -14,6 +14,7 @@ import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
+import com.project.pagu.modules.comment.service.CommentService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
@@ -67,6 +68,9 @@ class BoardServiceTest {
 
     @Mock
     private TechStackService techStackService;
+
+    @Mock
+    private CommentService commentService;
 
     @Captor
     private ArgumentCaptor<com.project.pagu.modules.board.domain.Board> argumentCaptor;
@@ -127,7 +131,7 @@ class BoardServiceTest {
         // given
         Board board = givenBoard(1L);
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
-
+        given(commentService.findCommentsByBoardId(any())).willReturn(null);
         // when
         BoardDetailDto boardDetailDto = boardService.getBoardDetailDto(1L);
 

@@ -19,7 +19,6 @@ import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.service.MemberSaveService;
-import com.project.pagu.modules.member.service.MemberViewService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +31,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA
@@ -115,6 +115,7 @@ class BoardControllerTest {
 
 
     @DisplayName("게시물 상세 페이지로 이동한다.")
+    @Transactional
     @Test
     void get_board() throws Exception {
         //given
@@ -142,10 +143,12 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시물 수정페이지로 이동한다.")
     @Test
+    @DisplayName("게시물 수정페이지로 이동한다.")
     void get_board_update_form() throws Exception {
-        mockMvc.perform(get("/boards/{id}/form", 1))
+        Member member = memberRepository.save(givenMember(Role.USER));
+        Long boardId=boardService.saveBoardDto(member,givenBoardDto());
+        mockMvc.perform(get("/boards/{id}/update", boardId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boards/board-update"))
                 .andExpect(content().string(containsString("스터디 모집 공고 수정")))
@@ -161,7 +164,7 @@ class BoardControllerTest {
 
     public Member givenMember(Role role) {
         return Member.builder()
-                .email("test@email.com")
+                .email("tester@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .password(passwordEncoder.encode("abcde1234!"))
