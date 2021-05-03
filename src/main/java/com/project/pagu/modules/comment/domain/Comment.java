@@ -79,6 +79,10 @@ public class Comment extends BaseTimeEntity {
         }
     }
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
     //==연관관계 편의 메서드==//
     public void registerMember(Member findMember) {
         this.member = findMember;

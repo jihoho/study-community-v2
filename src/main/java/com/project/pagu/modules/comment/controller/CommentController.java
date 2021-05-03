@@ -2,6 +2,7 @@ package com.project.pagu.modules.comment.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.modules.comment.model.CommentSaveDto;
+import com.project.pagu.modules.comment.model.CommentUpdateDto;
 import com.project.pagu.modules.comment.service.CommentService;
 import com.project.pagu.modules.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,13 @@ public class CommentController {
         commentService.saveComment(writer, commentSaveDto);
 
         return "redirect:/boards/" + commentSaveDto.getBoardId();
+    }
+
+    @PostMapping("/comments/update")
+    public String updateComment(@CurrentMember Member writer, CommentUpdateDto commentUpdateDto)
+            throws Exception {
+        commentService.updateComment(writer, commentUpdateDto);
+        return "redirect:/boards/" + commentUpdateDto.getBoardId();
     }
 
     @DeleteMapping("/comments/{id}")

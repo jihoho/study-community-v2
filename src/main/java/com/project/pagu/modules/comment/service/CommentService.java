@@ -5,6 +5,7 @@ import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.comment.model.CommentResponseDto;
 import com.project.pagu.modules.comment.model.CommentSaveDto;
+import com.project.pagu.modules.comment.model.CommentUpdateDto;
 import com.project.pagu.modules.comment.repository.CommentRepository;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.repository.MemberRepository;
@@ -57,6 +58,15 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
+    @Transactional
+    public void updateComment(Member writer, CommentUpdateDto commentUpdateDto) throws Exception {
+        Comment findComment = findById(commentUpdateDto.getCommentId());
+        if (findComment == null || !findComment.getMember().getMemberId()
+                .equals(writer.getMemberId())) {
+            throw new Exception("해당 댓글의 주인이 아닙니다.");
+        }
+        findComment.updateContent(commentUpdateDto.getContent());
+    }
 
     @Transactional
     public void deleteComment(long commentId) {
@@ -84,4 +94,7 @@ public class CommentService {
         return result;
     }
 
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
 }
