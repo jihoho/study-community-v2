@@ -21,6 +21,8 @@ public interface MemberSaveService {
 
     Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
 
+    Member save(Member member);
+
     void update(Member findMember, ProfileRequestDto profileRequestDto);
 
     void changePassword(MemberId of, String newPassword);

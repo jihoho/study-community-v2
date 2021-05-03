@@ -65,6 +65,12 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
+    @Override
+    @Transactional
     public void update(Member member, ProfileRequestDto profileRequestDto) {
         updateImageFile(profileRequestDto);
         member.updateProfile(profileRequestDto);
