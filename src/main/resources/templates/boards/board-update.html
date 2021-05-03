@@ -12,7 +12,7 @@
 
 <div id="header-txt-div">
             <span id="header-txt">
-                스터디 모집 공고 등록
+                스터디 모집 공고 수정
             </span>
 </div>
 <div id="board-form-body">
@@ -97,7 +97,19 @@
             <small class="form-text text-danger" th:if="!${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}" th:errors="*{recruitmentEndAt}"></small>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitmentStartAt')} and ${#fields.hasErrors('recruitmentEndAt')}">모집 기간 등록해주세요.</small>
         </div>
-
+        <div class="form-group">
+            <label for="study-status-div">모집 상태</label>
+            <div id="study-status-div">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        모집 중
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">모집 중</a>
+                        <a class="dropdown-item" href="#">모집 마감</a>
+                    </div>
+                </div>
+            </div>
         <div class="form-group">
             <label for="study-term-div">스터디 기간</label>
             <div id="study-term-div"><input type="date" th:field="*{termsStartAt}" /> ~ <input type="date" th:field="*{termsEndAt}" required /></div>
