@@ -73,18 +73,35 @@
 }
 .board-comment-list {
     border: 1px solid black;
+    margin: 0.5em 0;
 }
 .board-comment-header {
     padding: 1em 2em;
 }
-.board-comment-img-div {
-    float: left;
+.board-comment-img img {
+    width: 3em;
+    height: 3em;
 }
-.board-comment-nick-div {
-    padding: 0 4em;
+.board-comment-nick {
+    padding: 0 1em;
+    width: 80%;
+}
+.board-comment-butt {
+    width: 20%;
+    text-align: right;
 }
 .board-comment-body {
     padding: 1em 5em;
+}
+.board-comment-butt a {
+    cursor: pointer;
+}
+.board-comment-footer {
+    text-align: right;
+}
+.board-comment-footer a {
+    margin: 1em;
+    cursor: pointer;
 }
 .board-comment-p {
     word-wrap: break-word;
@@ -95,4 +112,15 @@
 
 .board-comment-text {
     width: 100%;
+}
+
+.comment-level-1 {
+}
+
+.comment-level-2 {
+    margin-left: 1.5em;
+}
+
+.comment-level-3 {
+    margin-left: 3em;
 }

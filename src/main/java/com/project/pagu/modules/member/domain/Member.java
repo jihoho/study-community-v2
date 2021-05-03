@@ -1,16 +1,17 @@
 package com.project.pagu.modules.member.domain;
 
+import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.common.domain.BaseTimeEntity;
+import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import org.hibernate.annotations.Where;
 
 /**
@@ -22,7 +23,6 @@ import org.hibernate.annotations.Where;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @IdClass(MemberId.class)
 @Where(clause = "is_delete = false")
@@ -42,9 +42,11 @@ public class Member extends BaseTimeEntity {
 
     private String password;
 
-    private String imageFile;
+    private String imageFilename;
 
-    private String imageUrl;
+    private String oauthImageUrl;
+
+    private String profileImageUrl;
 
     private String link;
 
@@ -61,19 +63,56 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "member")
-    @Builder.Default
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Builder
+    public Member(String email, MemberType memberType, String nickname, String password,
+            String imageFilename, String oauthImageUrl, String link, String info, String career,
+            String postion,
+            Role role) {
+        this.email = email;
+        this.memberType = memberType;
+        this.nickname = nickname;
+        this.password = password;
+        this.imageFilename = imageFilename;
+        this.oauthImageUrl = oauthImageUrl;
+        this.link = link;
+        this.info = info;
+        this.career = career;
+        this.postion = postion;
+        this.role = role;
+
+        if (imageFilename != null && !imageFilename.equals("")) {
+            this.profileImageUrl = FileUtil
+                    .createImageUrl("profileThumbnails", memberType.getKey(), email, imageFilename);
+        } else {
+            this.profileImageUrl = oauthImageUrl;
+        }
+    }
+
     public Member updateImage(String imageUrl) {
-        this.imageUrl = imageUrl;
+        if (profileImageUrl.equals(oauthImageUrl)) {
+            profileImageUrl = imageUrl;
+        }
+        oauthImageUrl = imageUrl;
         return this;
     }
 
     public void updateProfile(ProfileRequestDto dto) {
         this.nickname = dto.getChangeNickname();
-        this.imageUrl = dto.getImageUrl();
-        this.imageFile = dto.getImageFile();
+        this.oauthImageUrl = dto.getOauthImageUrl();
+        this.imageFilename = dto.getImageFilename();
+        if (imageFilename != null && !imageFilename.equals("")) {
+            profileImageUrl = FileUtil
+                    .createImageUrl("profileThumbnails", dto.getMemberType(), dto.getEmail(),
+                            imageFilename);
+        } else {
+            profileImageUrl = oauthImageUrl;
+        }
         this.link = dto.getLink();
         this.info = dto.getInfo();
         this.career = dto.getCareer();
@@ -97,11 +136,16 @@ public class Member extends BaseTimeEntity {
         return MemberId.of(email, memberType);
     }
 
+
     public void changePassword(String password) {
         this.password = password;
     }
 
     public void delete() {
         this.isDelete = true;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 }

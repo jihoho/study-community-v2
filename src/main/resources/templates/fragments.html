@@ -16,6 +16,8 @@
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
 <!--    <script src="/node_modules/popper/dist/umd/popper.min.js"></script>-->
     <script src="/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div th:fragment="pagu-nav">

@@ -124,7 +124,7 @@ class BoardRepositoryTest {
                 .memberType(MemberType.NORMAL)
                 .nickname("tester")
                 .role(Role.GUEST)
-                .imageUrl(null)
+                .imageFilename(null)
                 .career("취준생")
                 .postion("백엔드")
                 .link("test@gi.com")

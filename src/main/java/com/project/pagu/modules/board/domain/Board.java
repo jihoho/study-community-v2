@@ -3,6 +3,7 @@ package com.project.pagu.modules.board.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import com.project.pagu.common.domain.BaseTimeEntity;
+import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.teckstack.BoardTechStack;
@@ -24,6 +25,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,6 +76,11 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @Builder.Default
     private List<BoardImage> boardImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OrderBy("depth asc")
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     @Lob
     private String etc;
@@ -135,4 +142,7 @@ public class Board extends BaseTimeEntity {
         }
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
 }
