@@ -95,8 +95,10 @@ public class ProfileController {
     }
 
     @PostMapping("/members/password-check/{name}")
-    public String checkPassword(@CurrentMember Member member, @PathVariable String name, MemberSaveRequestDto dto, BindingResult result) {
+    public String checkPassword(@CurrentMember Member member, Model model,
+            @PathVariable String name, MemberSaveRequestDto dto, BindingResult result) {
         if (profileValidation.isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
+            model.addAttribute("view", name);
             return "members/password-check";
         }
 
