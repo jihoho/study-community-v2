@@ -67,10 +67,8 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default
     private List<Comment> subComment = new ArrayList<>();
 
-    @Builder.Default
     private int depth = 0;
 
-    @Builder.Default
     private boolean isRemove = false;
 
     public void remove() {
@@ -79,6 +77,10 @@ public class Comment extends BaseTimeEntity {
             this.content = "삭제된 댓글 입니다.";
             this.isRemove = true;
         }
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 
     //==연관관계 편의 메서드==//
