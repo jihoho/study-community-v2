@@ -7,6 +7,7 @@ import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
 
 import com.project.pagu.modules.member.domain.UserMember;
+import com.project.pagu.modules.member.exception.MemberNotFoundException;
 import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
@@ -43,75 +44,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class MemberServiceImpl implements MemberService {
+public class MemberSaveServiceImpl implements MemberSaveService {
 
     private final MemberRepository memberRepository;
     private final FileManager fileManager;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Member findById(MemberId memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException(memberId.toString()));
-    }
-
-    @Override
-    public boolean existsById(MemberId memberId) {
-        return memberRepository.existsById(memberId);
-    }
-
-    @Override
-    public boolean existsByNickname(String nickname) {
-        return memberRepository.existsByNickname(nickname);
-    }
-
-    @Override
     @Transactional
     public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
         return MemberId.of(saveMember.getEmail(), saveMember.getMemberType());
-    }
-
-    @Override
-    @Transactional
-    public Member save(Member member) {
-        return memberRepository.save(member);
-    }
-
-    @Override
-    public void login(Member member) {
-        UserDetails userDetails = loadUserByUsername(member.getEmail());
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                member.getPassword(),
-                userDetails.getAuthorities());
-        SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(token);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info("## loadUserByUsername ##");
-        return new UserMember(findById(MemberId.of(email, MemberType.NORMAL)));
-    }
-
-    @Override
-    public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
-        Member findMember = findById(member.getMemberId());
-
-        return ProfileRequestDto.builder()
-                .email(findMember.getEmail())
-                .memberType(findMember.getMemberType().getKey())
-                .nickname(findMember.getNickname())
-                .changeNickname(findMember.getNickname())
-                .imageFilename(findMember.getImageFilename())
-                .oauthImageUrl(findMember.getOauthImageUrl())
-                .profileImageUrl(findMember.getProfileImageUrl())
-                .link(findMember.getLink())
-                .info(findMember.getInfo())
-                .career(findMember.getCareer())
-                .position(findMember.getPostion())
-                .build();
     }
 
     @Override
@@ -136,36 +79,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ProfileRequestDto getBy(String nickname) {
-        Member findMember = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new UsernameNotFoundException(nickname));
-
-        return ProfileRequestDto.builder()
-                .email(findMember.getEmail())
-                .memberType(findMember.getMemberType().getKey())
-                .nickname(findMember.getNickname())
-                .imageFilename(findMember.getImageFilename())
-                .oauthImageUrl(findMember.getOauthImageUrl())
-                .profileImageUrl(findMember.getProfileImageUrl())
-                .link(findMember.getLink())
-                .info(findMember.getInfo())
-                .career(findMember.getCareer())
-                .position(findMember.getPostion())
-                .build();
-    }
-
-    @Override
     @Transactional
     public void changePassword(MemberId memberId, String newPassword) {
-        Member findMember = findById(memberId);
-        findMember.changePassword(passwordEncoder.encode(newPassword));
+        memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new)
+                .changePassword(passwordEncoder.encode(newPassword));
     }
 
     @Override
     @Transactional
-    public void deleteMember(Member member) {
-        Member findMember = findById(MemberId.of(member.getEmail(), MemberType.NORMAL));
-        findMember.delete();
+    public void deleteMember(MemberId memberId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new)
+                .delete();
     }
 
     private void updateImageFile(ProfileRequestDto profileRequestDto) {
@@ -180,18 +106,4 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
-        // 현재 로그인 진행 중인 서비스
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        Member loginMember = OauthFactory.of(registrationId, oAuth2User.getAttributes());
-        return new OauthMember(getOrSyncImage(loginMember));
-    }
-
-    private Member getOrSyncImage(Member member) {
-        return memberRepository.findById(member.getMemberId())
-                .map(entity -> entity.updateImage(member.getOauthImageUrl()))
-                .orElse(member);
-    }
 }

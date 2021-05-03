@@ -18,7 +18,8 @@ import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.repository.MemberRepository;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +50,7 @@ class BoardControllerTest {
     private BoardService boardService;
 
     @Autowired
-    private MemberService memberService;
+    private MemberSaveService memberSaveService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -117,7 +118,7 @@ class BoardControllerTest {
     @Test
     void get_board() throws Exception {
         //given
-        Member member = memberService.save(givenMember(Role.USER));
+        Member member = memberRepository.save(givenMember(Role.USER));
         BoardSaveRequestDto boardDto = givenBoardDto();
         Long id = boardService.saveBoardDto(member, boardDto);
 

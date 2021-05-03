@@ -2,8 +2,9 @@ package com.project.pagu.common.handler;
 
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.modules.member.domain.OauthMember;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private static final String HOME = "/";
     private static final String SIGN_UP = "/sign-up-google";
 
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
+    private final MemberViewService memberViewService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -40,7 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private String getRedirectUrl(String email, MemberType memberType) {
-        if (memberService.existsById(MemberId.of(email, memberType))) {
+        if (memberViewService.existsById(MemberId.of(email, memberType))) {
             log.info(String.format("OAuth2 login success email: %s, type: %s ", email, memberType));
             return HOME;
         }

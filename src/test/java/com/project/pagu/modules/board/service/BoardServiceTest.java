@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.model.BoardDetailDto;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
@@ -16,7 +17,8 @@ import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
 import com.project.pagu.modules.teckstack.TechStack;
@@ -55,7 +57,10 @@ class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private MemberService memberService;
+    private MemberSaveService memberSaveService;
+
+    @Mock
+    private MemberViewService memberViewService;
 
     @Mock
     private SubjectService subjectService;
@@ -73,7 +78,7 @@ class BoardServiceTest {
     @DisplayName("게시물을 등록한다.")
     void save_board() {
         Member member = givenMember();
-        given(memberService.findById(any())).willReturn(member);
+        given(memberViewService.findById(any())).willReturn(member);
         given(subjectService.getOrSave(any())).willReturn(Subject.of("Spring"));
         given(techStackService.getOrSave(any())).willReturn(TechStack.of("Spring"));
         given(boardRepository.save(any())).willReturn(givenBoardDto().toEntity());
@@ -120,7 +125,7 @@ class BoardServiceTest {
     @DisplayName("게시물 상세 조회 한다.")
     void get_board_detail() throws Exception {
         // given
-        com.project.pagu.modules.board.domain.Board board = givenBoard(1L);
+        Board board = givenBoard(1L);
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
         // when
@@ -183,12 +188,12 @@ class BoardServiceTest {
         return PageRequest.of(page, size, sort);
     }
 
-    private PageImpl<com.project.pagu.modules.board.domain.Board> givenPagedBoard(Pageable pageable) {
+    private PageImpl<Board> givenPagedBoard(Pageable pageable) {
         List<com.project.pagu.modules.board.domain.Board> boards = givenBoardList();
         return new PageImpl<>(boards, pageable, boards.size());
     }
 
-    private List<com.project.pagu.modules.board.domain.Board> givenBoardList() {
+    private List<Board> givenBoardList() {
         List<com.project.pagu.modules.board.domain.Board> boards = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             boards.add(givenBoard((long) i));
@@ -196,7 +201,7 @@ class BoardServiceTest {
         return boards;
     }
 
-    private com.project.pagu.modules.board.domain.Board givenBoard(Long id) {
+    private Board givenBoard(Long id) {
         return com.project.pagu.modules.board.domain.Board.builder()
                 .id(id)
                 .title("제목")

@@ -4,12 +4,12 @@ import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
 import com.project.pagu.modules.member.model.PasswordDto;
 import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.ProfileValidation;
+import com.project.pagu.modules.member.service.MemberViewService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
+    private final MemberViewService memberViewService;
     private final ProfileValidation profileValidation;
     private final FileManager fileManager;
 
@@ -42,7 +43,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(@CurrentMember Member member, Model model) {
-        ProfileRequestDto profileRequestDto = memberService
+        ProfileRequestDto profileRequestDto = memberViewService
                 .convertMemberToProfileRequestDto(member);
         model.addAttribute(profileRequestDto);
         return "profile";
@@ -56,7 +57,7 @@ public class ProfileController {
             return "profile";
         }
 
-        memberService.update(member, profileRequestDto);
+        memberSaveService.update(member, profileRequestDto);
         return "redirect:/profile";
     }
 
@@ -70,7 +71,7 @@ public class ProfileController {
 
     @GetMapping("/profile/{nickname}")
     public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
-        ProfileRequestDto profileRequestDto = memberService.getBy(nickname);
+        ProfileRequestDto profileRequestDto = memberViewService.getBy(nickname);
         //자기 자신을 조회하면 프로필 관리로 이동
         MemberId currentMemberId = MemberId.of(member.getEmail(), member.getMemberType());
         MemberId findMemberId = MemberId.of(profileRequestDto.getEmail(), member.getMemberType());
@@ -107,7 +108,7 @@ public class ProfileController {
         }
 
         if (name.equals("secession")) {
-            memberService.deleteMember(member);
+            memberSaveService.deleteMember(MemberId.of(member.getEmail(), member.getMemberType()));
             return "redirect:/members/delete-success";
         }
         return "/error";
@@ -128,8 +129,8 @@ public class ProfileController {
             return "members/change-password";
         }
 
-        memberService.changePassword(MemberId.of(member.getEmail(), member.getMemberType()), dto.getPassword());
-        memberService.login(member);
+        memberSaveService.changePassword(MemberId.of(member.getEmail(), member.getMemberType()), dto.getPassword());
+        memberViewService.login(member);
 
         return "redirect:/members/password-success";
     }

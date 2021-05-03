@@ -7,8 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.SignUpValidation;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -33,7 +34,11 @@ import org.springframework.validation.Errors;
 public class MemberSaveRequestDtoTest {
 
     @Mock
-    private MemberService memberService;
+    private MemberSaveService memberSaveService;
+
+    @Mock
+    private MemberViewService memberViewService;
+
     @InjectMocks
     private SignUpValidation signUpValidation;
     private Errors errors;
@@ -50,8 +55,8 @@ public class MemberSaveRequestDtoTest {
         dto.setAuthKey("123456");
         dto.setAuthKeyInput("123456");
         errors = new BeanPropertyBindingResult(dto, "MemberSaveRequestDto");
-        when(memberService.existsById(any())).thenReturn(false); // 이메일 unique
-        when(memberService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
+        when(memberViewService.existsById(any())).thenReturn(false); // 이메일 unique
+        when(memberViewService.existsByNickname(any())).thenReturn(false); // 닉네임 unique
     }
 
     @DisplayName("정상 입력")
@@ -74,7 +79,7 @@ public class MemberSaveRequestDtoTest {
     @Test
     @DisplayName("이메일 중복 실패 테스트")
     void input_fail_email_unique() throws Exception {
-        when(memberService.existsById(any())).thenReturn(true); // 이메일 중복
+        when(memberViewService.existsById(any())).thenReturn(true); // 이메일 중복
 
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 
@@ -93,7 +98,7 @@ public class MemberSaveRequestDtoTest {
     @Test
     @DisplayName("닉네임 중복 실패 테스트")
     void input_fail_nickname_unique() throws Exception {
-        when(memberService.existsByNickname(any())).thenReturn(true); // 닉네임 중복
+        when(memberViewService.existsByNickname(any())).thenReturn(true); // 닉네임 중복
 
         Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
 

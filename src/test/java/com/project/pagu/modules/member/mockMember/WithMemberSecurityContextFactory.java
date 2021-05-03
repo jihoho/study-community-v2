@@ -1,7 +1,9 @@
 package com.project.pagu.modules.member.mockMember;
 
 import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.service.MemberServiceImpl;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberSaveServiceImpl;
+import com.project.pagu.modules.member.service.MemberViewService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +23,10 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 public class WithMemberSecurityContextFactory implements WithSecurityContextFactory<WithMember> {
 
     @Autowired
-    private MemberServiceImpl memberService;
+    private MemberViewService MemberViewService;
+
+    @Autowired
+    private MemberSaveService memberSaveService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -34,9 +39,9 @@ public class WithMemberSecurityContextFactory implements WithSecurityContextFact
         dto.setNickname(nickname);
         dto.setEmail(nickname + "@email.com");
         dto.setPassword(passwordEncoder.encode("123123a!"));
-        memberService.saveMember(dto);
+        memberSaveService.saveMember(dto);
 
-        UserDetails principal = memberService.loadUserByUsername(dto.getEmail());
+        UserDetails principal = MemberViewService.loadUserByUsername(dto.getEmail());
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContext context = SecurityContextHolder.createEmptyContext();

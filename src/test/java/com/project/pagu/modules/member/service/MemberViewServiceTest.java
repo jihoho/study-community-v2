@@ -1,10 +1,8 @@
 package com.project.pagu.modules.member.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -14,19 +12,16 @@ import static org.mockito.Mockito.verify;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
-import com.project.pagu.modules.member.domain.UserMember;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.domain.Role;
-
+import com.project.pagu.modules.member.domain.UserMember;
+import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.repository.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,24 +29,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * Created by IntelliJ IDEA
  * User: yhh1056@naver.com
- * Date: 2021/04/08 Time: 10:48 오전
+ * Date: 2021/05/03 Time: 3:25 오후
  */
 
 @ExtendWith(MockitoExtension.class)
-public class MemberServiceImplTest {
+public class MemberViewServiceTest {
 
     @InjectMocks
-    private MemberServiceImpl memberService;
+    private MemberViewServiceImpl memberViewService;
 
     @Mock
     private MemberRepository memberRepository;
 
-    @Captor
-    private ArgumentCaptor<Member> argumentCaptor;
-
     private MemberSaveRequestDto dto;
-
-    private ProfileRequestDto detailRequestDto;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")
@@ -66,22 +56,6 @@ public class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("회원 저장")
-    void save_member() {
-        // given
-        given(memberRepository.save(any())).willReturn(dto.toEntity());
-
-        // when
-        memberService.saveMember(dto);
-
-        // then
-        verify(memberRepository, times(1)).save(argumentCaptor.capture());
-        then(argumentCaptor.getValue()).isNotNull();
-        then(argumentCaptor.getValue().getEmail()).isEqualTo("123@email.com");
-        then(argumentCaptor.getValue().getNickname()).isEqualTo("nick");
-    }
-
-    @Test
     @DisplayName("memberId가 존재하는지")
     void exists_by_memberId() {
         // given
@@ -89,7 +63,7 @@ public class MemberServiceImplTest {
         given(memberRepository.existsById(memberId)).willReturn(true);
 
         // when
-        assertTrue(memberService.existsById(memberId));
+        assertTrue(memberViewService.existsById(memberId));
 
         // then
         verify(memberRepository, times(1)).existsById(memberId);
@@ -102,7 +76,7 @@ public class MemberServiceImplTest {
         given(memberRepository.existsByNickname(dto.getNickname())).willReturn(true);
 
         // when
-        assertTrue(memberService.existsByNickname(dto.getNickname()));
+        assertTrue(memberViewService.existsByNickname(dto.getNickname()));
 
         // then
         verify(memberRepository, times(1)).existsByNickname(dto.getNickname());
@@ -115,29 +89,29 @@ public class MemberServiceImplTest {
         given(memberRepository.findById(any())).willReturn(Optional.of(dto.toEntity()));
 
         // when
-        Member member = memberService.findById(MemberId.of(dto.getEmail(), MemberType.NORMAL));
+        Member member = memberViewService.findById(MemberId.of(dto.getEmail(), MemberType.NORMAL));
 
         // then
         verify(memberRepository, times(1)).findById(any());
         assertNotNull(member);
     }
-    
+
     @Test
     @DisplayName("loadUserByUsername 테스트")
     void load_user_by_username(){
         // given
-        Member member=dto.toEntity();
+        Member member = dto.toEntity();
         Optional<Member> optionalMember=Optional.of(member);
         given(memberRepository.findById(any())).willReturn(optionalMember);
 
         // when
-        assertEquals(memberService.loadUserByUsername(member.getEmail()),new UserMember(member));
+        assertEquals(memberViewService.loadUserByUsername(member.getEmail()),new UserMember(member));
 
         // then
         verify(memberRepository, times(1)).findById(any());
     }
-    
-    
+
+
     @Test
     @DisplayName("Member엔티티 profileRequestDto 변환 테스트")
     void  convert_member_to_profiledto() throws Exception{
@@ -169,7 +143,7 @@ public class MemberServiceImplTest {
         given(memberRepository.findById(any())).willReturn(Optional.of(targetMember));
 
         // when
-        ProfileRequestDto resultDto=memberService.convertMemberToProfileRequestDto(targetMember);
+        ProfileRequestDto resultDto = memberViewService.convertMemberToProfileRequestDto(targetMember);
 
         // then
         assertAll(
@@ -182,6 +156,6 @@ public class MemberServiceImplTest {
                 ()->assertEquals(expectedDto.getPosition(),resultDto.getPosition())
         );
     }
-    
+
 
 }

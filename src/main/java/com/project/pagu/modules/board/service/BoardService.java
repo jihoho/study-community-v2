@@ -14,21 +14,19 @@ import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.comment.service.CommentService;
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.service.MemberService;
+import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.service.MemberViewService;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.tag.Subject;
 import com.project.pagu.modules.tag.SubjectService;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import com.project.pagu.modules.teckstack.TechStackService;
 import com.project.pagu.modules.teckstack.TechStack;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +34,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +51,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final FileManager fileManager;
-    private final MemberService memberService;
+    private final MemberSaveService memberSaveService;
+    private final MemberViewService memberViewService;
     private final SubjectService subjectService;
     private final TechStackService techStackService;
     private final CommentService commentService;
@@ -62,7 +60,7 @@ public class BoardService {
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
         // Member엔티티 조회
-        Member findMember = memberService.findById(member.getMemberId());
+        Member findMember = memberViewService.findById(member.getMemberId());
         List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
         Set<Subject> subject = createSubject(dto.getSubjects());
         Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
