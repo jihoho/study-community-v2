@@ -145,7 +145,11 @@ class BoardControllerTest {
     @DisplayName("게시물 수정페이지로 이동한다.")
     @Test
     void get_board_update_form() throws Exception {
-        mockMvc.perform(get("/boards/{id}/form", 1))
+        Member member = memberRepository.save(givenMember(Role.USER));
+        BoardSaveRequestDto boardDto = givenBoardDto();
+        Long id = boardService.saveBoardDto(member, boardDto);
+
+        mockMvc.perform(get("/boards/{id}/update", id))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boards/board-update"))
                 .andExpect(content().string(containsString("스터디 모집 공고 수정")))

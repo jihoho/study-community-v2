@@ -214,6 +214,8 @@ public class BoardService {
                 board.addTechStack(boardTechStack);
             }
 
+            //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
+
 //            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
 //            savedBoard.addBoardImageList(boardImageList);
 
@@ -221,6 +223,7 @@ public class BoardService {
 
     }
 
+    //todo: 뷰 dto로 변경
     public BoardSaveRequestDto getBoardSaveDto(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException());
@@ -233,6 +236,7 @@ public class BoardService {
         dto.setGoal(board.getGoal());
         dto.setPlace(board.getPlace());
         dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setStatus(board.getStatus());
         dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
         dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
         dto.setTermsStartAt(board.getTermsStartAt());

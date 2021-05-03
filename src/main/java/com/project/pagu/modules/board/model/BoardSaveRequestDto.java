@@ -1,5 +1,6 @@
 package com.project.pagu.modules.board.model;
 
+import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -66,10 +67,12 @@ public class BoardSaveRequestDto {
 
     private String etc;
 
+    private StudyStatus status;
+
     private List<MultipartFile> fileList = new ArrayList<>();
 
-    public com.project.pagu.modules.board.domain.Board toEntity() {
-        return com.project.pagu.modules.board.domain.Board.builder()
+    public Board toEntity() {
+        return Board.builder()
                 .title(this.title)
                 .goal(this.goal)
                 .place(this.place)
@@ -90,9 +93,5 @@ public class BoardSaveRequestDto {
             boardImageDtos.add(new BoardImageDto(multipartFile));
         }
         return boardImageDtos;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
