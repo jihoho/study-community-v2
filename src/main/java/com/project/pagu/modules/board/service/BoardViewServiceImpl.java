@@ -80,10 +80,9 @@ public class BoardViewServiceImpl implements BoardViewService {
     /**
      * Mapper로 변환 예정
      */
-    private PageImpl<PagedBoardViewDto> convertBoardPageToBoardPageDto(
-            Page<com.project.pagu.modules.board.domain.Board> boardPage, Pageable pageable) {
+    private PageImpl<PagedBoardViewDto> convertBoardPageToBoardPageDto(Page<Board> boardPage, Pageable pageable) {
         List<PagedBoardViewDto> pagedBoardViewDtos = new ArrayList<>();
-        for (com.project.pagu.modules.board.domain.Board board : boardPage) {
+        for (Board board : boardPage) {
             pagedBoardViewDtos.add(PagedBoardViewDto.creatBoardPageDto(board));
         }
         return new PageImpl<>(pagedBoardViewDtos, pageable,
