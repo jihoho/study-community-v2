@@ -4,7 +4,6 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.comment.model.CommentViewDto;
-import com.project.pagu.modules.comment.repository.CommentRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentViewServiceImpl implements CommentViewService {
 
-    private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
     @Override

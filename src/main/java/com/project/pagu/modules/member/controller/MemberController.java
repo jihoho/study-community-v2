@@ -76,8 +76,7 @@ public class MemberController {
         }
 
         signUpDto.createEmailAuthKey();
-        signUpManager.sendAuthMessage(signUpDto.getEmail(),
-                signUpDto.getAuthKey());
+        signUpManager.sendAuthMessage(signUpDto.getEmail(), signUpDto.getAuthKey());
         signUpManager.encryptPassword(signUpDto);
         model.addAttribute(signUpDto);
         return "redirect:/email-check";

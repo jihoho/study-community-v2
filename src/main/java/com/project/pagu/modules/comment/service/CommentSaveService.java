@@ -11,10 +11,8 @@ import com.project.pagu.modules.member.domain.MemberId;
  */
 public interface CommentSaveService {
 
-    //todo : memberId로
     Long saveComment(MemberId memberId, CommentSaveDto commentSaveDto);
 
-    //todo : memberId로
     void updateComment(MemberId memberId, CommentSaveDto commentSaveDto);
 
     void deleteComment(MemberId memberId,long commentId);
