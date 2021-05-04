@@ -1,5 +1,6 @@
 package com.project.pagu.modules.board.service;
 
+import com.project.pagu.common.exception.AccessDeniedException;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardSaveServiceImpl implements BoardSaveService {
 
     private final MemberViewService memberViewService;
+    private final BoardViewService boardViewService;
     private final BoardRepository boardRepository;
     private final SubjectService subjectService;
     private final TechStackService techStackService;
@@ -83,32 +85,35 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     }
 
     @Override
+    @Transactional
     public void update(Member member, Long id, BoardSaveDto dto) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException());
-        if (member.getBoards().contains(board)) {
-            List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
-            Set<Subject> subject = createSubject(dto.getSubjects());
-            Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
 
-            board.addBoardScheduleList(boardSchedule);
-
-            for (Subject subject1 : subject) {
-                BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
-                board.addSubject(boardSubject);
-            }
-
-            for (TechStack techStack : techStacks) {
-                BoardTechStack boardTechStack = BoardTechStack.of(techStack);
-                board.addTechStack(boardTechStack);
-            }
-
-            //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
-
-            //            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
-            //            savedBoard.addBoardImageList(boardImageList);
-
+        Board board = boardViewService.findById(id);
+        if(member==null||!member.getMemberId().equals(board.getMember().getMemberId())){
+            throw new AccessDeniedException();
         }
+
+        List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
+        Set<Subject> subject = createSubject(dto.getSubjects());
+        Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
+
+        board.addBoardScheduleList(boardSchedule);
+
+        for (Subject subject1 : subject) {
+            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
+            board.addSubject(boardSubject);
+        }
+
+        for (TechStack techStack : techStacks) {
+            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
+            board.addTechStack(boardTechStack);
+        }
+
+        //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
+
+        //            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
+        //            savedBoard.addBoardImageList(boardImageList);
+
     }
 
     private List<BoardSchedule> createBoardSchedule(List<BoardScheduleDto> boardSchedules) {
