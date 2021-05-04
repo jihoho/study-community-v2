@@ -68,7 +68,7 @@ public class BoardViewDto {
 
     private List<CommentResponseDto> commentList;
 
-    public static BoardViewDto createBoardDetailDto(Board board) {
+    public static BoardViewDto createBoardViewDto(Board board) {
 
         BoardViewDto boardViewDto = BoardViewDto.builder()
                 .id(board.getId())

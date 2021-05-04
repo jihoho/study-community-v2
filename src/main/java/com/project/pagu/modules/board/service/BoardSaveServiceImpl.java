@@ -55,28 +55,15 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     @Override
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveDto dto) { // Member엔티티 조회
+
+        if (member == null) {
+            throw new AccessDeniedException();
+        }
+
         Member findMember = memberViewService.findById(member.getMemberId());
-        List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
-        Set<Subject> subject = createSubject(dto.getSubjects());
-        Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
-
-        Board board = dto.toEntity();
+        Board board = registerTagToBoard(dto.toEntity(), dto.getSubjects(), dto.getTechStacks());
         board.setMember(findMember);
-        //        board.setMember(member);
-        board.addBoardScheduleList(boardSchedule);
-
-        for (Subject subject1 : subject) {
-            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
-            board.addSubject(boardSubject);
-        }
-
-        for (TechStack techStack : techStacks) {
-            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
-            board.addTechStack(boardTechStack);
-        }
-
-        //Board savedBoard = boardRepository.save(board);
-        com.project.pagu.modules.board.domain.Board savedBoard = saveBoard(board);
+        Board savedBoard = saveBoard(board);
 
         List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
@@ -89,26 +76,12 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     public void update(Member member, Long id, BoardSaveDto dto) {
 
         Board board = boardViewService.findById(id);
-        if(member==null||!member.getMemberId().equals(board.getMember().getMemberId())){
+        if (member == null || !member.getMemberId().equals(board.getMember().getMemberId())) {
             throw new AccessDeniedException();
         }
+        registerTagToBoard(board, dto.getSubjects(), dto.getTechStacks());
 
-        List<BoardSchedule> boardSchedule = createBoardSchedule(dto.getBoardSchedules());
-        Set<Subject> subject = createSubject(dto.getSubjects());
-        Set<TechStack> techStacks = createTechStack(dto.getTechStacks());
-
-        board.addBoardScheduleList(boardSchedule);
-
-        for (Subject subject1 : subject) {
-            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject1);
-            board.addSubject(boardSubject);
-        }
-
-        for (TechStack techStack : techStacks) {
-            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
-            board.addTechStack(boardTechStack);
-        }
-
+        //todo : 게시물 내용 수정 코드 필요
         //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
 
         //            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
@@ -116,13 +89,21 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
     }
 
-    private List<BoardSchedule> createBoardSchedule(List<BoardScheduleDto> boardSchedules) {
-        List<BoardSchedule> boardScheduleList = new ArrayList<>();
-        for (BoardScheduleDto boardScheduleDto : boardSchedules) {
-            BoardSchedule boardSchedule = boardScheduleDto.toEntity();
-            boardScheduleList.add(boardSchedule);
+
+    private Board registerTagToBoard(Board board, String subjects, String techStacks) {
+        Set<Subject> subjectSet = createSubject(subjects);
+        Set<TechStack> techStackSet = createTechStack(techStacks);
+
+        for (Subject subject : subjectSet) {
+            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject);
+            board.addSubject(boardSubject);
         }
-        return boardScheduleList;
+        for (TechStack techStack : techStackSet) {
+            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
+            board.addTechStack(boardTechStack);
+        }
+
+        return board;
     }
 
     private Set<Subject> createSubject(String subject) {

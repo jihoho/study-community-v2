@@ -1,10 +1,12 @@
 package com.project.pagu.modules.board.model;
 
 import com.project.pagu.modules.board.domain.Board;
+import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -71,6 +73,24 @@ public class BoardSaveDto {
 
     private List<MultipartFile> fileList = new ArrayList<>();
 
+    public static BoardSaveDto createBoardSaveDto(Board board){
+        BoardSaveDto dto = new BoardSaveDto();
+        dto.setId(board.getId());
+        dto.setTitle(board.getTitle());
+        dto.setSubjects(board.subjectToString());
+        dto.setTechStacks(board.techStackToString());
+        dto.setGoal(board.getGoal());
+        dto.setPlace(board.getPlace());
+        dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setStatus(board.getStatus());
+        dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
+        dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
+        dto.setTermsStartAt(board.getTermsStartAt());
+        dto.setTermsEndAt(board.getTermsEndAt());
+        dto.setEtc(board.getEtc());
+        return dto;
+    }
+
     public Board toEntity() {
         return Board.builder()
                 .title(this.title)
@@ -82,9 +102,14 @@ public class BoardSaveDto {
                 .termsEndAt(this.termsEndAt)
                 .etc(this.etc)
                 .status(StudyStatus.READY)
-//                .subjects(this.subjects)
-//                .techStacks(this.techStacks)
+                .boardSchedules(createBoardSchedules())
+                //                .subjects(this.subjects)
+                //                .techStacks(this.techStacks)
                 .build();
+    }
+
+    private List<BoardSchedule> createBoardSchedules() {
+        return this.boardSchedules.stream().map(s -> s.toEntity()).collect(Collectors.toList());
     }
 
     public List<BoardImageSaveDto> toBoardImageDtoList() {

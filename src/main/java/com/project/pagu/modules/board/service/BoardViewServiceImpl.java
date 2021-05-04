@@ -47,31 +47,14 @@ public class BoardViewServiceImpl implements BoardViewService {
     @Override
     public BoardViewDto getBoardDetailDto(Long id) {
         Board board = findById(id);
-        BoardViewDto boardViewDto = BoardViewDto.createBoardDetailDto(board);
+        BoardViewDto boardViewDto = BoardViewDto.createBoardViewDto(board);
         boardViewDto.setCommentList(commentService.findCommentsByBoardId(board.getId()));
         return boardViewDto;
     }
 
     @Override
     public BoardSaveDto getBoardSaveDto(Long id) {
-        Board board = findById(id);
-
-        BoardSaveDto dto = new BoardSaveDto();
-        dto.setId(board.getId());
-        dto.setTitle(board.getTitle());
-        dto.setSubjects(subjectToString(board.getBoardSubjects()));
-        dto.setTechStacks(techStackToString(board.getBoardTechStacks()));
-        dto.setGoal(board.getGoal());
-        dto.setPlace(board.getPlace());
-        dto.setBoardSchedules(dto.getBoardSchedules());
-        dto.setStatus(board.getStatus());
-        dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
-        dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
-        dto.setTermsStartAt(board.getTermsStartAt());
-        dto.setTermsEndAt(board.getTermsEndAt());
-        dto.setEtc(board.getEtc());
-
-        return dto;
+        return BoardSaveDto.createBoardSaveDto(findById(id));
     }
 
     @Override
@@ -95,23 +78,6 @@ public class BoardViewServiceImpl implements BoardViewService {
         Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository
                 .findByTitleContaining(keyword, pageable);
         return convertBoardPageToBoardPageDto(boardPage, pageable);
-    }
-
-    private String subjectToString(Set<BoardSubject> boardSubjects) {
-        // todo : 로직 깔끔하게 수정할것
-        String subject = "";
-        for (BoardSubject boardSubject : boardSubjects) {
-            subject += boardSubject.getSubject().getName() + ",";
-        }
-        return subject;
-    }
-
-    private String techStackToString(Set<BoardTechStack> boardTechStacks) {
-        String techStack = "";
-        for (BoardTechStack boardTechStack : boardTechStacks) {
-            techStack += boardTechStack.getTechStack().getName() + ",";
-        }
-        return techStack;
     }
 
     /**

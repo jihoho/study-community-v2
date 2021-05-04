@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -144,5 +145,15 @@ public class Board extends BaseTimeEntity {
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
+    }
+
+    public String subjectToString() {
+        return boardSubjects.stream().map(s->s.getSubject().getName())
+                .collect(Collectors.joining(","));
+    }
+
+    public String techStackToString() {
+        return boardTechStacks.stream().map(s->s.getTechStack().getName())
+                .collect(Collectors.joining(","));
     }
 }
