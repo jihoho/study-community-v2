@@ -63,18 +63,18 @@
                 <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-info-tab">
                     <h3 class="mb-4">프로필 정보</h3>
                     <!-- 프로필 수정 폼 -->
-                    <form th:action="@{/members/update}" method="post" th:object="${profileRequestDto}" enctype="multipart/form-data">
+                    <form th:action="@{/members/update}" method="post" th:object="${profileDto}" enctype="multipart/form-data">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <div class="row">
                             <div class="col-md-4">
                                 <div id="img-box">
-                                    <img th:if="${!#strings.isEmpty(profileRequestDto.profileImageUrl)} " th:src="${profileRequestDto.profileImageUrl}" class="profile-img" />
+                                    <img th:if="${!#strings.isEmpty(profileDto.profileImageUrl)} " th:src="${profileDto.profileImageUrl}" class="profile-img" />
 
                                     <svg
-                                        th:if="${#strings.isEmpty(profileRequestDto.profileImageUrl)}"
-                                        th:data-jdenticon-value="${profileRequestDto.nickname}"
-                                        class="profile-image"
-                                    ></svg>
+                                        th:if="${#strings.isEmpty(profileDto.profileImageUrl)}"
+                                        th:data-jdenticon-value="${profileDto.nickname}"
+                                        class="profile-image">
+                                    </svg>
                                 </div>
                                 <div class="text-center">
                                     <div class="filebox">

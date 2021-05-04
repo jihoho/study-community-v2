@@ -15,7 +15,7 @@ import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -114,8 +114,8 @@ class ProfileControllerTest {
                 .andExpect(view().name("redirect:/profile"));
     }
 
-    private ProfileRequestDto givenDto() {
-        return ProfileRequestDto.builder()
+    private ProfileDto givenDto() {
+        return ProfileDto.builder()
                 .nickname("tester")
                 .email("test@email.com")
                 .memberType("NORMAL")

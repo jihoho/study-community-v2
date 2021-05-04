@@ -16,7 +16,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OauthMemberSaveDto {
+public class OauthDto {
 
     private String email;
 

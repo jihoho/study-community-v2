@@ -15,7 +15,7 @@
                     <div class="form-signin">
                         <div class="form-label-group mt-5">
 
-                            <form th:action="@{/members/email-check}" method="post" th:object="${memberSaveRequestDto}">
+                            <form th:action="@{/members/email-check}" method="post" th:object="${signUpDto}">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <input type="email" id="inputEmail" name="email" class="form-control" th:field="*{email}" placeholder="Email address" required autofocus />
                                 <label for="inputEmail">가입하신 이메일을 입력해주세요</label>

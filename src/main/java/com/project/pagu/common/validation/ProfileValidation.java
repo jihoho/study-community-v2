@@ -1,7 +1,6 @@
 package com.project.pagu.common.validation;
 
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.service.MemberViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +23,14 @@ public class ProfileValidation implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(ProfileRequestDto.class);
+        return clazz.isAssignableFrom(ProfileDto.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ProfileRequestDto profileRequestDto = (ProfileRequestDto) target;
-        if (!profileRequestDto.getNickname().equals(profileRequestDto.getChangeNickname())) {
-            isExistedNickname(profileRequestDto.getChangeNickname(), errors);
+        ProfileDto profileDto = (ProfileDto) target;
+        if (!profileDto.getNickname().equals(profileDto.getChangeNickname())) {
+            isExistedNickname(profileDto.getChangeNickname(), errors);
         }
     }
 

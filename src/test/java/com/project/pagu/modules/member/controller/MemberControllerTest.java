@@ -23,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.modules.member.domain.UserMember;
-import com.project.pagu.modules.member.mockMember.WithMember;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.service.MemberSaveServiceImpl;
 import com.project.pagu.modules.member.service.MemberViewService;
@@ -70,7 +69,7 @@ class MemberControllerTest {
     @MockBean
     private MemberViewService memberViewService;
 
-    private MemberSaveRequestDto memberSaveDto;
+    private SignUpDto memberSaveDto;
 
     @Mock
     private MemberRepository memberRepository;
@@ -81,7 +80,7 @@ class MemberControllerTest {
     @BeforeEach
     @DisplayName("memberSaveDto 정상 입력 세팅")
     void beforeEach() {
-        memberSaveDto = new MemberSaveRequestDto();
+        memberSaveDto = new SignUpDto();
         memberSaveDto.setEmail("yy123@email.com");
         memberSaveDto.setNickname("nick");
         memberSaveDto.setPassword("abcde1234!");

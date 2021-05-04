@@ -4,16 +4,12 @@ import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.domain.MemberType;
 
-import com.project.pagu.modules.member.domain.UserMember;
 import com.project.pagu.modules.member.exception.MemberNotFoundException;
-import com.project.pagu.modules.member.model.OauthMemberSaveDto;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.OauthDto;
+import com.project.pagu.modules.member.model.ProfileDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
-import com.project.pagu.common.manager.OauthFactory;
-import com.project.pagu.modules.member.domain.OauthMember;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,15 +41,15 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
-    public MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto) {
-        Member saveMember = memberRepository.save(memberSaveRequestDto.toEntity());
+    public MemberId saveMember(SignUpDto signUpDto) {
+        Member saveMember = memberRepository.save(signUpDto.toEntity());
         return MemberId.of(saveMember.getEmail(), saveMember.getMemberType());
     }
 
     @Override
     @Transactional
-    public Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
-        return memberRepository.save(OAuthMemberSaveDto.toEntity());
+    public Member saveMember(OauthDto OAuthDto) {
+        return memberRepository.save(OAuthDto.toEntity());
     }
 
     @Override
@@ -71,9 +60,9 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
-    public void update(Member member, ProfileRequestDto profileRequestDto) {
-        updateImageFile(profileRequestDto);
-        member.updateProfile(profileRequestDto);
+    public void update(Member member, ProfileDto profileDto) {
+        updateImageFile(profileDto);
+        member.updateProfile(profileDto);
         memberRepository.save(member);
 
         updateAuthentication(member);
@@ -106,15 +95,16 @@ public class MemberSaveServiceImpl implements MemberSaveService {
                 .delete();
     }
 
-    private void updateImageFile(ProfileRequestDto profileRequestDto) {
-        if (profileRequestDto.getMultipartFile() == null) {
+    private void updateImageFile(ProfileDto profileDto) {
+        if (profileDto.getMultipartFile() == null) {
             return;
         }
 
-        if (profileRequestDto.getMultipartFile().getSize() != 0) {
+        if (profileDto.getMultipartFile().getSize() != 0) {
             String fileName = FileUtil.createFileName();
-            profileRequestDto.setImageFilename(fileName);
-            fileManager.uploadProfileImage(profileRequestDto.getMultipartFile(), fileName, profileRequestDto.getMemberType(), profileRequestDto.getEmail());
+            profileDto.setImageFilename(fileName);
+            fileManager.uploadProfileImage(profileDto.getMultipartFile(), fileName, profileDto
+                    .getMemberType(), profileDto.getEmail());
         }
     }
 

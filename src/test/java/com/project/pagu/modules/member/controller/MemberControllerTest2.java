@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +73,7 @@ class MemberControllerTest2 {
     @Test
     @DisplayName("회원가입 Form validation 성공 테스트")
     void formValidationSuccessTest() throws Exception {
-        MemberSaveRequestDto dto = givenDto();
+        SignUpDto dto = givenDto();
         dto.setEmail("other@email.com");
         dto.setNickname("other-id");
         MultiValueMap<String, String> params = convert(objectMapper, dto);
@@ -141,7 +141,7 @@ class MemberControllerTest2 {
     @Test
     @DisplayName("이메일 인증이 실패하는 경우 페이지가 유지된다.")
     void emailCheckFailTest() throws Exception {
-        MemberSaveRequestDto dto = givenDto();
+        SignUpDto dto = givenDto();
         dto.setAuthKeyInput("123123");
         MultiValueMap<String, String> params = convert(objectMapper, dto);
 
@@ -210,8 +210,8 @@ class MemberControllerTest2 {
                 .andExpect(authenticated());
     }
 
-    public MemberSaveRequestDto givenDto() {
-        MemberSaveRequestDto givenDto = new MemberSaveRequestDto();
+    public SignUpDto givenDto() {
+        SignUpDto givenDto = new SignUpDto();
         givenDto.setEmail("test@email.com");
         givenDto.setNickname("tester");
         givenDto.setPassword("abcde1234!");

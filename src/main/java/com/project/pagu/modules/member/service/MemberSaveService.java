@@ -2,13 +2,9 @@ package com.project.pagu.modules.member.service;
 
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.model.OauthMemberSaveDto;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.project.pagu.modules.member.model.OauthDto;
+import com.project.pagu.modules.member.model.ProfileDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 
 /**
  * Created by IntelliJ IDEA
@@ -17,13 +13,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
  */
 public interface MemberSaveService {
 
-    MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
+    MemberId saveMember(SignUpDto signUpDto);
 
-    Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
+    Member saveMember(OauthDto OAuthDto);
 
     Member save(Member member);
 
-    void update(Member findMember, ProfileRequestDto profileRequestDto);
+    void update(Member findMember, ProfileDto profileDto);
 
     void changePassword(MemberId of, String newPassword);
 
