@@ -13,15 +13,14 @@ import com.project.pagu.modules.member.model.SignUpDto;
  */
 public interface MemberSaveService {
 
-    MemberId saveMember(SignUpDto signUpDto);
+    //todo id리턴이 필요할때 변경
+    void saveMember(SignUpDto signUpDto);
 
-    Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
-
-    Member save(Member member);
+    void saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
 
     void update(Member findMember, ProfileDto profileDto);
 
-    void changePassword(MemberId of, String newPassword);
+    void changePassword(MemberId memberId, String newPassword);
 
     void deleteMember(MemberId memberId);
 }

@@ -41,21 +41,14 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
-    public MemberId saveMember(SignUpDto signUpDto) {
-        Member saveMember = memberRepository.save(signUpDto.toEntity());
-        return MemberId.of(saveMember.getEmail(), saveMember.getMemberType());
+    public void saveMember(SignUpDto signUpDto) {
+        memberRepository.save(signUpDto.toEntity());
     }
 
     @Override
     @Transactional
-    public Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
-        return memberRepository.save(OAuthMemberSaveDto.toEntity());
-    }
-
-    @Override
-    @Transactional
-    public Member save(Member member) {
-        return memberRepository.save(member);
+    public void saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
+        memberRepository.save(OAuthMemberSaveDto.toEntity());
     }
 
     @Override
