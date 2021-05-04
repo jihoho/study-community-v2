@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberSaveServiceImpl implements MemberSaveService {
 
     private final MemberRepository memberRepository;
+    private final MemberViewService memberViewService;
     private final FileManager fileManager;
     private final PasswordEncoder passwordEncoder;
 
@@ -53,12 +54,12 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
-    public void update(Member member, ProfileDto profileDto) {
+    public void update(MemberId memberId, ProfileDto profileDto) {
         updateImageFile(profileDto);
-        member.updateProfile(profileDto);
-        memberRepository.save(member);
+        Member findMember = memberViewService.findById(memberId);
+        findMember.updateProfile(profileDto);
 
-        updateAuthentication(member);
+        updateAuthentication(findMember);
     }
 
     private void updateAuthentication(Member member) {

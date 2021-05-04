@@ -1,11 +1,13 @@
 package com.project.pagu.modules.comment.service;
 
+import com.project.pagu.common.exception.AccessDeniedException;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.comment.model.CommentSaveDto;
 import com.project.pagu.modules.comment.repository.CommentRepository;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,10 +29,10 @@ public class CommentSaveServiceImpl implements CommentSaveService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public Long saveComment(Member writer, CommentSaveDto commentSaveDto) {
+    public Long saveComment(MemberId memberId, CommentSaveDto commentSaveDto) {
 
         // MemberNotFoundException, BoardNotFoundException 추후 추가
-        Member findMember = memberRepository.findById(writer.getMemberId())
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(IllegalArgumentException::new);
         Board board = boardRepository.findById(commentSaveDto.getBoardId())
                 .orElseThrow(IllegalArgumentException::new);
@@ -47,20 +49,23 @@ public class CommentSaveServiceImpl implements CommentSaveService {
     }
 
     @Transactional
-    public void updateComment(Member writer, CommentSaveDto commentSaveDto) {
+    public void updateComment(MemberId memberId, CommentSaveDto commentSaveDto) {
         Comment findComment = commentRepository.findById(commentSaveDto.getCommentId())
                 .orElseThrow(IllegalAccessError::new);
 
-        if (!findComment.getMember().getMemberId().equals(writer.getMemberId())) {
-            throw new IllegalArgumentException("해당 댓글의 주인이 아닙니다.");
+        if (!findComment.getMember().getMemberId().equals(memberId)) {
+            throw new AccessDeniedException("해당 댓글의 주인이 아닙니다.");
         }
         findComment.updateContent(commentSaveDto.getContent());
     }
 
     @Transactional
-    public void deleteComment(long commentId) {
+    public void deleteComment(MemberId memberId, long commentId) {
         Comment targetComment = commentRepository.findById(commentId)
                 .orElseThrow(IllegalArgumentException::new);
+        if(!targetComment.getMember().getMemberId().equals(memberId)){
+            throw new AccessDeniedException("해당 댓글의 주인이 아닙니다.");
+        }
         if (!targetComment.isRemove()) {
             targetComment.remove();
         }

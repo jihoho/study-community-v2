@@ -7,6 +7,7 @@ import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.service.MemberViewService;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.tag.Subject;
@@ -49,13 +50,9 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
     @Override
     @Transactional
-    public Long saveBoardDto(Member member, BoardSaveDto dto) { // Member엔티티 조회
+    public Long saveBoardDto(MemberId memberId, BoardSaveDto dto) { // Member엔티티 조회
 
-        if (member == null) {
-            throw new AccessDeniedException();
-        }
-
-        Member findMember = memberViewService.findById(member.getMemberId());
+        Member findMember = memberViewService.findById(memberId);
         Board board = registerTagToBoard(dto.toEntity(), dto.getSubjects(), dto.getTechStacks());
         board.setMember(findMember);
         Board savedBoard = saveBoard(board);
@@ -68,11 +65,11 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
     @Override
     @Transactional
-    public void update(Member member, Long id, BoardSaveDto dto) {
+    public void update(MemberId memberId, Long id, BoardSaveDto dto) {
 
         Board board = boardViewService.findById(id);
-        if (member == null || !member.getMemberId().equals(board.getMember().getMemberId())) {
-            throw new AccessDeniedException();
+        if (!memberId.equals(board.getMember().getMemberId())) {
+            throw new AccessDeniedException("해당 댓글의 주인이 아닙니다.");
         }
         registerTagToBoard(board, dto.getSubjects(), dto.getTechStacks());
 

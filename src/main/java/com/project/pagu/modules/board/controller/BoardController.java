@@ -54,7 +54,7 @@ public class BoardController {
             return "boards/board-form";
         }
 
-        boardSaveService.saveBoardDto(member, boardSaveDto);
+        boardSaveService.saveBoardDto(member.getMemberId(), boardSaveDto);
         return "redirect:/";
     }
 
@@ -89,7 +89,7 @@ public class BoardController {
             return "boards/board-form";
         }
 
-        boardSaveService.update(member, id, dto);
+        boardSaveService.update(member.getMemberId(), id, dto);
 
         return "redirect:/";
     }

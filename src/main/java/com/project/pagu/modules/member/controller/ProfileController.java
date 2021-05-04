@@ -55,7 +55,7 @@ public class ProfileController {
             return "profile";
         }
 
-        memberSaveService.update(member, profileDto);
+        memberSaveService.update(member.getMemberId(), profileDto);
         return "redirect:/profile";
     }
 

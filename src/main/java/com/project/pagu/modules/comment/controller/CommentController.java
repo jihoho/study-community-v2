@@ -31,21 +31,21 @@ public class CommentController {
      */
     @PostMapping("/comments")
     public String createComment(@CurrentMember Member writer, CommentSaveDto commentSaveDto) {
-        commentSaveService.saveComment(writer, commentSaveDto);
+        commentSaveService.saveComment(writer.getMemberId(), commentSaveDto);
 
         return "redirect:/boards/" + commentSaveDto.getBoardId();
     }
 
     @PostMapping("/comments/update")
     public String updateComment(@CurrentMember Member writer, CommentSaveDto commentSaveDto) {
-        commentSaveService.updateComment(writer, commentSaveDto);
+        commentSaveService.updateComment(writer.getMemberId(), commentSaveDto);
         return "redirect:/boards/" + commentSaveDto.getBoardId();
     }
 
     @DeleteMapping("/comments/{id}")
     @ResponseBody
-    public ResponseEntity deleteComment(@PathVariable Long id) {
-        commentSaveService.deleteComment(id);
+    public ResponseEntity deleteComment(@CurrentMember Member member, @PathVariable Long id) {
+        commentSaveService.deleteComment(member.getMemberId(),id);
         return new ResponseEntity(HttpStatus.OK);
     }
 

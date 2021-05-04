@@ -119,7 +119,7 @@ class BoardControllerTest {
         //given
         Member member = memberRepository.save(givenMember(Role.USER));
         BoardSaveDto boardDto = givenBoardDto();
-        Long id = boardSaveService.saveBoardDto(member, boardDto);
+        Long id = boardSaveService.saveBoardDto(member.getMemberId(), boardDto);
 
         mockMvc.perform(get("/boards/{id}", id))
                 .andExpect(status().isOk())
@@ -145,7 +145,7 @@ class BoardControllerTest {
     @DisplayName("게시물 수정페이지로 이동한다.")
     void get_board_update_form() throws Exception {
         Member member = memberRepository.save(givenMember(Role.USER));
-        Long boardId= boardSaveService.saveBoardDto(member,givenBoardDto());
+        Long boardId= boardSaveService.saveBoardDto(member.getMemberId(),givenBoardDto());
         mockMvc.perform(get("/boards/{id}/update", boardId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boards/board-update"))

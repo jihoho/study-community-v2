@@ -2,6 +2,7 @@ package com.project.pagu.modules.comment.service;
 
 import com.project.pagu.modules.comment.model.CommentSaveDto;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 
 /**
  * Created by IntelliJ IDEA
@@ -11,11 +12,11 @@ import com.project.pagu.modules.member.domain.Member;
 public interface CommentSaveService {
 
     //todo : memberId로
-    Long saveComment(Member writer, CommentSaveDto commentSaveDto);
+    Long saveComment(MemberId memberId, CommentSaveDto commentSaveDto);
 
     //todo : memberId로
-    void updateComment(Member writer, CommentSaveDto commentSaveDto);
+    void updateComment(MemberId memberId, CommentSaveDto commentSaveDto);
 
-    void deleteComment(long commentId);
+    void deleteComment(MemberId memberId,long commentId);
 
 }

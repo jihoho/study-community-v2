@@ -96,7 +96,7 @@ class BoardServiceTest {
         given(boardRepository.save(any())).willReturn(givenBoard(1L));
         given(fileManager.uploadBoardImageDtos(any(),any())).willReturn(null);
 
-        boardSaveService.saveBoardDto(member, givenBoardDto());
+        boardSaveService.saveBoardDto(member.getMemberId(), givenBoardDto());
 
         verify(boardRepository, times(1)).save(argumentCaptor.capture());
 

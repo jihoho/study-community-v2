@@ -1,6 +1,5 @@
 package com.project.pagu.modules.member.service;
 
-import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.model.ProfileDto;
@@ -18,7 +17,7 @@ public interface MemberSaveService {
 
     void saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
 
-    void update(Member findMember, ProfileDto profileDto);
+    void update(MemberId memberId, ProfileDto profileDto);
 
     void changePassword(MemberId memberId, String newPassword);
 
