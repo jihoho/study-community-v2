@@ -4,12 +4,16 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by IntelliJ IDEA
  * User: hojun
  * Date: 2021-04-27 Time: 오전 12:00
  */
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtil {
 
     public static String createFileName() {
