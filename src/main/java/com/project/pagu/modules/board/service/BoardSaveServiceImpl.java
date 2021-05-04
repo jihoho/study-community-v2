@@ -44,18 +44,12 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
     @Override
     @Transactional
-    public Board saveBoard(Board board) {
-        return boardRepository.save(board);
-    }
-
-    @Override
-    @Transactional
     public Long saveBoardDto(MemberId memberId, BoardSaveDto dto) { // Member엔티티 조회
 
         Member findMember = memberViewService.findById(memberId);
         Board board = registerTagToBoard(dto.toEntity(), dto.getSubjects(), dto.getTechStacks());
         board.setMember(findMember);
-        Board savedBoard = saveBoard(board);
+        Board savedBoard = boardRepository.save(board);
 
         List<BoardImage> boardImageList = fileManager.uploadBoardImageDtos(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);

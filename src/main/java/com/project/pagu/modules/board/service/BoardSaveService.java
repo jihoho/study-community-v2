@@ -1,6 +1,5 @@
 package com.project.pagu.modules.board.service;
 
-import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.member.domain.MemberId;
 
@@ -10,8 +9,6 @@ import com.project.pagu.modules.member.domain.MemberId;
  * Date: 2021-05-04 Time: 오후 12:31
  */
 public interface BoardSaveService {
-
-    Board saveBoard(Board board);
 
     Long saveBoardDto(MemberId memberId, BoardSaveDto dto);
 
