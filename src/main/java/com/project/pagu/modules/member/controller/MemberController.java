@@ -31,7 +31,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes("memberSaveRequestDto")
+@SessionAttributes("signUpDto")
 public class MemberController {
 
     private final MemberSaveService memberSaveService;
@@ -39,7 +39,7 @@ public class MemberController {
     private final SignUpManager signUpManager;
     private final SignUpValidation signUpValidation;
 
-    @InitBinder("memberSaveRequestDto")
+    @InitBinder("signUpDto")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(signUpValidation);
     }

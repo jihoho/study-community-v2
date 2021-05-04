@@ -1,6 +1,7 @@
 package com.project.pagu.common.validation;
 
-import com.project.pagu.modules.member.model.OauthDto;
+import com.project.pagu.modules.member.model.OauthMemberSaveDto;
+import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.modules.member.service.MemberViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +22,13 @@ public class OauthSignUpValidation implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(OauthDto.class);
+        return clazz.isAssignableFrom(OauthMemberSaveDto.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        OauthDto oAuthDto = (OauthDto) target;
-        isExistedNickname(oAuthDto.getNickname(), errors);
+        OauthMemberSaveDto oAuthMemberSaveDto = (OauthMemberSaveDto) target;
+        isExistedNickname(oAuthMemberSaveDto.getNickname(), errors);
     }
 
     private void isExistedNickname(String nickname, Errors errors) {

@@ -76,7 +76,7 @@ class ProfileControllerTest {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"))
-                .andExpect(model().attributeExists("profileRequestDto"))
+                .andExpect(model().attributeExists("profileDto"))
                 .andDo(print());
     }
 

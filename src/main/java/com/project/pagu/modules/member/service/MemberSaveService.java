@@ -2,7 +2,7 @@ package com.project.pagu.modules.member.service;
 
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.model.OauthDto;
+import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.model.SignUpDto;
 
@@ -15,7 +15,7 @@ public interface MemberSaveService {
 
     MemberId saveMember(SignUpDto signUpDto);
 
-    Member saveMember(OauthDto OAuthDto);
+    Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
 
     Member save(Member member);
 

@@ -3,7 +3,7 @@ package com.project.pagu.modules.board.controller;
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.modules.board.service.BoardService;
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.model.OauthDto;
+import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.OauthSignUpValidation;
 import javax.validation.Valid;
@@ -52,21 +52,21 @@ public class MainController {
 
     @GetMapping("/sign-up-google")
     public String signUpGoogle(Model model) {
-        model.addAttribute(new OauthDto());
+        model.addAttribute(new OauthMemberSaveDto());
         return "sign-up-google";
     }
 
     @PostMapping("/sign-up-google")
     public String submitSignUpGoogle(@CurrentMember Member member,
-            @Valid OauthDto oAuthDto,
+            @Valid OauthMemberSaveDto oAuthMemberSaveDto,
             BindingResult result) {
         if (result.hasErrors()) {
             return "sign-up-google";
         }
 
-        oAuthDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
+        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
 
-        memberSaveService.saveMember(oAuthDto);
+        memberSaveService.saveMember(oAuthMemberSaveDto);
         return "redirect:/";
     }
 

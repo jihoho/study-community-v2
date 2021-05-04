@@ -113,10 +113,10 @@ public class MemberViewServiceTest {
 
 
     @Test
-    @DisplayName("Member엔티티 profileRequestDto 변환 테스트")
-    void  convert_member_to_profiledto() throws Exception{
+    @DisplayName("Member엔티티 profileDto 변환 테스트")
+    void  convert_member_to_profile_dto() throws Exception {
         // given
-        Member targetMember=Member.builder()
+        Member targetMember = Member.builder()
                 .email("email@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("nick")
@@ -129,7 +129,7 @@ public class MemberViewServiceTest {
                 .role(Role.GUEST)
                 .build();
 
-        ProfileDto expectedDto= ProfileDto.builder()
+        ProfileDto expectedDto = ProfileDto.builder()
                 .email("email@email.com")
                 .memberType(MemberType.NORMAL.getKey())
                 .nickname("nick")
@@ -140,7 +140,7 @@ public class MemberViewServiceTest {
                 .position("웹 백엔드")
                 .build();
 
-        given(memberRepository.findById(any())).willReturn(Optional.of(targetMember));
+        given(memberRepository.findByNickname(any())).willReturn(Optional.of(targetMember));
 
         // when
         ProfileDto resultDto = memberViewService.convertToProfileViewDtoBy("nick");

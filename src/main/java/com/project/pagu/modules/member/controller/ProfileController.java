@@ -36,7 +36,7 @@ public class ProfileController {
     private final ProfileValidation profileValidation;
     private final FileManager fileManager;
 
-    @InitBinder("profileRequestDto")
+    @InitBinder("profileDto")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(profileValidation);
     }

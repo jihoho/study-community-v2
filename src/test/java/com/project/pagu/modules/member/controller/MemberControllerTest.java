@@ -130,7 +130,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "email",
                         "UniqueEmail"))
                 .andExpect(content().string(containsString("이미 존재하는 이메일입니다.")))
@@ -152,7 +152,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "nickname",
                         "UniqueNickname"))
                 .andExpect(content().string(containsString("이미 존재하는 닉네임입니다.")))
@@ -171,7 +171,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "nickname",
                         "Pattern"))
                 .andExpect(view().name("sign-up"));
@@ -190,7 +190,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "password",
                         "Pattern"))
                 .andExpect(view().name("sign-up"));
@@ -208,7 +208,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "passwordCheck",
                         "NotEqualsPassword"))
                 .andExpect(content().string(containsString("비밀번호가 다릅니다.")))
@@ -253,7 +253,7 @@ class MemberControllerTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(
-                        "memberSaveRequestDto",
+                        "signUpDto",
                         "authKeyInput",
                         "NotEqualsAuthKeyInput"))
                 .andExpect(view().name("email-check"));
