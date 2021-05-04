@@ -2,11 +2,10 @@ package com.project.pagu.modules.board.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
-import com.project.pagu.modules.board.model.BoardSaveRequestDto;
+import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.WriterDto;
-import com.project.pagu.modules.board.service.BoardService;
-import com.project.pagu.modules.comment.model.CommentSaveDto;
-import com.project.pagu.modules.comment.model.CommentUpdateDto;
+import com.project.pagu.modules.board.service.BoardSaveService;
+import com.project.pagu.modules.board.service.BoardViewService;
 import com.project.pagu.modules.member.domain.Member;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -32,7 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardService boardService;
+    private final BoardSaveService boardSaveService;
+    private final BoardViewService boardViewService;
     private final FileManager fileManager;
 
     @GetMapping("/boards")
@@ -40,33 +40,33 @@ public class BoardController {
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
             Model model) {
 
-        model.addAttribute("boardList", boardService.getPagedBoardList(pageable));
+        model.addAttribute("boardList", boardViewService.getPagedBoardList(pageable));
         return "boards/board-list";
 
     }
 
     @PostMapping("/boards")
     public String createBoard(@CurrentMember Member member,
-            @Valid BoardSaveRequestDto boardSaveRequestDto,
+            @Valid BoardSaveDto boardSaveDto,
             BindingResult result) {
 
         if (result.hasErrors()) {
             return "boards/board-form";
         }
 
-        boardService.saveBoardDto(member, boardSaveRequestDto);
+        boardSaveService.saveBoardDto(member, boardSaveDto);
         return "redirect:/";
     }
 
     @GetMapping("/boards/board-form")
-    public String boardsFrom(Model model, BoardSaveRequestDto boardSaveRequestDto) {
-        model.addAttribute(boardSaveRequestDto);
+    public String boardsFrom(Model model, BoardSaveDto boardSaveDto) {
+        model.addAttribute(boardSaveDto);
         return "boards/board-form";
     }
 
     @GetMapping("/boards/{id}")
     public String getBoard(@CurrentMember Member member, @PathVariable Long id, Model model) {
-        model.addAttribute("board", boardService.getBoardDetailDto(id));
+        model.addAttribute("board", boardViewService.getBoardDetailDto(id));
 
         if (member != null) {
             model.addAttribute("member", WriterDto.createWriterDto(member));
@@ -77,19 +77,19 @@ public class BoardController {
 
     @GetMapping("/boards/{id}/update")
     public String getBoardForUpdate(@PathVariable Long id, Model model) {
-        model.addAttribute("board", boardService.getBoardSaveDto(id));
+        model.addAttribute("board", boardViewService.getBoardSaveDto(id));
         return "boards/board-update";
     }
 
     @PostMapping("/boards/{id}/update")
-    public String update(@CurrentMember Member member, @PathVariable Long id, @Valid BoardSaveRequestDto dto,
+    public String update(@CurrentMember Member member, @PathVariable Long id, @Valid BoardSaveDto dto,
             BindingResult result) {
 
         if (result.hasErrors()) {
             return "boards/board-form";
         }
 
-        boardService.update(member, id, dto);
+        boardSaveService.update(member, id, dto);
 
         return "redirect:/";
     }
@@ -105,7 +105,7 @@ public class BoardController {
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
             Model model) {
 
-        model.addAttribute("boardList", boardService.getSearchBoards(keyword, pageable));
+        model.addAttribute("boardList", boardViewService.getSearchBoards(keyword, pageable));
         model.addAttribute("keyword", keyword);
         return "boards/board-list";
     }

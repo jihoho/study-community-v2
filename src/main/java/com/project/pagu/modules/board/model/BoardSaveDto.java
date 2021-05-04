@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @ToString
-public class BoardSaveRequestDto {
+public class BoardSaveDto {
 
     private Long id;
 
@@ -87,11 +87,11 @@ public class BoardSaveRequestDto {
                 .build();
     }
 
-    public List<BoardImageDto> toBoardImageDtoList() {
-        List<BoardImageDto> boardImageDtos = new ArrayList<>();
+    public List<BoardImageSaveDto> toBoardImageDtoList() {
+        List<BoardImageSaveDto> boardImageSaveDtos = new ArrayList<>();
         for (MultipartFile multipartFile : fileList) {
-            boardImageDtos.add(new BoardImageDto(multipartFile));
+            boardImageSaveDtos.add(new BoardImageSaveDto(multipartFile));
         }
-        return boardImageDtos;
+        return boardImageSaveDtos;
     }
 }

@@ -14,14 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class BoardImageDto {
+public class BoardImageSaveDto {
 
     private Long boardId;
     private String filename;
     private MultipartFile multipartFile;
 
     @Builder
-    public BoardImageDto(MultipartFile multipartFile) {
+    public BoardImageSaveDto(MultipartFile multipartFile) {
         this.multipartFile = multipartFile;
     }
 

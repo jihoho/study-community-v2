@@ -1,7 +1,7 @@
 package com.project.pagu.modules.board.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
-import com.project.pagu.modules.board.service.BoardService;
+import com.project.pagu.modules.board.service.BoardViewService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.model.OauthMemberSaveDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
@@ -37,7 +37,7 @@ public class MainController {
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final MemberSaveService memberSaveService;
     private final OauthSignUpValidation oauthSignUpValidation;
-    private final BoardService boardService;
+    private final BoardViewService boardViewService;
 
     @InitBinder("oauthMemberSaveDto")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -46,7 +46,7 @@ public class MainController {
 
     @GetMapping("/")
     public String mainPage(Model model) {
-        model.addAttribute("boardList",boardService.getLatestBoard(10));
+        model.addAttribute("boardList", boardViewService.getLatestBoard(10));
         return "main-body";
     }
 

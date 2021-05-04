@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BoardPageDto {
+public class PagedBoardViewDto {
 
     private Long id;
 
@@ -36,17 +36,17 @@ public class BoardPageDto {
 
     private String status;
 
-    public static BoardPageDto creatBoardPageDto(Board board) {
+    public static PagedBoardViewDto creatBoardPageDto(Board board) {
 
-        BoardPageDto boardPageDto = BoardPageDto.builder()
+        PagedBoardViewDto pagedBoardViewDto = PagedBoardViewDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .place(board.getPlace())
                 .writerDto(WriterDto.createWriterDto(board.getMember()))
                 .modifiedDate(board.getModifiedDate())
                 .status(board.getStatus().getStatusName()).build();
-        boardPageDto.addTags(board.getBoardSubjects());
-        return boardPageDto;
+        pagedBoardViewDto.addTags(board.getBoardSubjects());
+        return pagedBoardViewDto;
 
     }
 

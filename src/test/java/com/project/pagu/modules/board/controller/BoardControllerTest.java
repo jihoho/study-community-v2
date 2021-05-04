@@ -9,17 +9,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.project.pagu.modules.board.model.BoardSaveRequestDto;
+import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
-import com.project.pagu.modules.board.service.BoardService;
+import com.project.pagu.modules.board.service.BoardSaveService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.service.MemberSaveService;
-import com.project.pagu.modules.member.service.MemberViewService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +46,7 @@ class BoardControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BoardService boardService;
+    private BoardSaveService boardSaveService;
 
     @Autowired
     private MemberSaveService memberSaveService;
@@ -91,7 +90,7 @@ class BoardControllerTest {
     void boards_form() throws Exception {
         mockMvc.perform(get("/boards/board-form"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("boardSaveRequestDto"))
+                .andExpect(model().attributeExists("boardSaveDto"))
                 .andExpect(view().name("boards/board-form"))
                 .andExpect(content().string(containsString("스터디 모집 공고 등록")))
                 .andExpect(content().string(containsString("제목")))
@@ -119,8 +118,8 @@ class BoardControllerTest {
     void get_board() throws Exception {
         //given
         Member member = memberRepository.save(givenMember(Role.USER));
-        BoardSaveRequestDto boardDto = givenBoardDto();
-        Long id = boardService.saveBoardDto(member, boardDto);
+        BoardSaveDto boardDto = givenBoardDto();
+        Long id = boardSaveService.saveBoardDto(member, boardDto);
 
         mockMvc.perform(get("/boards/{id}", id))
                 .andExpect(status().isOk())
@@ -146,7 +145,7 @@ class BoardControllerTest {
     @DisplayName("게시물 수정페이지로 이동한다.")
     void get_board_update_form() throws Exception {
         Member member = memberRepository.save(givenMember(Role.USER));
-        Long boardId=boardService.saveBoardDto(member,givenBoardDto());
+        Long boardId= boardSaveService.saveBoardDto(member,givenBoardDto());
         mockMvc.perform(get("/boards/{id}/update", boardId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("boards/board-update"))
@@ -176,13 +175,13 @@ class BoardControllerTest {
                 .build();
     }
 
-    private BoardSaveRequestDto givenBoardDto() {
+    private BoardSaveDto givenBoardDto() {
         BoardScheduleDto scheduleDto = new BoardScheduleDto();
         scheduleDto.setDayKey(0);
         scheduleDto.setStartTime(LocalTime.of(10, 30));
         scheduleDto.setEndTime(LocalTime.of(13, 30));
 
-        BoardSaveRequestDto dto = new BoardSaveRequestDto();
+        BoardSaveDto dto = new BoardSaveDto();
         dto.setTitle("스프링 스터디 모집합니다.");
         dto.setSubjects("Backend");
         dto.setTechStacks("Java");

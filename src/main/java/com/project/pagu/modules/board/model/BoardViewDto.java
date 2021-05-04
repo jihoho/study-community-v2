@@ -28,7 +28,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class BoardDetailDto {
+public class BoardViewDto {
 
     private Long id;
 
@@ -68,9 +68,9 @@ public class BoardDetailDto {
 
     private List<CommentResponseDto> commentList;
 
-    public static BoardDetailDto createBoardDetailDto(Board board) {
+    public static BoardViewDto createBoardDetailDto(Board board) {
 
-        BoardDetailDto boardDetailDto = BoardDetailDto.builder()
+        BoardViewDto boardViewDto = BoardViewDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .goal(board.getGoal())
@@ -84,11 +84,11 @@ public class BoardDetailDto {
                 .modifiedDate(board.getModifiedDate())
                 .writer(WriterDto.createWriterDto(board.getMember()))
                 .build();
-        boardDetailDto.addImageUrls(board.getId(), board.getBoardImages());
-        boardDetailDto.addSubjects(board.getBoardSubjects());
-        boardDetailDto.addTechStacks(board.getBoardTechStacks());
-        boardDetailDto.addSchedules(board.getBoardSchedules());
-        return boardDetailDto;
+        boardViewDto.addImageUrls(board.getId(), board.getBoardImages());
+        boardViewDto.addSubjects(board.getBoardSubjects());
+        boardViewDto.addTechStacks(board.getBoardTechStacks());
+        boardViewDto.addSchedules(board.getBoardSchedules());
+        return boardViewDto;
 
     }
 
