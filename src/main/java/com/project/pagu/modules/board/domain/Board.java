@@ -119,6 +119,9 @@ public class Board extends BaseTimeEntity {
     }
 
     public void addBoardImageList(List<BoardImage> boardImageList) {
+        if (boardImageList == null) {
+            return;
+        }
         for (BoardImage boardImage : boardImageList) {
             addBoardImage(boardImage);
         }
@@ -148,12 +151,12 @@ public class Board extends BaseTimeEntity {
     }
 
     public String subjectToString() {
-        return boardSubjects.stream().map(s->s.getSubject().getName())
+        return boardSubjects.stream().map(s -> s.getSubject().getName())
                 .collect(Collectors.joining(","));
     }
 
     public String techStackToString() {
-        return boardTechStacks.stream().map(s->s.getTechStack().getName())
+        return boardTechStacks.stream().map(s -> s.getTechStack().getName())
                 .collect(Collectors.joining(","));
     }
 }

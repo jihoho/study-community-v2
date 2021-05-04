@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.model.BoardViewDto;
@@ -61,7 +62,7 @@ class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private MemberSaveService memberSaveService;
+    private FileManager fileManager;
 
     @Mock
     private MemberViewService memberViewService;
@@ -88,7 +89,8 @@ class BoardServiceTest {
         given(memberViewService.findById(any())).willReturn(member);
         given(subjectService.getOrSave(any())).willReturn(Subject.of("Spring"));
         given(techStackService.getOrSave(any())).willReturn(TechStack.of("Spring"));
-        given(boardRepository.save(any())).willReturn(givenBoardDto().toEntity());
+        given(boardRepository.save(any())).willReturn(givenBoard(1L));
+        given(fileManager.uploadBoardImageDtos(any(),any())).willReturn(null);
 
         boardSaveService.saveBoardDto(member, givenBoardDto());
 

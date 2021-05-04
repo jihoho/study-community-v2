@@ -2,13 +2,9 @@ package com.project.pagu.modules.board.service;
 
 import com.project.pagu.common.exception.AccessDeniedException;
 import com.project.pagu.common.manager.FileManager;
-import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
-import com.project.pagu.modules.board.domain.BoardSchedule;
-import com.project.pagu.modules.board.model.BoardImageSaveDto;
 import com.project.pagu.modules.board.model.BoardSaveDto;
-import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.service.MemberViewService;
@@ -18,7 +14,6 @@ import com.project.pagu.modules.tag.SubjectService;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import com.project.pagu.modules.teckstack.TechStack;
 import com.project.pagu.modules.teckstack.TechStackService;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +60,7 @@ public class BoardSaveServiceImpl implements BoardSaveService {
         board.setMember(findMember);
         Board savedBoard = saveBoard(board);
 
-        List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
+        List<BoardImage> boardImageList = fileManager.uploadBoardImageDtos(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
 
         return savedBoard.getId();
@@ -119,27 +114,4 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     }
 
 
-    private List<BoardImage> uploadBoardImageDto(Long boardId,
-            BoardSaveDto boardSaveDto) {
-
-        List<BoardImage> boardImageList = new ArrayList<>();
-        List<BoardImageSaveDto> boardImageSaveDtoList = boardSaveDto.toBoardImageDtoList();
-        for (BoardImageSaveDto boardImageSaveDto : boardImageSaveDtoList) {
-            boardImageSaveDto.setBoardId(boardId);
-            uploadImage(boardImageSaveDto);
-            boardImageList.add(boardImageSaveDto.toEntity());
-        }
-        return boardImageList;
-    }
-
-    private void uploadImage(BoardImageSaveDto boardImageSaveDto) {
-
-        if (boardImageSaveDto.getMultipartFile().getSize() != 0) {
-            String filename = FileUtil.createFileName();
-            boardImageSaveDto.setFilename(filename);
-            fileManager.uploadBoardImage(boardImageSaveDto.getMultipartFile(), filename,
-                    String.valueOf(boardImageSaveDto.getBoardId()));
-        }
-
-    }
 }
