@@ -16,7 +16,7 @@
             </span>
 </div>
 <div id="board-form-body">
-    <form id="board-create-form" th:action="@{/boards}" method="post" th:object="${boardSaveRequestDto}" enctype="multipart/form-data">
+    <form id="board-create-form" th:action="@{/boards}" method="post" th:object="${boardSaveDto}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title-input">제목</label>
             <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="제목 입력해주세요." required />
@@ -118,7 +118,7 @@
             <button id="board-create-butt" type="button" class="btn btn-primary btn-lg">공고 등록</button>
         </div>
 
-        <div class="hidden-schedule-list" th:each="boardSchedule:${boardSaveRequestDto.boardSchedules}">
+        <div class="hidden-schedule-list" th:each="boardSchedule:${boardSaveDto.boardSchedules}">
             <input class="hidden-schedule-daykey" type="hidden" th:value="${boardSchedule.dayKey}"/>
             <input class="hidden-schedule-starttime" type="hidden" th:value="${boardSchedule.startTime}"/>
             <input class="hidden-schedule-endtime" type="hidden" th:value="${boardSchedule.endTime}"/>
