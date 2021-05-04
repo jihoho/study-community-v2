@@ -5,7 +5,7 @@ import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.model.SignUpDto;
-import com.project.pagu.modules.member.model.PasswordDto;
+import com.project.pagu.modules.member.model.PasswordSaveDto;
 import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.ProfileValidation;
@@ -116,12 +116,12 @@ public class ProfileController {
 
     @GetMapping("/members/change-password")
     public String changePassword(Model model) {
-        model.addAttribute(new PasswordDto());
+        model.addAttribute(new PasswordSaveDto());
         return "members/change-password";
     }
 
     @PostMapping("/members/change-password")
-    public String submitPassword(@CurrentMember Member member, @Valid PasswordDto dto, BindingResult result) {
+    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto, BindingResult result) {
         profileValidation.isNotEqualToPassword(dto.getPassword(), dto.getPasswordCheck(), result);
 
         if (result.hasErrors()) {
