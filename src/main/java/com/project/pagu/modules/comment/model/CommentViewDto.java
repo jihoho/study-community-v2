@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class CommentResponseDto {
+public class CommentViewDto {
 
     private Long boardId;
 
@@ -42,12 +42,11 @@ public class CommentResponseDto {
     private LocalDateTime modifiedDate;
 
     @Builder.Default
-    private List<CommentResponseDto> subComment = new ArrayList<>();
+    private List<CommentViewDto> subComment = new ArrayList<>();
 
-
-    public static CommentResponseDto createCommentResponseDto(Comment comment) {
+    public static CommentViewDto createCommentResponseDto(Comment comment) {
         Member member = comment.getMember();
-        return CommentResponseDto.builder()
+        return CommentViewDto.builder()
                 .boardId(comment.getBoard().getId())
                 .commentId(comment.getId())
                 .email(member.getEmail())

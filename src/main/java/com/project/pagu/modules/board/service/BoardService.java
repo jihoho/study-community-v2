@@ -12,7 +12,8 @@ import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.model.LatestBoardDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.common.manager.FileManager;
-import com.project.pagu.modules.comment.service.CommentService;
+import com.project.pagu.modules.comment.service.CommentSaveService;
+import com.project.pagu.modules.comment.service.CommentViewService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.modules.member.service.MemberViewService;
@@ -55,7 +56,8 @@ public class BoardService {
     private final MemberViewService memberViewService;
     private final SubjectService subjectService;
     private final TechStackService techStackService;
-    private final CommentService commentService;
+    private final CommentSaveService commentSaveService;
+    private final CommentViewService commentViewService;
 
     @Transactional
     public Long saveBoardDto(Member member, BoardSaveRequestDto dto) {
@@ -164,7 +166,7 @@ public class BoardService {
         com.project.pagu.modules.board.domain.Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException());
         BoardDetailDto boardDetailDto=BoardDetailDto.createBoardDetailDto(board);
-        boardDetailDto.setCommentList(commentService.findCommentsByBoardId(board.getId()));
+        boardDetailDto.setCommentList(commentViewService.findCommentsByBoardId(board.getId()));
         return boardDetailDto;
 
     }

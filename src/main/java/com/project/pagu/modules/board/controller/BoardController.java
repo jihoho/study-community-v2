@@ -5,8 +5,6 @@ import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.board.model.BoardSaveRequestDto;
 import com.project.pagu.modules.board.model.WriterDto;
 import com.project.pagu.modules.board.service.BoardService;
-import com.project.pagu.modules.comment.model.CommentSaveDto;
-import com.project.pagu.modules.comment.model.CommentUpdateDto;
 import com.project.pagu.modules.member.domain.Member;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
