@@ -6,7 +6,7 @@ import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 
 import com.project.pagu.modules.member.exception.MemberNotFoundException;
-import com.project.pagu.modules.member.model.OauthMemberSaveDto;
+import com.project.pagu.modules.member.model.OauthSaveDto;
 import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
@@ -48,8 +48,8 @@ public class MemberSaveServiceImpl implements MemberSaveService {
 
     @Override
     @Transactional
-    public void saveMember(OauthMemberSaveDto OAuthMemberSaveDto) {
-        memberRepository.save(OAuthMemberSaveDto.toEntity());
+    public void saveMember(OauthSaveDto OAuthSaveDto) {
+        memberRepository.save(OAuthSaveDto.toEntity());
     }
 
     @Override
