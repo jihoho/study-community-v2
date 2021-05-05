@@ -102,14 +102,13 @@ public class BoardSaveDto {
                 .termsEndAt(this.termsEndAt)
                 .etc(this.etc)
                 .status(StudyStatus.READY)
-                .boardSchedules(createBoardSchedules())
-                //                .subjects(this.subjects)
-                //                .techStacks(this.techStacks)
+//                .boardSchedules()
                 .build();
     }
 
-    private List<BoardSchedule> createBoardSchedules() {
+    public List<BoardSchedule> createBoardSchedules() {
         return this.boardSchedules.stream().map(s -> s.toEntity()).collect(Collectors.toList());
+
     }
 
     public List<BoardImageSaveDto> toBoardImageDtoList() {

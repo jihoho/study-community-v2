@@ -48,6 +48,7 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
         Member findMember = memberViewService.findById(memberId);
         Board board = registerTagToBoard(dto.toEntity(), dto.getSubjects(), dto.getTechStacks());
+        board.addBoardScheduleList(dto.createBoardSchedules());
         board.setMember(findMember);
         Board savedBoard = boardRepository.save(board);
 
