@@ -5,7 +5,7 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
-import com.project.pagu.modules.comment.model.CommentResponseDto;
+import com.project.pagu.modules.comment.model.CommentViewDto;
 import com.project.pagu.modules.tag.BoardSubject;
 import com.project.pagu.modules.teckstack.BoardTechStack;
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class BoardDetailDto {
+public class BoardViewDto {
 
     private Long id;
 
@@ -66,11 +66,11 @@ public class BoardDetailDto {
 
     private WriterDto writer;
 
-    private List<CommentResponseDto> commentList;
+    private List<CommentViewDto> commentList;
 
-    public static BoardDetailDto createBoardDetailDto(Board board) {
+    public static BoardViewDto createBoardViewDto(Board board) {
 
-        BoardDetailDto boardDetailDto = BoardDetailDto.builder()
+        BoardViewDto boardViewDto = BoardViewDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .goal(board.getGoal())
@@ -84,11 +84,11 @@ public class BoardDetailDto {
                 .modifiedDate(board.getModifiedDate())
                 .writer(WriterDto.createWriterDto(board.getMember()))
                 .build();
-        boardDetailDto.addImageUrls(board.getId(), board.getBoardImages());
-        boardDetailDto.addSubjects(board.getBoardSubjects());
-        boardDetailDto.addTechStacks(board.getBoardTechStacks());
-        boardDetailDto.addSchedules(board.getBoardSchedules());
-        return boardDetailDto;
+        boardViewDto.addImageUrls(board.getId(), board.getBoardImages());
+        boardViewDto.addSubjects(board.getBoardSubjects());
+        boardViewDto.addTechStacks(board.getBoardTechStacks());
+        boardViewDto.addSchedules(board.getBoardSchedules());
+        return boardViewDto;
 
     }
 

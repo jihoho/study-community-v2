@@ -1,6 +1,6 @@
 package com.project.pagu.common.manager;
 
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 
 /**
  * Created by IntelliJ IDEA
@@ -11,7 +11,7 @@ public interface SignUpManager {
 
     void sendAuthMessage(String email, String authKey);
 
-    void encryptPassword(MemberSaveRequestDto memberSaveRequestDto);
+    void encryptPassword(SignUpDto signUpDto);
 
     String sendNewPassword(String email);
 }

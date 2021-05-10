@@ -12,15 +12,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.domain.MemberType;
-import com.project.pagu.modules.member.domain.UserMember;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
-import com.project.pagu.modules.member.domain.Role;
 
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,12 +43,12 @@ public class MemberSaveServiceTest {
     @Captor
     private ArgumentCaptor<Member> argumentCaptor;
 
-    private MemberSaveRequestDto dto;
+    private SignUpDto dto;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")
     void beforeEach() {
-        dto = new MemberSaveRequestDto();
+        dto = new SignUpDto();
         dto.setEmail("123@email.com");
         dto.setNickname("nick");
         dto.setPassword("abcde1234!");

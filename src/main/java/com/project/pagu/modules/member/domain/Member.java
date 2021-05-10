@@ -4,7 +4,7 @@ import com.project.pagu.common.manager.FileUtil;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.common.domain.BaseTimeEntity;
 import com.project.pagu.modules.comment.domain.Comment;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -102,7 +102,7 @@ public class Member extends BaseTimeEntity {
         return this;
     }
 
-    public void updateProfile(ProfileRequestDto dto) {
+    public void updateProfile(ProfileDto dto) {
         this.nickname = dto.getChangeNickname();
         this.oauthImageUrl = dto.getOauthImageUrl();
         this.imageFilename = dto.getImageFilename();

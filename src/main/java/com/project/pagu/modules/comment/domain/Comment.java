@@ -67,9 +67,9 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default
     private List<Comment> subComment = new ArrayList<>();
 
-    private int depth = 0;
+    private int depth;
 
-    private boolean isRemove = false;
+    private boolean isRemove;
 
     public void remove() {
         if (isRemove == false) {

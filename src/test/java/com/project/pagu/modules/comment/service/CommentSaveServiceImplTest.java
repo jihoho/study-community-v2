@@ -6,10 +6,11 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.domain.Comment;
-import com.project.pagu.modules.comment.model.CommentResponseDto;
+import com.project.pagu.modules.comment.model.CommentViewDto;
 import com.project.pagu.modules.comment.model.CommentSaveDto;
 import com.project.pagu.modules.comment.repository.CommentRepository;
 import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.repository.MemberRepository;
@@ -32,14 +33,16 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
 @DisplayName("Comment 서비스 테스트")
-class CommentServiceTest {
+class CommentSaveServiceImplTest {
 
     /**
      * Repository 모킹으로 수정
      */
 
     @Autowired
-    CommentService commentService;
+    CommentSaveService commentSaveService;
+    @Autowired
+    CommentViewService commentViewService;
     @Autowired
     CommentRepository commentRepository;
     @Autowired
@@ -65,14 +68,14 @@ class CommentServiceTest {
         Board savedBoard = boardRepository.save(givenBoard());
         savedBoard.setMember(member);
 
-        commetTestSave(member, savedBoard);
+        commetTestSave(member.getMemberId(), savedBoard);
 
         // when
         Board findBoard = boardRepository.findById(savedBoard.getId())
                 .orElseThrow(IllegalArgumentException::new);
-        List<CommentResponseDto> result = commentService.findCommentsByBoardId(findBoard.getId());
+        List<CommentViewDto> result = commentViewService.findCommentsByBoardId(findBoard.getId());
 
-        for (CommentResponseDto dto : result) {
+        for (CommentViewDto dto : result) {
             System.out.println(dto);
         }
         // then
@@ -113,30 +116,30 @@ class CommentServiceTest {
      * ****7
      * 8
      */
-    private void commetTestSave(Member writer, Board board) {
-        Long commentId1 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, null, "content1"));
+    private void commetTestSave(MemberId memberId, Board board) {
+        Long commentId1 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, null, "content1"));
 
-        Long commentId2 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId1, "content2"));
+        Long commentId2 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId1, "content2"));
 
-        Long commentId3 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId1, "content3"));
+        Long commentId3 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId1, "content3"));
 
-        Long commentId4 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId2, "content4"));
+        Long commentId4 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId2, "content4"));
 
-        Long commentId5 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId2, "content5"));
+        Long commentId5 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId2, "content5"));
 
-        Long commentId6 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId4, "content6"));
+        Long commentId6 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId4, "content6"));
 
-        Long commentId7 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, commentId3, "content7"));
+        Long commentId7 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, commentId3, "content7"));
 
-        Long commentId8 = commentService
-                .saveComment(writer, givenCommentSaveDto(board, null, "content8"));
+        Long commentId8 = commentSaveService
+                .saveComment(memberId, givenCommentSaveDto(board, null, "content8"));
     }
 
     private CommentSaveDto givenCommentSaveDto(Board board, Long superId,
@@ -158,13 +161,13 @@ class CommentServiceTest {
                 .orElseThrow(IllegalArgumentException::new);
         Board savedBoard = boardRepository.save(givenBoard());
         savedBoard.setMember(writer);
-        Long commentId1 = commentService
-                .saveComment(writer, givenCommentSaveDto(savedBoard, null, "content1"));
-        Long commentId2 = commentService
-                .saveComment(writer, givenCommentSaveDto(savedBoard, commentId1, "content2"));
+        Long commentId1 = commentSaveService
+                .saveComment(writer.getMemberId(), givenCommentSaveDto(savedBoard, null, "content1"));
+        Long commentId2 = commentSaveService
+                .saveComment(writer.getMemberId(), givenCommentSaveDto(savedBoard, commentId1, "content2"));
 
         // when
-        commentService.deleteComment(commentId2);
+        commentSaveService.deleteComment(writer.getMemberId(),commentId2);
 
         // then
         Comment comment2 = commentRepository.findById(commentId2).orElse(null);

@@ -1,9 +1,9 @@
 package com.project.pagu.modules.board.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
-import com.project.pagu.modules.board.service.BoardService;
+import com.project.pagu.modules.board.service.BoardViewService;
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.model.OauthMemberSaveDto;
+import com.project.pagu.modules.member.model.OauthSaveDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.OauthSignUpValidation;
 import javax.validation.Valid;
@@ -37,7 +37,7 @@ public class MainController {
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final MemberSaveService memberSaveService;
     private final OauthSignUpValidation oauthSignUpValidation;
-    private final BoardService boardService;
+    private final BoardViewService boardViewService;
 
     @InitBinder("oauthMemberSaveDto")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -46,27 +46,27 @@ public class MainController {
 
     @GetMapping("/")
     public String mainPage(Model model) {
-        model.addAttribute("boardList",boardService.getLatestBoard(10));
+        model.addAttribute("boardList", boardViewService.getLatestBoard(10));
         return "main-body";
     }
 
     @GetMapping("/sign-up-google")
     public String signUpGoogle(Model model) {
-        model.addAttribute(new OauthMemberSaveDto());
+        model.addAttribute(new OauthSaveDto());
         return "sign-up-google";
     }
 
     @PostMapping("/sign-up-google")
     public String submitSignUpGoogle(@CurrentMember Member member,
-            @Valid OauthMemberSaveDto oAuthMemberSaveDto,
+            @Valid OauthSaveDto oAuthSaveDto,
             BindingResult result) {
         if (result.hasErrors()) {
             return "sign-up-google";
         }
 
-        oAuthMemberSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
+        oAuthSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
 
-        memberSaveService.saveMember(oAuthMemberSaveDto);
+        memberSaveService.saveMember(oAuthSaveDto);
         return "redirect:/";
     }
 

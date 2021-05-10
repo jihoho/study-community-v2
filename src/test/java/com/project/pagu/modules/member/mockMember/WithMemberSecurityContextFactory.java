@@ -3,6 +3,7 @@ package com.project.pagu.modules.member.mockMember;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
+import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.modules.member.service.MemberViewService;
 import java.util.List;
@@ -25,10 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class WithMemberSecurityContextFactory implements WithSecurityContextFactory<WithMember> {
 
     @Autowired
-    private MemberViewService memberViewService;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private MemberSaveService memberSaveService;
+    private MemberViewService memberViewService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,7 +39,7 @@ public class WithMemberSecurityContextFactory implements WithSecurityContextFact
         String nickname = withMember.value();
 
         Member member=givenMember(nickname);
-        memberSaveService.save(member);
+        memberRepository.save(member);
         UserDetails principal = memberViewService.loadUserByUsername(member.getEmail());
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));

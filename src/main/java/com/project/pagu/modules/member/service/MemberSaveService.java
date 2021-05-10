@@ -1,14 +1,9 @@
 package com.project.pagu.modules.member.service;
 
-import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.model.OauthMemberSaveDto;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.project.pagu.modules.member.model.OauthSaveDto;
+import com.project.pagu.modules.member.model.ProfileDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 
 /**
  * Created by IntelliJ IDEA
@@ -17,15 +12,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
  */
 public interface MemberSaveService {
 
-    MemberId saveMember(MemberSaveRequestDto memberSaveRequestDto);
+    //todo id리턴이 필요할때 변경
+    void saveMember(SignUpDto signUpDto);
 
-    Member saveMember(OauthMemberSaveDto OAuthMemberSaveDto);
+    void saveMember(OauthSaveDto OAuthSaveDto);
 
-    Member save(Member member);
+    void update(MemberId memberId, ProfileDto profileDto);
 
-    void update(Member findMember, ProfileRequestDto profileRequestDto);
-
-    void changePassword(MemberId of, String newPassword);
+    void changePassword(MemberId memberId, String newPassword);
 
     void deleteMember(MemberId memberId);
 }

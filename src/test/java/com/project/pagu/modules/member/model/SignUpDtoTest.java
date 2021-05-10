@@ -31,7 +31,7 @@ import org.springframework.validation.Errors;
  */
 @DisplayName("회원 가입 입력 관련 테스트")
 @ExtendWith(MockitoExtension.class)
-public class MemberSaveRequestDtoTest {
+public class SignUpDtoTest {
 
     @Mock
     private MemberSaveService memberSaveService;
@@ -43,7 +43,7 @@ public class MemberSaveRequestDtoTest {
     private SignUpValidation signUpValidation;
     private Errors errors;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    private final MemberSaveRequestDto dto = new MemberSaveRequestDto();
+    private final SignUpDto dto = new SignUpDto();
 
     @BeforeEach
     @DisplayName("정삭적인 입력 초기 세팅")
@@ -63,7 +63,7 @@ public class MemberSaveRequestDtoTest {
     @Test
     void input_success() {
         // when
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<SignUpDto>> violations = validator.validate(dto);
 
         // MemberSaveDto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -81,7 +81,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_email_unique() throws Exception {
         when(memberViewService.existsById(any())).thenReturn(true); // 이메일 중복
 
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<SignUpDto>> violations = validator.validate(dto);
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -100,7 +100,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_nickname_unique() throws Exception {
         when(memberViewService.existsByNickname(any())).thenReturn(true); // 닉네임 중복
 
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<SignUpDto>> violations = validator.validate(dto);
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -119,7 +119,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_password_check() throws Exception {
         dto.setPasswordCheck("abcdef123!");
 
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<SignUpDto>> violations = validator.validate(dto);
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -138,7 +138,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_email_authkey() throws Exception {
         dto.setAuthKeyInput("111111");
 
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<SignUpDto>> violations = validator.validate(dto);
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -157,7 +157,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_nickname_min_length() {
         dto.setNickname("t");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -179,7 +179,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_nickname_max_length() {
         dto.setNickname("tester1234");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -199,7 +199,7 @@ public class MemberSaveRequestDtoTest {
     void input_fail_email() {
         dto.setEmail("test@test");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -219,7 +219,7 @@ public class MemberSaveRequestDtoTest {
         dto.setPassword("1234567");
         dto.setPasswordCheck("1234567");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -240,7 +240,7 @@ public class MemberSaveRequestDtoTest {
         dto.setPassword("123456789012345678901");
         dto.setPasswordCheck("123456789012345678901");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -261,7 +261,7 @@ public class MemberSaveRequestDtoTest {
         dto.setPassword("12345678a");
         dto.setPasswordCheck("12345678a");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -282,7 +282,7 @@ public class MemberSaveRequestDtoTest {
         dto.setPassword("aaaaaaaa!");
         dto.setPasswordCheck("aaaaaaaa!");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -303,7 +303,7 @@ public class MemberSaveRequestDtoTest {
         dto.setPassword("12345678!");
         dto.setPasswordCheck("12345678!");
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -323,7 +323,7 @@ public class MemberSaveRequestDtoTest {
     void invalid_nickname_by_special_word() {
         dto.setNickname("nick*"); // 닉네임에 * 특수문자
 
-        ConstraintViolation<MemberSaveRequestDto> violation = getViolation();
+        ConstraintViolation<SignUpDto> violation = getViolation();
 
         // dto cumstom validation
         signUpValidation.validate(dto, errors);
@@ -339,8 +339,8 @@ public class MemberSaveRequestDtoTest {
         );
     }
 
-    private ConstraintViolation<MemberSaveRequestDto> getViolation() {
-        Set<ConstraintViolation<MemberSaveRequestDto>> violations = validator
+    private ConstraintViolation<SignUpDto> getViolation() {
+        Set<ConstraintViolation<SignUpDto>> violations = validator
                 .validate(dto);
 
         return violations.iterator().next();

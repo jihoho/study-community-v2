@@ -2,7 +2,7 @@ package com.project.pagu.modules.member.service;
 
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -22,9 +22,7 @@ public interface MemberViewService extends UserDetailsService,
 
     boolean existsByNickname(String nickname);
 
-    ProfileRequestDto convertMemberToProfileRequestDto(Member member);
-
-    ProfileRequestDto getBy(String nickname);
+    ProfileDto convertToProfileViewDtoBy(String nickname);
 
     void login(Member member);
 }

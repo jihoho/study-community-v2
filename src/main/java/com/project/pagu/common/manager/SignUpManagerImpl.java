@@ -1,7 +1,6 @@
 package com.project.pagu.common.manager;
 
-import com.project.pagu.common.manager.SignUpManager;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +44,10 @@ public class SignUpManagerImpl implements SignUpManager {
     }
 
     @Override
-    public void encryptPassword(MemberSaveRequestDto memberSaveRequestDto) {
-        String password = memberSaveRequestDto.getPassword();
-        memberSaveRequestDto.setPassword(passwordEncoder.encode(password));
-        memberSaveRequestDto.setPasswordCheck(memberSaveRequestDto.getPassword());
+    public void encryptPassword(SignUpDto signUpDto) {
+        String password = signUpDto.getPassword();
+        signUpDto.setPassword(passwordEncoder.encode(password));
+        signUpDto.setPasswordCheck(signUpDto.getPassword());
     }
 
     @Override

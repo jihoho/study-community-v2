@@ -24,9 +24,11 @@ public class CommentSaveDto {
 
     private Long superCommentId;
 
+    private Long commentId;
+
     private String content;
 
-    public Comment toEnity() {
+    public Comment toEntity() {
         return Comment.builder().content(content).build();
     }
 

@@ -4,9 +4,9 @@ import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.model.PasswordDto;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
+import com.project.pagu.modules.member.model.PasswordSaveDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.validation.ProfileValidation;
 import com.project.pagu.modules.member.service.MemberViewService;
@@ -36,28 +36,26 @@ public class ProfileController {
     private final ProfileValidation profileValidation;
     private final FileManager fileManager;
 
-    @InitBinder("profileRequestDto")
+    @InitBinder("profileDto")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(profileValidation);
     }
 
     @GetMapping("/profile")
     public String profile(@CurrentMember Member member, Model model) {
-        ProfileRequestDto profileRequestDto = memberViewService
-                .convertMemberToProfileRequestDto(member);
-        model.addAttribute(profileRequestDto);
+        model.addAttribute(memberViewService.convertToProfileViewDtoBy(member.getNickname()));
         return "profile";
     }
 
     @PostMapping("/members/update")
-    public String updateMember(@CurrentMember Member member,
-            @Valid ProfileRequestDto profileRequestDto, BindingResult result) {
+    public String updateMember(@CurrentMember Member member, @Valid ProfileDto profileDto,
+            BindingResult result) {
 
         if (result.hasErrors()) {
             return "profile";
         }
 
-        memberSaveService.update(member, profileRequestDto);
+        memberSaveService.update(member.getMemberId(), profileDto);
         return "redirect:/profile";
     }
 
@@ -71,15 +69,16 @@ public class ProfileController {
 
     @GetMapping("/profile/{nickname}")
     public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
-        ProfileRequestDto profileRequestDto = memberViewService.getBy(nickname);
+        ProfileDto profileViewDto = memberViewService.convertToProfileViewDtoBy(nickname);
+
         //자기 자신을 조회하면 프로필 관리로 이동
         MemberId currentMemberId = member.getMemberId();
-        MemberId findMemberId = MemberId.of(profileRequestDto.getEmail(), member.getMemberType());
+        MemberId findMemberId = MemberId.of(profileViewDto.getEmail(), member.getMemberType());
         if (currentMemberId.equals(findMemberId)) {
             return "redirect:/profile";
         }
 
-        model.addAttribute(profileRequestDto);
+        model.addAttribute(profileViewDto);
         return "/profile/detail";
     }
 
@@ -90,14 +89,14 @@ public class ProfileController {
 //            memberService.deleteMember(member);
 //            return "redirect:/members/delete-success";
 //        }
-        model.addAttribute(new MemberSaveRequestDto());
+        model.addAttribute(new SignUpDto());
         model.addAttribute("view", name);
         return "members/password-check";
     }
 
     @PostMapping("/members/password-check/{name}")
     public String checkPassword(@CurrentMember Member member, Model model,
-            @PathVariable String name, MemberSaveRequestDto dto, BindingResult result) {
+            @PathVariable String name, SignUpDto dto, BindingResult result) {
         if (profileValidation.isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
             model.addAttribute("view", name);
             return "members/password-check";
@@ -117,12 +116,12 @@ public class ProfileController {
 
     @GetMapping("/members/change-password")
     public String changePassword(Model model) {
-        model.addAttribute(new PasswordDto());
+        model.addAttribute(new PasswordSaveDto());
         return "members/change-password";
     }
 
     @PostMapping("/members/change-password")
-    public String submitPassword(@CurrentMember Member member, @Valid PasswordDto dto, BindingResult result) {
+    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto, BindingResult result) {
         profileValidation.isNotEqualToPassword(dto.getPassword(), dto.getPasswordCheck(), result);
 
         if (result.hasErrors()) {

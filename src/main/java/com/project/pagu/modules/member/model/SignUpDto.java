@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
-public class MemberSaveRequestDto {
+public class SignUpDto {
 
     @NotBlank
     @Pattern(regexp = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$",

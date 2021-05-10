@@ -7,7 +7,7 @@ import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.OauthMember;
 import com.project.pagu.modules.member.domain.UserMember;
 import com.project.pagu.modules.member.exception.MemberNotFoundException;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class MemberViewServiceImpl implements MemberViewService {
 
     private final MemberRepository memberRepository;
@@ -52,31 +54,11 @@ public class MemberViewServiceImpl implements MemberViewService {
     }
 
     @Override
-    public ProfileRequestDto convertMemberToProfileRequestDto(Member member) {
-        Member findMember = findById(member.getMemberId());
-
-        return ProfileRequestDto.builder()
-                .email(findMember.getEmail())
-                .memberType(findMember.getMemberType().getKey())
-                .nickname(findMember.getNickname())
-                .changeNickname(findMember.getNickname())
-                .imageFilename(findMember.getImageFilename())
-                .oauthImageUrl(findMember.getOauthImageUrl())
-                .profileImageUrl(findMember.getProfileImageUrl())
-                .link(findMember.getLink())
-                .info(findMember.getInfo())
-                .career(findMember.getCareer())
-                .position(findMember.getPostion())
-                .build();
-    }
-
-
-    @Override
-    public ProfileRequestDto getBy(String nickname) {
+    public ProfileDto convertToProfileViewDtoBy(String nickname) {
         Member findMember = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new UsernameNotFoundException(nickname));
+                .orElseThrow(MemberNotFoundException::new);
 
-        return ProfileRequestDto.builder()
+        return ProfileDto.builder()
                 .email(findMember.getEmail())
                 .memberType(findMember.getMemberType().getKey())
                 .nickname(findMember.getNickname())
@@ -90,7 +72,6 @@ public class MemberViewServiceImpl implements MemberViewService {
                 .position(findMember.getPostion())
                 .build();
     }
-
 
     @Override
     public void login(Member member) {

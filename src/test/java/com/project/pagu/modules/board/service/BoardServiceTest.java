@@ -8,13 +8,15 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.StudyStatus;
-import com.project.pagu.modules.board.model.BoardDetailDto;
-import com.project.pagu.modules.board.model.BoardSaveRequestDto;
+import com.project.pagu.modules.board.model.BoardViewDto;
+import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
-import com.project.pagu.modules.comment.service.CommentService;
+import com.project.pagu.modules.comment.service.CommentSaveService;
+import com.project.pagu.modules.comment.service.CommentViewService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
@@ -52,13 +54,16 @@ import org.springframework.data.domain.Sort;
 class BoardServiceTest {
 
     @InjectMocks
-    private BoardService boardService;
+    private BoardSaveServiceImpl boardSaveService;
+
+    @InjectMocks
+    private BoardViewServiceImpl boardViewService;
 
     @Mock
     private BoardRepository boardRepository;
 
     @Mock
-    private MemberSaveService memberSaveService;
+    private FileManager fileManager;
 
     @Mock
     private MemberViewService memberViewService;
@@ -70,7 +75,10 @@ class BoardServiceTest {
     private TechStackService techStackService;
 
     @Mock
-    private CommentService commentService;
+    private CommentSaveService commentSaveService;
+
+    @Mock
+    private CommentViewService commentViewService;
 
     @Captor
     private ArgumentCaptor<com.project.pagu.modules.board.domain.Board> argumentCaptor;
@@ -85,9 +93,10 @@ class BoardServiceTest {
         given(memberViewService.findById(any())).willReturn(member);
         given(subjectService.getOrSave(any())).willReturn(Subject.of("Spring"));
         given(techStackService.getOrSave(any())).willReturn(TechStack.of("Spring"));
-        given(boardRepository.save(any())).willReturn(givenBoardDto().toEntity());
+        given(boardRepository.save(any())).willReturn(givenBoard(1L));
+        given(fileManager.uploadBoardImageDtos(any(),any())).willReturn(null);
 
-        boardService.saveBoardDto(member, givenBoardDto());
+        boardSaveService.saveBoardDto(member.getMemberId(), givenBoardDto());
 
         verify(boardRepository, times(1)).save(argumentCaptor.capture());
 
@@ -113,7 +122,7 @@ class BoardServiceTest {
         given(boardRepository.findAll(pageable)).willReturn(givenPagedBoard(pageable));
 
         // when
-        boardService.getPagedBoardList(pageable);
+        boardViewService.getPagedBoardList(pageable);
 
         // then
         verify(boardRepository, times(1)).findAll(pageableArgumentCaptor.capture());
@@ -131,26 +140,26 @@ class BoardServiceTest {
         // given
         Board board = givenBoard(1L);
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
-        given(commentService.findCommentsByBoardId(any())).willReturn(null);
+        given(commentViewService.findCommentsByBoardId(any())).willReturn(null);
         // when
-        BoardDetailDto boardDetailDto = boardService.getBoardDetailDto(1L);
+        BoardViewDto boardViewDto = boardViewService.getBoardDetailDto(1L);
 
         // then
         verify(boardRepository, times(1)).findById(1L);
 
-        then(boardDetailDto.getId()).isEqualTo(board.getId());
-        then(boardDetailDto.getTitle()).isEqualTo(board.getTitle());
-        then(boardDetailDto.getGoal()).isEqualTo(board.getGoal());
-        then(boardDetailDto.getPlace()).isEqualTo(board.getPlace());
-        then(boardDetailDto.getWriter().getNickname()).isEqualTo(board.getMember().getNickname());
-        then(boardDetailDto.getWriter().getEmail()).isEqualTo(board.getMember().getEmail());
-        then(boardDetailDto.getRecruitmentStartAt()).isEqualTo(board.getRecruitmentStartAt());
-        then(boardDetailDto.getRecruitmentEndAt()).isEqualTo(board.getRecruitmentEndAt());
-        then(boardDetailDto.getTermsEndAt()).isEqualTo(board.getTermsEndAt());
-        then(boardDetailDto.getTermsStartAt()).isEqualTo(board.getTermsStartAt());
-        then(boardDetailDto.getStatus()).isEqualTo(board.getStatus());
-        then(boardDetailDto.getModifiedDate()).isEqualTo(board.getModifiedDate());
-        then(boardDetailDto.getEtc()).isEqualTo(board.getEtc());
+        then(boardViewDto.getId()).isEqualTo(board.getId());
+        then(boardViewDto.getTitle()).isEqualTo(board.getTitle());
+        then(boardViewDto.getGoal()).isEqualTo(board.getGoal());
+        then(boardViewDto.getPlace()).isEqualTo(board.getPlace());
+        then(boardViewDto.getWriter().getNickname()).isEqualTo(board.getMember().getNickname());
+        then(boardViewDto.getWriter().getEmail()).isEqualTo(board.getMember().getEmail());
+        then(boardViewDto.getRecruitmentStartAt()).isEqualTo(board.getRecruitmentStartAt());
+        then(boardViewDto.getRecruitmentEndAt()).isEqualTo(board.getRecruitmentEndAt());
+        then(boardViewDto.getTermsEndAt()).isEqualTo(board.getTermsEndAt());
+        then(boardViewDto.getTermsStartAt()).isEqualTo(board.getTermsStartAt());
+        then(boardViewDto.getStatus()).isEqualTo(board.getStatus());
+        then(boardViewDto.getModifiedDate()).isEqualTo(board.getModifiedDate());
+        then(boardViewDto.getEtc()).isEqualTo(board.getEtc());
     }
 
 
@@ -168,13 +177,13 @@ class BoardServiceTest {
                 .build();
     }
 
-    private BoardSaveRequestDto givenBoardDto() {
+    private BoardSaveDto givenBoardDto() {
         BoardScheduleDto scheduleDto = new BoardScheduleDto();
         scheduleDto.setDayKey(0);
         scheduleDto.setStartTime(LocalTime.of(10, 30));
         scheduleDto.setEndTime(LocalTime.of(13, 30));
 
-        BoardSaveRequestDto dto = new BoardSaveRequestDto();
+        BoardSaveDto dto = new BoardSaveDto();
         dto.setTitle("스프링 스터디 모집합니다.");
         dto.setSubjects("Backend");
         dto.setTechStacks("Java");

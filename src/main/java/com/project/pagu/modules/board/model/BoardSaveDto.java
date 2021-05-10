@@ -1,10 +1,12 @@
 package com.project.pagu.modules.board.model;
 
 import com.project.pagu.modules.board.domain.Board;
+import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyStatus;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -24,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @ToString
-public class BoardSaveRequestDto {
+public class BoardSaveDto {
 
     private Long id;
 
@@ -71,6 +73,24 @@ public class BoardSaveRequestDto {
 
     private List<MultipartFile> fileList = new ArrayList<>();
 
+    public static BoardSaveDto createBoardSaveDto(Board board){
+        BoardSaveDto dto = new BoardSaveDto();
+        dto.setId(board.getId());
+        dto.setTitle(board.getTitle());
+        dto.setSubjects(board.subjectToString());
+        dto.setTechStacks(board.techStackToString());
+        dto.setGoal(board.getGoal());
+        dto.setPlace(board.getPlace());
+        dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setStatus(board.getStatus());
+        dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
+        dto.setRecruitmentEndAt(board.getRecruitmentEndAt());
+        dto.setTermsStartAt(board.getTermsStartAt());
+        dto.setTermsEndAt(board.getTermsEndAt());
+        dto.setEtc(board.getEtc());
+        return dto;
+    }
+
     public Board toEntity() {
         return Board.builder()
                 .title(this.title)
@@ -82,16 +102,20 @@ public class BoardSaveRequestDto {
                 .termsEndAt(this.termsEndAt)
                 .etc(this.etc)
                 .status(StudyStatus.READY)
-//                .subjects(this.subjects)
-//                .techStacks(this.techStacks)
+//                .boardSchedules()
                 .build();
     }
 
-    public List<BoardImageDto> toBoardImageDtoList() {
-        List<BoardImageDto> boardImageDtos = new ArrayList<>();
+    public List<BoardSchedule> createBoardSchedules() {
+        return this.boardSchedules.stream().map(s -> s.toEntity()).collect(Collectors.toList());
+
+    }
+
+    public List<BoardImageSaveDto> toBoardImageDtoList() {
+        List<BoardImageSaveDto> boardImageSaveDtos = new ArrayList<>();
         for (MultipartFile multipartFile : fileList) {
-            boardImageDtos.add(new BoardImageDto(multipartFile));
+            boardImageSaveDtos.add(new BoardImageSaveDto(multipartFile));
         }
-        return boardImageDtos;
+        return boardImageSaveDtos;
     }
 }

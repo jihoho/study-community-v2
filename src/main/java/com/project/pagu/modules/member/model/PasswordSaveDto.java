@@ -13,7 +13,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PasswordDto {
+public class PasswordSaveDto {
 
     @NotBlank
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",

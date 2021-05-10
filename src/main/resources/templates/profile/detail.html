@@ -18,13 +18,13 @@
                     <div class="col-md-4">
                         <div id="img-box">
                             <img
-                                th:if="${!#strings.isEmpty(profileRequestDto.profileImageUrl)}"
-                                th:src="${profileRequestDto.profileImageUrl}"
+                                th:if="${!#strings.isEmpty(profileDto.profileImageUrl)}"
+                                th:src="${profileDto.profileImageUrl}"
                                 class="profile-img"
                             />
                             <svg
-                                th:if="${#strings.isEmpty(profileRequestDto.profileImageUrl)}"
-                                th:data-jdenticon-value="${profileRequestDto.nickname}"
+                                th:if="${#strings.isEmpty(profileDto.profileImageUrl)}"
+                                th:data-jdenticon-value="${profileDto.nickname}"
                                 class="profile-image"
                             ></svg>
                         </div>
@@ -35,28 +35,28 @@
                             <label>닉네임</label>
                             <div class="form-control">
                                 <span style="font-weight: bold"
-                                      th:text="*{profileRequestDto.nickname}"/>
+                                      th:text="*{profileDto.nickname}"/>
                             </div>
                         </div>
                         <!-- 포지션 -->
                         <div class="form-group">
                             <label>포지션</label>
                             <div class="form-control">
-                                <span th:text="*{profileRequestDto.position}"/>
+                                <span th:text="*{profileDto.position}"/>
                             </div>
                         </div>
                         <!-- 경력 -->
                         <div class="form-group">
                             <label>경력</label>
                             <div class="form-control">
-                                <span th:text="*{profileRequestDto.career}"/>
+                                <span th:text="*{profileDto.career}"/>
                             </div>
                         </div>
                         <!-- 링크 -->
                         <div class="form-group">
                             <label>링크</label>
                             <div class="form-control">
-                                <span th:text="*{profileRequestDto.link}"/>
+                                <span th:text="*{profileDto.link}"/>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label>자기소개</label>
                             <div class="form-control">
-                                <span th:text="*{profileRequestDto.info}"/>
+                                <span th:text="*{profileDto.info}"/>
                             </div>
                         </div>
                     </div>

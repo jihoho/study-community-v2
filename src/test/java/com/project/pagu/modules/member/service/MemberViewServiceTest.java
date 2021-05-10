@@ -14,8 +14,8 @@ import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.domain.UserMember;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.model.ProfileRequestDto;
+import com.project.pagu.modules.member.model.SignUpDto;
+import com.project.pagu.modules.member.model.ProfileDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,12 +41,12 @@ public class MemberViewServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
-    private MemberSaveRequestDto dto;
+    private SignUpDto dto;
 
     @BeforeEach
     @DisplayName("MemberSaveRequestDto 유효한 데이터 초기 세팅")
     void beforeEach() {
-        dto = new MemberSaveRequestDto();
+        dto = new SignUpDto();
         dto.setEmail("123@email.com");
         dto.setNickname("nick");
         dto.setPassword("abcde1234!");
@@ -113,10 +113,10 @@ public class MemberViewServiceTest {
 
 
     @Test
-    @DisplayName("Member엔티티 profileRequestDto 변환 테스트")
-    void  convert_member_to_profiledto() throws Exception{
+    @DisplayName("Member엔티티 profileDto 변환 테스트")
+    void  convert_member_to_profile_dto() throws Exception {
         // given
-        Member targetMember=Member.builder()
+        Member targetMember = Member.builder()
                 .email("email@email.com")
                 .memberType(MemberType.NORMAL)
                 .nickname("nick")
@@ -129,7 +129,7 @@ public class MemberViewServiceTest {
                 .role(Role.GUEST)
                 .build();
 
-        ProfileRequestDto expectedDto=ProfileRequestDto.builder()
+        ProfileDto expectedDto = ProfileDto.builder()
                 .email("email@email.com")
                 .memberType(MemberType.NORMAL.getKey())
                 .nickname("nick")
@@ -140,10 +140,10 @@ public class MemberViewServiceTest {
                 .position("웹 백엔드")
                 .build();
 
-        given(memberRepository.findById(any())).willReturn(Optional.of(targetMember));
+        given(memberRepository.findByNickname(any())).willReturn(Optional.of(targetMember));
 
         // when
-        ProfileRequestDto resultDto = memberViewService.convertMemberToProfileRequestDto(targetMember);
+        ProfileDto resultDto = memberViewService.convertToProfileViewDtoBy("nick");
 
         // then
         assertAll(

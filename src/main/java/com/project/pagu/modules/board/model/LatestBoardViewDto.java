@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class LatestBoardDto {
+public class LatestBoardViewDto {
 
     private Long id;
 
@@ -26,9 +26,9 @@ public class LatestBoardDto {
     private LocalDateTime modifiedDate;
 
 
-    public static LatestBoardDto createLatestBoardDto(Board board) {
+    public static LatestBoardViewDto createLatestBoardDto(Board board) {
 
-        return LatestBoardDto.builder()
+        return LatestBoardViewDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .writer(WriterDto.createWriterDto(board.getMember()))

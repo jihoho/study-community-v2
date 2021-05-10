@@ -2,8 +2,7 @@ package com.project.pagu.common.validation;
 
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
-import com.project.pagu.modules.member.model.MemberSaveRequestDto;
-import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.service.MemberViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -24,15 +23,15 @@ public class SignUpValidation implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(MemberSaveRequestDto.class);
+        return clazz.isAssignableFrom(SignUpDto.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        MemberSaveRequestDto memberSaveRequestDto = (MemberSaveRequestDto) target;
-        isExistedNormalEmail(memberSaveRequestDto.getEmail(), errors);
-        isExistedNickname(memberSaveRequestDto.getNickname(), errors);
-        isNotEqualToPassword(memberSaveRequestDto.getPassword(), memberSaveRequestDto.getPasswordCheck(), errors);
+        SignUpDto signUpDto = (SignUpDto) target;
+        isExistedNormalEmail(signUpDto.getEmail(), errors);
+        isExistedNickname(signUpDto.getNickname(), errors);
+        isNotEqualToPassword(signUpDto.getPassword(), signUpDto.getPasswordCheck(), errors);
     }
 
     private void isExistedNormalEmail(String email,Errors errors) {
