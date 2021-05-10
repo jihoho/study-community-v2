@@ -1,0 +1,33 @@
+.align-center {
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+#board-list-body {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+#register-board-div {
+    padding: 1em;
+}
+
+#paginationBox .pagination {
+    justify-content: center;
+}
+
+#search-bar {
+    text-align: center;
+}
+#search-bar .btn-group {
+    float: left;
+    margin-left: 20%;
+}
+#search-bar .input-group {
+    width: 50%;
+}
+
+.tag-butt{
+    margin: 0 0.2em;
+}

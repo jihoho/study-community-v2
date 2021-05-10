@@ -1,0 +1,126 @@
+#board-detail-wrapper {
+    width: 60%;
+    margin: 30px auto;
+    border: 1px solid black;
+}
+
+#board-detail-header {
+    width: 100%;
+    height: 100px;
+    background-color: #fffafa;
+    border: 1px solid black;
+}
+
+#board-detail-header table {
+    width: 100%;
+}
+#board-detail-header table th {
+    height: 100px;
+}
+.padding-left {
+    padding-left: 3%;
+}
+.padding-right {
+    padding-right: 3%;
+}
+#title-span {
+    font-size: 1.2em;
+}
+#title-td {
+    width: 60%;
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+
+#profile-img {
+    height: 20px;
+    width: 20px;
+}
+
+#reg-date-span {
+    color: #7e7d7d;
+}
+
+#board-detail-body {
+    margin: 3em 20%;
+}
+.board-info {
+    margin-top: 10px;
+}
+.board-info-field {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.board-info-value {
+    padding: 0.5em 1em;
+}
+.tag-butt {
+    margin: 0 0.2em;
+}
+.board-info-value textarea {
+    width: 90%;
+}
+.board-info-value img {
+    width: 90%;
+}
+
+#board-comment-wrapper {
+    width: 60%;
+    margin: 10px auto;
+}
+.board-comment-list {
+    border: 1px solid black;
+    margin: 0.5em 0;
+}
+.board-comment-header {
+    padding: 1em 2em;
+}
+.board-comment-img img {
+    width: 3em;
+    height: 3em;
+}
+.board-comment-nick {
+    padding: 0 1em;
+    width: 80%;
+}
+.board-comment-butt {
+    width: 20%;
+    text-align: right;
+}
+.board-comment-body {
+    padding: 1em 5em;
+}
+.board-comment-butt a {
+    cursor: pointer;
+}
+.board-comment-footer {
+    text-align: right;
+}
+.board-comment-footer a {
+    margin: 1em;
+    cursor: pointer;
+}
+.board-comment-p {
+    word-wrap: break-word;
+}
+.board-comment-write {
+    border: 1px solid black;
+}
+
+.board-comment-text {
+    width: 100%;
+}
+
+.comment-level-1 {
+}
+
+.comment-level-2 {
+    margin-left: 1.5em;
+}
+
+.comment-level-3 {
+    margin-left: 1.5em;
+}

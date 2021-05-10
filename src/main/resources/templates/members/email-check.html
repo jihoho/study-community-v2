@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+<!-- todo: 페이지 이동 -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-7 col-lg-10 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <!-- 로고 -->
+                    <a class="card-title text-center" href="">
+                        <h1 class="logo">PAGU</h1>
+                    </a>
+                    <div class="form-signin">
+                        <div class="form-label-group mt-5">
+
+                            <form th:action="@{/members/email-check}" method="post" th:object="${signUpDto}">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <input type="email" id="inputEmail" name="email" class="form-control" th:field="*{email}" placeholder="Email address" required autofocus />
+                                <label for="inputEmail">가입하신 이메일을 입력해주세요</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                                <button class="btn btn-lg btn-sign-in btn-block mt-4">
+                                    인증번호 전송하기
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+  function to_ajax(){
+
+    var queryString = $("form[name=asdf]").serialize() ;
+
+    $.ajax({
+      type : 'post',
+      url : '/asdf',
+      data : queryString,
+      dataType : 'json',
+      error: function(xhr, status, error){
+        alert(error);
+      },
+      success : function(json){
+        alert(json)
+      }
+    });
+
+  }
+
+</script>
+</body>
+</html>
