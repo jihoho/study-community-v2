@@ -77,16 +77,16 @@ public class BoardController {
 
     @GetMapping("/boards/{id}/update")
     public String getBoardForUpdate(@PathVariable Long id, Model model) {
-        model.addAttribute("board", boardViewService.getBoardSaveDto(id));
+        model.addAttribute(boardViewService.getBoardSaveDto(id));
         return "boards/board-update";
     }
 
     @PostMapping("/boards/{id}/update")
-    public String update(@CurrentMember Member member, @PathVariable Long id, @Valid BoardSaveDto dto,
-            BindingResult result) {
+    public String update(@CurrentMember Member member, @PathVariable Long id,
+            @Valid BoardSaveDto dto, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "boards/board-form";
+            return "boards/board-update";
         }
 
         boardSaveService.update(member.getMemberId(), id, dto);

@@ -16,7 +16,7 @@
             </span>
 </div>
 <div id="board-form-body">
-    <form id="board-create-form" th:action="@{/boards/{id}/update(id=${board.id})}" method="post" th:object="${board}" enctype="multipart/form-data">
+    <form id="board-create-form" th:action="@{/boards/{id}/update(id=${boardSaveDto.id})}" method="post" th:object="${boardSaveDto}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title-input">제목</label>
             <input type="text" class="form-control" id="title-input" th:field="*{title}" placeholder="제목 입력해주세요." required />
