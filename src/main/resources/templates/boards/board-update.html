@@ -100,13 +100,13 @@
         <div class="form-group">
             <label for="study-status-div">모집 상태</label>
             <div id="study-status-div">
+                <input type="hidden" th:field="*{status}">
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        모집 중
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="*{status.getStatusName()}">
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">모집 중</a>
-                        <a class="dropdown-item" href="#">모집 마감</a>
+                        <a class="dropdown-item" onclick="boardStatusClick('READY')">모집 중</a>
+                        <a class="dropdown-item" onclick="boardStatusClick('FINISH')">모집 마감</a>
                     </div>
                 </div>
             </div>
@@ -174,4 +174,5 @@
 </body>
 
 <script src="/js/board-form.js"></script>
+<script src="/js/board-update.js"></script>
 </html>
