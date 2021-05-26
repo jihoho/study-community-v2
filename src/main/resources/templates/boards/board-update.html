@@ -127,6 +127,13 @@
             <label for="study-img">스터디 관련 이미지</label>
             <input type="file" class="form-control-file" id="study-img" th:field="*{fileList}" multiple />
         </div>
+
+        <div class="hidden-schedule-list" th:each="boardSchedule:${boardSaveDto.boardSchedules}">
+            <input class="hidden-schedule-daykey" type="hidden" th:value="${boardSchedule.dayKey}"/>
+            <input class="hidden-schedule-starttime" type="hidden" th:value="${boardSchedule.startTime}"/>
+            <input class="hidden-schedule-endtime" type="hidden" th:value="${boardSchedule.endTime}"/>
+        </div>
+
         <div class="align-center">
             <button id="board-create-butt" type="button" class="btn btn-primary btn-lg">공고 수정</button>
         </div>
