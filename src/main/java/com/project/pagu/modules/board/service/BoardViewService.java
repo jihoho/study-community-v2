@@ -5,6 +5,8 @@ import com.project.pagu.modules.board.model.BoardViewDto;
 import com.project.pagu.modules.board.model.PagedBoardViewDto;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.LatestBoardViewDto;
+import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -22,6 +24,8 @@ public interface BoardViewService {
     BoardSaveDto getBoardSaveDto(Long id);
 
     PageImpl<PagedBoardViewDto> getPagedBoardList(Pageable pageable);
+
+    PageImpl<PagedBoardViewDto> getPagedBoardListByMemberId(Member member, Pageable pageable);
 
     PageImpl<LatestBoardViewDto> getLatestBoard(int size);
 
