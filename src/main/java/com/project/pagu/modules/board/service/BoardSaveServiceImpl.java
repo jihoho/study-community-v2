@@ -67,10 +67,9 @@ public class BoardSaveServiceImpl implements BoardSaveService {
             throw new AccessDeniedException("해당 댓글의 주인이 아닙니다.");
         }
         registerTagToBoard(board, dto.getSubjects(), dto.getTechStacks());
+        board.update(dto);
 
-        //todo : 게시물 내용 수정 코드 필요
-        //todo : dto에 있는 데이터 보드로 전송, view에서 status 입력 넘기는 부분
-
+        // todo : 게시물 이미지 수정 코드 필요
         //            List<BoardImage> boardImageList = uploadBoardImageDto(savedBoard.getId(), dto);
         //            savedBoard.addBoardImageList(boardImageList);
 

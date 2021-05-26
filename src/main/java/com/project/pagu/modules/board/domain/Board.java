@@ -3,6 +3,8 @@ package com.project.pagu.modules.board.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import com.project.pagu.common.domain.BaseTimeEntity;
+import com.project.pagu.modules.board.model.BoardSaveDto;
+import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.comment.domain.Comment;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.tag.BoardSubject;
@@ -70,7 +72,7 @@ public class Board extends BaseTimeEntity {
 
     private LocalDate termsEndAt;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<BoardSchedule> boardSchedules = new ArrayList<>();
 
@@ -93,15 +95,37 @@ public class Board extends BaseTimeEntity {
     /**
      * 추후 해시태그 기반으로 수정
      */
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<BoardSubject> boardSubjects = new HashSet<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<BoardTechStack> boardTechStacks = new HashSet<>();
 
+
+    public void update(BoardSaveDto boardSaveDto) {
+        this.title = boardSaveDto.getTitle();
+        this.goal = boardSaveDto.getGoal();
+        this.place = boardSaveDto.getPlace();
+        this.recruitmentStartAt = boardSaveDto.getRecruitmentStartAt();
+        this.recruitmentEndAt = boardSaveDto.getRecruitmentEndAt();
+        this.termsStartAt = boardSaveDto.getTermsStartAt();
+        this.termsEndAt = boardSaveDto.getTermsEndAt();
+        this.etc = boardSaveDto.getEtc();
+        this.status = boardSaveDto.getStatus();
+        registerBoardScheduleListByDto(boardSaveDto.getBoardSchedules());
+    }
+
     //==연관관계 편의 메서드==//
+
+    private void registerBoardScheduleListByDto(List<BoardScheduleDto> boardScheduleDtos) {
+        this.boardSchedules.clear();
+        for (BoardScheduleDto boardScheduleDto : boardScheduleDtos) {
+            addBoardSchedule(boardScheduleDto.toEntity());
+        }
+    }
+
     public void addBoardScheduleList(List<BoardSchedule> boardSchedules) {
         for (BoardSchedule boardSchedule : boardSchedules) {
             addBoardSchedule(boardSchedule);
@@ -132,18 +156,28 @@ public class Board extends BaseTimeEntity {
         boardImage.setBoard(this);
     }
 
-    public void addSubject(BoardSubject... boardSubjects) {
+    public void registerSubjects(List<BoardSubject> boardSubjects) {
+        this.boardSubjects.clear();
         for (BoardSubject boardSubject : boardSubjects) {
-            this.boardSubjects.add(boardSubject);
-            boardSubject.addBoard(this);
+            addSubject(boardSubject);
         }
     }
 
-    public void addTechStack(BoardTechStack... boardTechStacks) {
+    public void addSubject(BoardSubject boardSubject) {
+        this.boardSubjects.add(boardSubject);
+        boardSubject.addBoard(this);
+    }
+
+    public void registerTechStacks(List<BoardTechStack> boardTechStacks) {
+        this.boardTechStacks.clear();
         for (BoardTechStack boardTechStack : boardTechStacks) {
-            this.boardTechStacks.add(boardTechStack);
-            boardTechStack.addBoard(this);
+            addTechStack(boardTechStack);
         }
+    }
+
+    public void addTechStack(BoardTechStack boardTechStack) {
+        this.boardTechStacks.add(boardTechStack);
+        boardTechStack.addBoard(this);
     }
 
     public void addComment(Comment comment) {
