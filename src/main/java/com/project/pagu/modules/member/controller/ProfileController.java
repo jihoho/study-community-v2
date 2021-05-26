@@ -138,4 +138,11 @@ public class ProfileController {
     public String deleteSuccess() {
         return "members/delete-success";
     }
+
+    @GetMapping("/profile/boards")
+    public String profileBoards(@CurrentMember Member member) {
+
+        return "/profile/boards";
+
+    }
 }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include="fragments :: head"></head>
+
+<link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen" />
+<style>
+  <!-- 헤더 대체되서 스타일 안읽힘 -- >
+  a .nav-link.active {
+    color: #70ab6b;
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .nav-pills .nav-link.active {
+    color: #fff;
+    background-color: #70ab6b;
+  }
+
+  .tab-content > .active {
+    display: block;
+    margin-right: -146px;
+  }
+
+</style>
+<body>
+<div th:replace="fragments :: pagu-nav"></div>
+<section>
+    <div class="container">
+        <div class="bg-white rounded-lg d-block d-sm-flex">
+            <!-- 왼쪽 메뉴 바 -->
+            <div class="profile-tab-nav border-right col-2">
+                <div class="p-4"></div>
+                <div class="nav flex-column nav-pills" id="menu-tab" role="tablist" aria-orientation="vertical">
+                    <!-- 프로필 정보 -->
+                    <a th:href="@{/profile}">
+                        <i class="fa fa-home text-center mr-1"></i>
+                        프로필 정보
+                    </a>
+                    <!-- 게시물 관리 -->
+                    <a th:href="@{/profile/boards}">
+                        <i class="fa fa-key text-center mr-1"></i>
+                        게시물 관리
+                    </a>
+<!--                    <a class="nav-link" id="security-tab" data-toggle="pill" href="#study" role="tab" aria-selected="false">-->
+<!--                        <i class="fa fa-user text-center mr-1"></i>-->
+<!--                        스터디 관리-->
+<!--                    </a>-->
+<!--                    &lt;!&ndash; 스터디 신청 내역 &ndash;&gt;-->
+<!--                    <a class="nav-link" id="application-tab " data-toggle="pill" href="#study-request" role="tab" aria-selected="false">-->
+<!--                        <i class="fa fa-tv text-center mr-1"></i>-->
+<!--                        스터디 신청 내역-->
+<!--                    </a>-->
+<!--                    <a class="nav-link" id="secession-tab" data-toggle="pill" href="#secession" role="tab" aria-selected="false">-->
+<!--                        <i class="fa fa-tv text-center mr-1"></i>-->
+<!--                        설정-->
+<!--                    </a>-->
+                </div>
+            </div>
+
+
+            <div class="tab-content p-4 p-md-5" id="menu-tap-content col-8">
+                <!-- 게시물 관리 -->
+                <div class="mr-auto" id="boards" aria-labelledby="password-tab">
+                    <h3 class="mb-4">게시물 관리</h3>
+                    <div id="board-list-body mt-auto">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <!--     table header      -->
+                            <tr>
+                                <th>no</th>
+                                <th>title</th>
+                                <th>location</th>
+                                <th>writer</th>
+                                <th>reg date</th>
+                                <th>tag</th>
+                                <th>status</th>
+                            </tr>
+                            <!--     table header end      -->
+                            </thead>
+                            <tbody>
+                            <!--     table row      -->
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <a href="#"><span>여기는 스터디 제목~~~~~~~</span></a>
+                                </td>
+                                <td><span>강남역 인근 ...</span></td>
+                                <td>nickname</td>
+                                <td>2021-03-21 12:30:00</td>
+                                <td class="align-center">
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Web
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        Backend
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm active">
+                                        JPA
+                                    </button>
+                                </td>
+                                <td class="align-center">
+                                    <button type="button" class="btn btn-success active">모집중</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <div id="paginationBox">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}')">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#" onClick="">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">5</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">6</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">7</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">8</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">9</a></li>
+                                <li class="page-item"><a class="page-link" href="#" onClick="">10</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" onClick="">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--                &lt;!&ndash; 스터디 관리 &ndash;&gt;-->
+<!--                <div class="tab-pane fade" id="study" role="tabpanel" aria-labelledby="security-tab">-->
+<!--                    <h3 class="mb-4">준비중인 서비스입니다.</h3>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; 스터디 신청 내역 &ndash;&gt;-->
+<!--                <div class="tab-pane fade" id="study-request" role="tabpanel" aria-labelledby="application-tab">-->
+<!--                    <h3 class="mb-4">준비중인 서비스입니다.</h3>-->
+<!--                </div>-->
+<!--                <div class="tab-pane fade" id="secession" role="tabpanel" aria-labelledby="application-tab">-->
+<!--                    <h3 class="mb-4">설정</h3>-->
+<!--                    <div class="mb-5">-->
+<!--                        <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='change-password')}">비밀번호 변경하기</a>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='secession')}">탈퇴하기</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+</section>
+<script src="/js/profile.js"></script>
+</body>
+</html>
