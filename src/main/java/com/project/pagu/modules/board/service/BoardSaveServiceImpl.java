@@ -79,15 +79,8 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     private Board registerTagToBoard(Board board, String subjects, String techStacks) {
         Set<Subject> subjectSet = createSubject(subjects);
         Set<TechStack> techStackSet = createTechStack(techStacks);
-
-        for (Subject subject : subjectSet) {
-            BoardSubject boardSubject = BoardSubject.createBoardSubject(subject);
-            board.addSubject(boardSubject);
-        }
-        for (TechStack techStack : techStackSet) {
-            BoardTechStack boardTechStack = BoardTechStack.of(techStack);
-            board.addTechStack(boardTechStack);
-        }
+        board.registerSubjects(subjectSet.stream().map(BoardSubject::of).collect(Collectors.toList()));
+        board.registerTechStacks(techStackSet.stream().map(BoardTechStack::of).collect(Collectors.toList()));
 
         return board;
     }
