@@ -8,6 +8,8 @@ import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.LatestBoardViewDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.service.CommentViewService;
+import com.project.pagu.modules.member.domain.Member;
+import com.project.pagu.modules.member.domain.MemberId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,14 @@ public class BoardViewServiceImpl implements BoardViewService {
         PageImpl<PagedBoardViewDto> boardPageDto = convertBoardPageToBoardPageDto(boardPage,
                 pageable);
         return boardPageDto;
+    }
+
+    @Override
+    public PageImpl<PagedBoardViewDto> getPagedBoardListByMemberId(Member member,
+            Pageable pageable) {
+
+        Page<Board> boardPage = boardRepository.findByMember(member, pageable);
+        return convertBoardPageToBoardPageDto(boardPage, pageable);
     }
 
     @Override

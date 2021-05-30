@@ -88,4 +88,9 @@ public class MainController {
 
         return "auth/oauth-login";
     }
+
+    @GetMapping("/authority")
+    public String authority() {
+        return "authority";
+    }
 }

@@ -62,6 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/sign-up")
                 .userInfoEndpoint()
                 .userService(memberViewService);
+
+        http
+                .exceptionHandling()
+                .accessDeniedPage("/authority");
     }
 
     @Bean

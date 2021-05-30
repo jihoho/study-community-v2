@@ -2,6 +2,7 @@ package com.project.pagu.modules.member.controller;
 
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
+import com.project.pagu.modules.board.service.BoardViewService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.model.SignUpDto;
@@ -13,6 +14,9 @@ import com.project.pagu.modules.member.service.MemberViewService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +38,7 @@ public class ProfileController {
     private final MemberSaveService memberSaveService;
     private final MemberViewService memberViewService;
     private final ProfileValidation profileValidation;
+    private final BoardViewService boardViewService;
     private final FileManager fileManager;
 
     @InitBinder("profileDto")
@@ -68,7 +73,8 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
+    public String getProfile(@CurrentMember Member member, @PathVariable String nickname,
+            Model model) {
         ProfileDto profileViewDto = memberViewService.convertToProfileViewDtoBy(nickname);
 
         //자기 자신을 조회하면 프로필 관리로 이동
@@ -83,7 +89,8 @@ public class ProfileController {
     }
 
     @GetMapping("/members/password-check/{name}")
-    public String passwordForm(@CurrentMember Member member, @PathVariable String name, Model model) {
+    public String passwordForm(@CurrentMember Member member, @PathVariable String name,
+            Model model) {
         //todo : 구글 계정일 경우 회원탈퇴
 //        if (member.getMemberType().equals(MemberType.GOOGLE)) {
 //            memberService.deleteMember(member);
@@ -97,7 +104,8 @@ public class ProfileController {
     @PostMapping("/members/password-check/{name}")
     public String checkPassword(@CurrentMember Member member, Model model,
             @PathVariable String name, SignUpDto dto, BindingResult result) {
-        if (profileValidation.isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
+        if (profileValidation
+                .isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
             model.addAttribute("view", name);
             return "members/password-check";
         }
@@ -121,14 +129,16 @@ public class ProfileController {
     }
 
     @PostMapping("/members/change-password")
-    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto, BindingResult result) {
+    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto,
+            BindingResult result) {
         profileValidation.isNotEqualToPassword(dto.getPassword(), dto.getPasswordCheck(), result);
 
         if (result.hasErrors()) {
             return "members/change-password";
         }
 
-        memberSaveService.changePassword(MemberId.of(member.getEmail(), member.getMemberType()), dto.getPassword());
+        memberSaveService.changePassword(MemberId.of(member.getEmail(), member.getMemberType()),
+                dto.getPassword());
         memberViewService.login(member);
 
         return "redirect:/members/password-success";
@@ -138,4 +148,16 @@ public class ProfileController {
     public String deleteSuccess() {
         return "members/delete-success";
     }
+
+    @GetMapping("/profile/boards")
+    public String profileBoards(@CurrentMember Member member,
+            @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
+            Model model) {
+
+        model.addAttribute("boards", boardViewService.getPagedBoardListByMemberId(member, pageable));
+
+        return "/profile/boards";
+
+    }
+
 }

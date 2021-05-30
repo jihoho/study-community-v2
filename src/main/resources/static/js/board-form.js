@@ -95,11 +95,15 @@ var substringMatcher = function (strs) {
   };
 };
 
-var subjects = ["Web", "Backend", "Frontent", "Embeded", "DataEngineering", "DataAnalysis", "Android", "IOS", "System", "DevOps"];
+// var subjects = ["Web", "Backend", "Frontent", "Embeded", "DataEngineering", "DataAnalysis", "Android", "IOS", "System", "DevOps"];
+//
+// var techStacks = ["name", "JPA", "Flutter", "Docker", "HTML", "JavaScript", "CSS", "React", "Vue.js", "MyBatis", "struts", "Java", "C++", "C", "Python"];
 
-var techStacks = ["Spring", "JPA", "Flutter", "Docker", "HTML", "JavaScript", "CSS", "React", "Vue.js", "MyBatis", "struts", "Java", "C++", "C", "Python"];
 
 
+
+var subjects = [];
+var techStacks = [];
 function getSubjectsAjax() {
   return new Promise(function (resolve, reject) {
     $.ajax({
@@ -107,7 +111,6 @@ function getSubjectsAjax() {
       url: "/subjects",
       success: function (jsonArr) {
         console.log("subjects response: " + jsonArr);
-        subjects = [];
         jsonArr.forEach(function (json, idx) {
           subjects.push(json["name"]);
         });
@@ -151,6 +154,45 @@ function tagsInputSetting() {
       },
     });
 
+    var _subjects = [];
+    $("#subject-input").on('beforeItemAdd', function (a, b){
+      _subjects.push(true);
+      $(this).parent().find('.tt-input').attr('placeholder', '')
+    }).on('itemAdded', function (a) {
+
+
+      if (_subjects.length === 6) {
+
+        $("#subject-input").tagsinput('remove', a.item);
+      }
+    }).on('itemRemoved', function (event) {
+      _subjects.pop();
+      if (_subjects.length === 0) {
+        $(this).parent().find('.tt-input').attr('placeholder', '기술 입력해주세요.').css('width', '300px');
+      }
+      // console.log(event.item)
+    });
+
+
+    var _teches = [];
+    $("#tech-input").on('beforeItemAdd', function (a, b){
+      _teches.push(true);
+      $(this).parent().find('.tt-input').attr('placeholder', '')
+    }).on('itemAdded', function (a) {
+
+
+      if (_teches.length === 6) {
+
+        $("#tech-input").tagsinput('remove', a.item);
+      }
+    }).on('itemRemoved', function (event) {
+      _teches.pop();
+      if (_teches.length === 0) {
+        $(this).parent().find('.tt-input').attr('placeholder', '기술 입력해주세요.').css('width', '300px');
+      }
+      // console.log(event.item)
+    });
+
     $("#tech-input").tagsinput({
       typeaheadjs: {
         name: "techStacks",
@@ -170,6 +212,11 @@ function errorFunction(msg) {
  * Subject or techStacks 관련 태그 셋팅
  */
 $(document).ready(function () {
+
+
+
+
+
   $(".hidden-schedule-list").each(function (index, schedule) {
     var dayIndex = $(schedule).find(".hidden-schedule-daykey").val();
     var startTime = $(schedule).find(".hidden-schedule-starttime").val();
