@@ -2,14 +2,13 @@ package com.project.pagu.modules.board.service;
 
 import com.project.pagu.modules.board.Exception.BoardNotFoundException;
 import com.project.pagu.modules.board.domain.Board;
+import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.model.BoardViewDto;
 import com.project.pagu.modules.board.model.PagedBoardViewDto;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.LatestBoardViewDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.service.CommentViewService;
-import com.project.pagu.modules.tag.SubjectService;
-import com.project.pagu.modules.teckstack.TechStackService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +84,7 @@ public class BoardViewServiceImpl implements BoardViewService {
                     .findBySubject(keyword, pageable);
         }else if(searchType.equals("STATUS")){
             boardPage = boardRepository
-                    .findByStatusContaining(keyword, pageable);
+                    .findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
         }else{
             throw new Exception();
         }
