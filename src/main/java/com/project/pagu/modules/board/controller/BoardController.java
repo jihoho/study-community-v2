@@ -41,6 +41,7 @@ public class BoardController {
             Model model) {
 
         model.addAttribute("boardList", boardViewService.getPagedBoardList(pageable));
+        model.addAttribute("stype", "TITLE");
         return "boards/board-list";
 
     }
@@ -101,11 +102,14 @@ public class BoardController {
     }
 
     @GetMapping("/boards/search")
-    public String search(@RequestParam(value = "keyword") String keyword,
+    public String search(@RequestParam(value = "stype") String searchType,
+            @RequestParam(value = "keyword") String keyword,
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
-            Model model) {
+            Model model) throws Exception {
 
-        model.addAttribute("boardList", boardViewService.getSearchBoards(keyword, pageable));
+        model.addAttribute("boardList",
+                boardViewService.getSearchBoards(searchType, keyword, pageable));
+        model.addAttribute("stype", searchType);
         model.addAttribute("keyword", keyword);
         return "boards/board-list";
     }

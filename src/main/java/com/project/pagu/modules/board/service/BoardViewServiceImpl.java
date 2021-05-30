@@ -8,6 +8,8 @@ import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.LatestBoardViewDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.service.CommentViewService;
+import com.project.pagu.modules.tag.SubjectService;
+import com.project.pagu.modules.teckstack.TechStackService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -71,16 +73,30 @@ public class BoardViewServiceImpl implements BoardViewService {
     }
 
     @Override
-    public PageImpl<PagedBoardViewDto> getSearchBoards(String keyword, Pageable pageable) {
-        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository
-                .findByTitleContaining(keyword, pageable);
+    public PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword,
+            Pageable pageable) throws Exception {
+
+        Page<Board> boardPage;
+        if (searchType.equals("TITLE")) {
+            boardPage = boardRepository
+                    .findByTitleContaining(keyword, pageable);
+        }else if (searchType.equals("TAG")){
+            boardPage = boardRepository
+                    .findBySubject(keyword, pageable);
+        }else if(searchType.equals("STATUS")){
+            boardPage = boardRepository
+                    .findByStatusContaining(keyword, pageable);
+        }else{
+            throw new Exception();
+        }
         return convertBoardPageToBoardPageDto(boardPage, pageable);
     }
 
     /**
      * Mapper로 변환 예정
      */
-    private PageImpl<PagedBoardViewDto> convertBoardPageToBoardPageDto(Page<Board> boardPage, Pageable pageable) {
+    private PageImpl<PagedBoardViewDto> convertBoardPageToBoardPageDto(Page<Board> boardPage,
+            Pageable pageable) {
         List<PagedBoardViewDto> pagedBoardViewDtos = new ArrayList<>();
         for (Board board : boardPage) {
             pagedBoardViewDtos.add(PagedBoardViewDto.creatBoardPageDto(board));

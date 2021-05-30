@@ -25,5 +25,6 @@ public interface BoardViewService {
 
     PageImpl<LatestBoardViewDto> getLatestBoard(int size);
 
-    PageImpl<PagedBoardViewDto> getSearchBoards(String keyword, Pageable pageable);
+    PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword, Pageable pageable)
+            throws Exception;
 }
