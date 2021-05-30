@@ -117,7 +117,7 @@
                                     <a class="page-link" th:href="@{/profile/boards(page=${#numbers.formatDecimal(startPage -1 , 0, -1)})}">Previous</a>
                                 </li>
 
-                                <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1 }? 'active'">
+                                <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1}? 'active'">
                                     <a th:text="${page}" class="page-link" th:href="@{/profile/boards(page=${page})}"></a>
                                 </li>
 

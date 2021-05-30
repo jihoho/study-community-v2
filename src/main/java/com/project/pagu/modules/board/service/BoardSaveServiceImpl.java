@@ -51,6 +51,7 @@ public class BoardSaveServiceImpl implements BoardSaveService {
         board.addBoardScheduleList(dto.createBoardSchedules());
         board.setMember(findMember);
         Board savedBoard = boardRepository.save(board);
+        registerTagToBoard(board, dto.getSubjects(), dto.getTechStacks());
 
         List<BoardImage> boardImageList = fileManager.uploadBoardImageDtos(savedBoard.getId(), dto);
         savedBoard.addBoardImageList(boardImageList);
