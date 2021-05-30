@@ -82,7 +82,7 @@ public class BoardViewServiceImpl implements BoardViewService {
 
     @Override
     public PageImpl<PagedBoardViewDto> getSearchBoards(String keyword, Pageable pageable) {
-        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository
+        Page<Board> boardPage = boardRepository
                 .findByTitleContaining(keyword, pageable);
         return convertBoardPageToBoardPageDto(boardPage, pageable);
     }

@@ -2,7 +2,6 @@ package com.project.pagu.modules.board.repository;
 
 import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.member.domain.Member;
-import com.project.pagu.modules.member.domain.MemberId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +17,4 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     Page<Board> findByMember(Member member, Pageable pageable);
 
-    Page<Board> findByBoardSubjectsBySubjectByNameContaining(String keyword, Pageable pageable);
 }
