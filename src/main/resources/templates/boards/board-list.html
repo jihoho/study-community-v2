@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: head"></head>
+<head th:include="fragments :: head"></head>
+<link href="/css/board-list.css" rel="stylesheet" type="text/css" media="screen" />
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
 <div class="container">
@@ -52,20 +53,34 @@
             <!-- Example single danger button -->
             <form th:action="@{/boards/search}">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="search-dropdown-menu" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         제목
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">제목</a>
-                        <a class="dropdown-item" href="#">주제+기술</a>
-                        <a class="dropdown-item" href="#">상태</a>
+                        <a class="dropdown-item" onclick="changeSearchType('TITLE')">제목</a>
+                        <a class="dropdown-item" onclick="changeSearchType('TAG')">주제+기술</a>
+                        <a class="dropdown-item" onclick="changeSearchType('STATUS')">상태</a>
                     </div>
+
+                    <input type="hidden" th:name="stype" id="stype" th:value="*{stype}" />
                 </div>
-                <div class="input-group mb-3">
-                    <input type="text" th:name="keyword" th:value="*{keyword}" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
+                <div class="input-group mb-3" id="search-input-div">
+                    <input type="text" id="keyword-input" th:name="keyword" th:value="*{keyword}" class="form-control" placeholder="검색어를 입력해주세요." aria-label="search keyword.." aria-describedby="basic-addon2" />
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">Search</button>
                     </div>
+                </div>
+
+                <div id="board-status-radio" style="display: none;">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="inlineRadio1" name="keyword" checked value="READY" />
+                        <label class="form-check-label" for="inlineRadio1">모집 중</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="inlineRadio2" name="keyword" value="FINISH" />
+                        <label class="form-check-label" for="inlineRadio2">모집 마감</label>
+                    </div>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </div>
             </form>
         </div>
@@ -83,20 +98,23 @@
         >
             <ul class="pagination">
                 <li class="page-item" th:if="${hasPrevious}">
-                    <a class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage -1 , 0, -1)})}">Previous</a>
+                    <a th:if="${keyword == null || keyword == ''}" class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage -1 , 0, -1)})}">Previous</a>
+                    <a th:if="${keyword != null && keyword != ''}" class="page-link" th:href="@{/boards/search(page=${#numbers.formatDecimal(startPage -1 , 0, -1)},stype=${stype},keyword=${keyword})}">Previous</a>
                 </li>
 
                 <li class="page-item" th:each="page:${#numbers.sequence(startPage,endPage)}" th:classappend="${page == pageNumber + 1 }? 'active'">
                     <a th:if="${keyword == null || keyword == ''}" th:text="${page}" class="page-link" th:href="@{/boards(page=${page})}"></a>
-                    <a th:if="${keyword != null && keyword != ''}" th:text="${page}" class="page-link" th:href="@{/boards/search(page=${page},keyword=${keyword})}"></a>
+                    <a th:if="${keyword != null && keyword != ''}" th:text="${page}" class="page-link" th:href="@{/boards/search(page=${page},stype=${stype},keyword=${keyword})}"></a>
                 </li>
 
                 <li class="page-item" th:if="${hasNext}">
-                    <a class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage + pageSize ,0,-1)})}" onClick="">Next</a>
+                    <a th:if="${keyword == null || keyword == ''}" class="page-link" th:href="@{/boards(page=${#numbers.formatDecimal(startPage + pageSize ,0,-1)})}">Next</a>
+                    <a th:if="${keyword != null && keyword != ''}" class="page-link" th:href="@{/boards/search(page=${#numbers.formatDecimal(startPage + pageSize ,0,-1)},stype=${stype},keyword=${keyword})}">Next</a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
 </body>
+<script src="/js/board-list.js"></script>
 </html>
