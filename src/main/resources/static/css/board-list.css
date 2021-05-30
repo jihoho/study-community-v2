@@ -22,12 +22,12 @@
 }
 #search-bar .btn-group {
     float: left;
-    margin-left: 20%;
+    margin-left: 5%;
 }
 #search-bar .input-group {
-    width: 50%;
+    width: 70%;
 }
 
-.tag-butt{
+.tag-butt {
     margin: 0 0.2em;
 }

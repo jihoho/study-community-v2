@@ -41,8 +41,7 @@ public class BoardSubject {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    // 네이밍 of로 변경하는건 어떨지
-    public static BoardSubject createBoardSubject(Subject subject) {
+    public static BoardSubject of(Subject subject) {
         return BoardSubject
                 .builder()
                 .subject(subject)
