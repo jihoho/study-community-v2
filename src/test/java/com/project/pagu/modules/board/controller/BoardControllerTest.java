@@ -114,6 +114,7 @@ class BoardControllerTest {
 
 
     @DisplayName("게시물 상세 페이지로 이동한다.")
+    @WithMember
     @Test
     void get_board() throws Exception {
         //given
