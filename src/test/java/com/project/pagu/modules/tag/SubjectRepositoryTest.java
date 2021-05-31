@@ -36,7 +36,7 @@ class SubjectRepositoryTest {
         subjectRepository.save(subject);
         Subject web = subjectRepository.findByName("Web").get();
 
-        BoardSubject boardSubject = BoardSubject.createBoardSubject(web);
+        BoardSubject boardSubject = BoardSubject.of(web);
 
         Board board = Board.builder()
                 .title("제목")

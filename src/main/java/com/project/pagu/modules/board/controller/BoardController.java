@@ -41,6 +41,7 @@ public class BoardController {
             Model model) {
 
         model.addAttribute("boardList", boardViewService.getPagedBoardList(pageable));
+        model.addAttribute("stype", "TITLE");
         return "boards/board-list";
 
     }
@@ -77,16 +78,16 @@ public class BoardController {
 
     @GetMapping("/boards/{id}/update")
     public String getBoardForUpdate(@PathVariable Long id, Model model) {
-        model.addAttribute("board", boardViewService.getBoardSaveDto(id));
+        model.addAttribute(boardViewService.getBoardSaveDto(id));
         return "boards/board-update";
     }
 
     @PostMapping("/boards/{id}/update")
-    public String update(@CurrentMember Member member, @PathVariable Long id, @Valid BoardSaveDto dto,
-            BindingResult result) {
+    public String update(@CurrentMember Member member, @PathVariable Long id,
+            @Valid BoardSaveDto dto, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "boards/board-form";
+            return "boards/board-update";
         }
 
         boardSaveService.update(member.getMemberId(), id, dto);
@@ -101,11 +102,14 @@ public class BoardController {
     }
 
     @GetMapping("/boards/search")
-    public String search(@RequestParam(value = "keyword") String keyword,
+    public String search(@RequestParam(value = "stype") String searchType,
+            @RequestParam(value = "keyword") String keyword,
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
-            Model model) {
+            Model model) throws Exception {
 
-        model.addAttribute("boardList", boardViewService.getSearchBoards(keyword, pageable));
+        model.addAttribute("boardList",
+                boardViewService.getSearchBoards(searchType, keyword, pageable));
+        model.addAttribute("stype", searchType);
         model.addAttribute("keyword", keyword);
         return "boards/board-list";
     }

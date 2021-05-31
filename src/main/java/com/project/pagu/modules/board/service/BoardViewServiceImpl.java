@@ -2,12 +2,14 @@ package com.project.pagu.modules.board.service;
 
 import com.project.pagu.modules.board.Exception.BoardNotFoundException;
 import com.project.pagu.modules.board.domain.Board;
+import com.project.pagu.modules.board.domain.StudyStatus;
 import com.project.pagu.modules.board.model.BoardViewDto;
 import com.project.pagu.modules.board.model.PagedBoardViewDto;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.LatestBoardViewDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
 import com.project.pagu.modules.comment.service.CommentViewService;
+import com.project.pagu.modules.member.domain.Member;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,14 @@ public class BoardViewServiceImpl implements BoardViewService {
     }
 
     @Override
+    public PageImpl<PagedBoardViewDto> getPagedBoardListByMemberId(Member member,
+            Pageable pageable) {
+
+        Page<Board> boardPage = boardRepository.findByMember(member, pageable);
+        return convertBoardPageToBoardPageDto(boardPage, pageable);
+    }
+
+    @Override
     public PageImpl<LatestBoardViewDto> getLatestBoard(int size) {
         Pageable pageable = PageRequest
                 .of(0, size, Sort.by("modifiedDate").descending());
@@ -71,9 +81,22 @@ public class BoardViewServiceImpl implements BoardViewService {
     }
 
     @Override
-    public PageImpl<PagedBoardViewDto> getSearchBoards(String keyword, Pageable pageable) {
-        Page<com.project.pagu.modules.board.domain.Board> boardPage = boardRepository
-                .findByTitleContaining(keyword, pageable);
+    public PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword,
+            Pageable pageable) throws Exception {
+
+        Page<Board> boardPage;
+        if (searchType.equals("TITLE")) {
+            boardPage = boardRepository
+                    .findByTitleContaining(keyword, pageable);
+        }else if (searchType.equals("TAG")){
+            boardPage = boardRepository
+                    .findBySubject(keyword, pageable);
+        }else if(searchType.equals("STATUS")){
+            boardPage = boardRepository
+                    .findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
+        }else{
+            throw new Exception();
+        }
         return convertBoardPageToBoardPageDto(boardPage, pageable);
     }
 

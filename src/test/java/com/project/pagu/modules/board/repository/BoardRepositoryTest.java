@@ -109,7 +109,7 @@ class BoardRepositoryTest {
     }
 
     private BoardSubject giveBoardSubject(String subject) {
-        return BoardSubject.createBoardSubject(givenSubject(subject));
+        return BoardSubject.of(givenSubject(subject));
     }
 
     private Subject givenSubject(String subject) {

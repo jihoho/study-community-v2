@@ -81,7 +81,8 @@ public class BoardSaveDto {
         dto.setTechStacks(board.techStackToString());
         dto.setGoal(board.getGoal());
         dto.setPlace(board.getPlace());
-        dto.setBoardSchedules(dto.getBoardSchedules());
+        dto.setBoardSchedules(
+                BoardScheduleDto.createBoardScheduleDtoList(board.getBoardSchedules()));
         dto.setStatus(board.getStatus());
         dto.setRecruitmentStartAt(board.getRecruitmentStartAt());
         dto.setRecruitmentEndAt(board.getRecruitmentEndAt());

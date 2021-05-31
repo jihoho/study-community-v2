@@ -82,7 +82,7 @@
             </div>
         </div>
         <div>
-            <a class="btn btn-primary" th:href="@{/boards/{id}/update(id=${board.id})}">수정하기</a>
+            <a class="btn btn-primary" th:if="${board.writer.email}==${member.email} and ${board.writer.memberType}==${member.memberType}" th:href="@{/boards/{id}/update(id=${board.id})}">수정하기</a>
         </div>
     </div>
 </div>

@@ -3,6 +3,8 @@ package com.project.pagu.modules.board.model;
 import com.project.pagu.modules.board.domain.BoardSchedule;
 import com.project.pagu.modules.board.domain.StudyDay;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +49,14 @@ public class BoardScheduleDto {
         return BoardScheduleDto.builder()
                 .startTime(boardSchedule.getStartTime())
                 .endTime(boardSchedule.getEndTime())
+                .dayKey(boardSchedule.getStudyDay().getKey())
                 .studyDay(boardSchedule.getStudyDay())
                 .build();
+    }
+
+    public static List<BoardScheduleDto> createBoardScheduleDtoList(
+            List<BoardSchedule> boardSchedules) {
+        return boardSchedules.stream().map(s -> createBoardScheduleDto(s))
+                .collect(Collectors.toList());
     }
 }
