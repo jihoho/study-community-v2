@@ -45,7 +45,7 @@
                     <a class="nav-link" href="#" th:href="@{/login}">Login</a>
                 </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/sign-up}">SignUp</a>
+                    <a class="nav-link" href="#" th:href="@{/members/sign-up}">SignUp</a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/profile}">MyPage</a>

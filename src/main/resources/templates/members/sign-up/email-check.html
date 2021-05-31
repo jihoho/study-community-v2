@@ -16,7 +16,7 @@
                         <span>로 인증번호를 전송하였습니다.</span>
                     </div>
                     <div class="form-signin">
-                        <form th:action="@{/sign-up/email-check}" method="post" th:object="${signUpDto}">
+                        <form th:action="@{/members/sign-up/email-check}" method="post" th:object="${signUpDto}">
                             <!-- 인증번호 입력-->
                             <div class="form-label-group mt-5">
                                 <input type="text" id="inputEmailCheck" class="form-control" th:field="*{authKeyInput}" placeholder="인증번호 입력해주세요." required autofocus />
