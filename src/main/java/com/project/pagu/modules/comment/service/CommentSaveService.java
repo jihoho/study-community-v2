@@ -1,7 +1,6 @@
 package com.project.pagu.modules.comment.service;
 
 import com.project.pagu.modules.comment.model.CommentSaveDto;
-import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 
 /**
@@ -16,5 +15,7 @@ public interface CommentSaveService {
     void updateComment(MemberId memberId, CommentSaveDto commentSaveDto);
 
     void deleteComment(MemberId memberId,long commentId);
+
+    void deleteCommentsOnBoard(long boardId);
 
 }

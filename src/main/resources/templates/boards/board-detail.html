@@ -81,8 +81,9 @@
                 <img th:each="imageUrl :${board.imageUrls}" th:src="${imageUrl}" />
             </div>
         </div>
-        <div>
-            <a class="btn btn-primary" th:if="${board.writer.email}==${member.email} and ${board.writer.memberType}==${member.memberType}" th:href="@{/boards/{id}/update(id=${board.id})}">수정하기</a>
+        <div class="board-edit-butt-div" th:if="${board.writer.email}==${member.email} and ${board.writer.memberType}==${member.memberType}">
+            <a class="btn btn-primary" th:href="@{/boards/{id}/update(id=${board.id})}">수정하기</a>
+            <a class="btn btn-danger" onclick="confirmDeleteBoard()">삭제하기</a>
         </div>
     </div>
 </div>
@@ -318,6 +319,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
                 <button type="button" onclick="commentDeleteClick($('#delete-comment-id').val())" class="btn btn-danger">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end-->
+
+<!-- Board Delete Confirm Modal -->
+<div class="modal fade" id="deleteBoardConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>삭제 확인</span>
+            </div>
+            <div class="modal-body">
+                <span>해당 게시판을 삭제 하시겠습니까?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" onclick="deleteBoardById($('#board-id').val())" class="btn btn-danger">삭제</button>
             </div>
         </div>
     </div>

@@ -1,14 +1,11 @@
 function commentReplyClick(e) {
   var commentDiv = $(e).parents("div.board-comment-list");
 
-  var nickname = $(commentDiv).find(".board-comment-nick").find(
-      "a span").text();
-  var imageUrl = $(commentDiv).find(".board-comment-img").children("img").attr(
-      "src");
+  var nickname = $(commentDiv).find(".board-comment-nick").find("a span").text();
+  var imageUrl = $(commentDiv).find(".board-comment-img").children("img").attr("src");
   var superCommentId = $(commentDiv).find(".comment-id").val();
   var content = $(commentDiv).find(".board-comment-p").text();
-  var modifiedDate = $(commentDiv).find(".board-comment-nick").children(
-      ":last").text();
+  var modifiedDate = $(commentDiv).find(".board-comment-nick").children(":last").text();
   console.log(commentDiv.attr("class"));
   console.log(nickname);
   console.log(imageUrl);
@@ -27,10 +24,8 @@ function commentReplyClick(e) {
 function commentUpdateClick(e) {
   var commentDiv = $(e).parents("div.board-comment-list");
 
-  var nickname = $(commentDiv).find(".board-comment-nick").find(
-      "a span").text();
-  var imageUrl = $(commentDiv).find(".board-comment-img").children("img").attr(
-      "src");
+  var nickname = $(commentDiv).find(".board-comment-nick").find("a span").text();
+  var imageUrl = $(commentDiv).find(".board-comment-img").children("img").attr("src");
   var commentId = $(commentDiv).find(".comment-id").val();
   var content = $(commentDiv).find(".board-comment-p").text();
   var modifiedDate = $(commentDiv).find(".board-comment-nick").children(":last").text();
@@ -63,6 +58,31 @@ function commentDeleteClick(targetCommentId) {
     },
     success: function () {
       location.reload();
+    },
+    error: function () {
+      alert("삭제 요청 에러");
+    },
+  });
+}
+
+function confirmDeleteBoard() {
+  $("#deleteBoardConfirmModal").modal("show");
+}
+
+function deleteBoardById(targetBoardId) {
+  console.log(targetBoardId);
+  var token = $("meta[name='_csrf']").attr("content");
+  var header = $("meta[name='_csrf_header']").attr("content");
+  console.log(token + ", " + header);
+  $.ajax({
+    url: "/boards/" + targetBoardId,
+    type: "DELETE",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(header, token);
+    },
+    success: function () {
+      console.log("delete complete boardId : " + targetBoardId);
+      history.back();
     },
     error: function () {
       alert("삭제 요청 에러");

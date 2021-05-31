@@ -1,6 +1,7 @@
 package com.project.pagu.modules.comment.repository;
 
 import com.project.pagu.modules.comment.domain.Comment;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -14,4 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //         + "WHERE b.id = :boardId "
     //         + "ORDER BY c.superComment.id asc nulls first, c.createdDate asc ")
     // List<Comment> findCommentByBoardId(@Param("boardId") Long boardId);
+
+    List<Comment> findByBoardId(Long boardId);
 }

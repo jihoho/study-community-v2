@@ -33,6 +33,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 /**
  * Created by IntelliJ IDEA
@@ -44,6 +45,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "is_delete = false")
 public class Board extends BaseTimeEntity {
 
     @Id
@@ -103,6 +105,7 @@ public class Board extends BaseTimeEntity {
     @Builder.Default
     private Set<BoardTechStack> boardTechStacks = new HashSet<>();
 
+    private boolean isDelete = false;
 
     public void update(BoardSaveDto boardSaveDto) {
         this.title = boardSaveDto.getTitle();
@@ -117,6 +120,9 @@ public class Board extends BaseTimeEntity {
         registerBoardScheduleListByDto(boardSaveDto.getBoardSchedules());
     }
 
+    public void delete() {
+        isDelete = true;
+    }
     //==연관관계 편의 메서드==//
 
     private void registerBoardScheduleListByDto(List<BoardScheduleDto> boardScheduleDtos) {

@@ -6,6 +6,7 @@ import com.project.pagu.modules.board.domain.Board;
 import com.project.pagu.modules.board.domain.BoardImage;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
+import com.project.pagu.modules.comment.service.CommentSaveService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.service.MemberViewService;
@@ -41,6 +42,7 @@ public class BoardSaveServiceImpl implements BoardSaveService {
     private final SubjectService subjectService;
     private final TechStackService techStackService;
     private final FileManager fileManager;
+    private final CommentSaveService commentSaveService;
 
     @Override
     @Transactional
@@ -65,7 +67,7 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
         Board board = boardViewService.findById(id);
         if (!memberId.equals(board.getMember().getMemberId())) {
-            throw new AccessDeniedException("해당 댓글의 주인이 아닙니다.");
+            throw new AccessDeniedException("해당 게시글의 주인이 아닙니다.");
         }
         registerTagToBoard(board, dto.getSubjects(), dto.getTechStacks());
         board.update(dto);
@@ -76,12 +78,24 @@ public class BoardSaveServiceImpl implements BoardSaveService {
 
     }
 
+    @Override
+    @Transactional
+    public void delete(MemberId memberId, Long boardId) {
+        Board board = boardViewService.findById(boardId);
+        if (!memberId.equals(board.getMember().getMemberId())) {
+            throw new AccessDeniedException("해당 게시글의 주인이 아닙니다.");
+        }
+        commentSaveService.deleteCommentsOnBoard(boardId);
+        board.delete();
+    }
 
     private Board registerTagToBoard(Board board, String subjects, String techStacks) {
         Set<Subject> subjectSet = createSubject(subjects);
         Set<TechStack> techStackSet = createTechStack(techStacks);
-        board.registerSubjects(subjectSet.stream().map(BoardSubject::of).collect(Collectors.toList()));
-        board.registerTechStacks(techStackSet.stream().map(BoardTechStack::of).collect(Collectors.toList()));
+        board.registerSubjects(
+                subjectSet.stream().map(BoardSubject::of).collect(Collectors.toList()));
+        board.registerTechStacks(
+                techStackSet.stream().map(BoardTechStack::of).collect(Collectors.toList()));
 
         return board;
     }

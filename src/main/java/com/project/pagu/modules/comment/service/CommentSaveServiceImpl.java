@@ -9,6 +9,7 @@ import com.project.pagu.modules.comment.repository.CommentRepository;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.repository.MemberRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,4 +72,14 @@ public class CommentSaveServiceImpl implements CommentSaveService {
         }
     }
 
+    @Override
+    @Transactional
+    public void deleteCommentsOnBoard(long boardId) {
+        List<Comment> comments = commentRepository.findByBoardId(boardId);
+        for (Comment targetComment:comments){
+            if (!targetComment.isRemove()) {
+                targetComment.remove();
+            }
+        }
+    }
 }

@@ -13,4 +13,6 @@ public interface BoardSaveService {
     Long saveBoardDto(MemberId memberId, BoardSaveDto dto);
 
     void update(MemberId memberId, Long boardId, BoardSaveDto dto);
+
+    void delete(MemberId memberId,Long boardId);
 }
