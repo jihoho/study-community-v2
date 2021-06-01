@@ -125,7 +125,7 @@ public class MemberViewServiceTest {
                 .link("https://link.com")
                 .info("안녕하세요")
                 .career("취준생")
-                .postion("웹 백엔드")
+                .position("웹 백엔드")
                 .role(Role.GUEST)
                 .build();
 

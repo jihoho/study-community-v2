@@ -56,7 +56,7 @@ public class WithMemberSecurityContextFactory implements WithSecurityContextFact
                 .role(Role.USER)
                 .imageFilename(null)
                 .career("취준생")
-                .postion("백엔드")
+                .position("백엔드")
                 .link("test@gi.com")
                 .info("안녕하세요")
                 .password(passwordEncoder.encode("123123a!"))

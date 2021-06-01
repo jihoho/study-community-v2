@@ -55,7 +55,7 @@ public class Member extends BaseTimeEntity {
 
     private String career;
 
-    private String postion;
+    private String position;
 
     private boolean isDelete;
 
@@ -72,7 +72,7 @@ public class Member extends BaseTimeEntity {
     @Builder
     public Member(String email, MemberType memberType, String nickname, String password,
             String imageFilename, String oauthImageUrl, String link, String info, String career,
-            String postion,
+            String position,
             Role role) {
         this.email = email;
         this.memberType = memberType;
@@ -83,7 +83,7 @@ public class Member extends BaseTimeEntity {
         this.link = link;
         this.info = info;
         this.career = career;
-        this.postion = postion;
+        this.position = position;
         this.role = role;
 
         if (imageFilename != null && !imageFilename.equals("")) {
@@ -116,7 +116,7 @@ public class Member extends BaseTimeEntity {
         this.link = dto.getLink();
         this.info = dto.getInfo();
         this.career = dto.getCareer();
-        this.postion = dto.getPosition();
+        this.position = dto.getPosition();
         this.role = Role.USER;
     }
 

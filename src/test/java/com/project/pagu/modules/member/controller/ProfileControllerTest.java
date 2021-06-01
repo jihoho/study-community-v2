@@ -255,7 +255,7 @@ class ProfileControllerTest {
                 .role(Role.GUEST)
                 .imageFilename(null)
                 .career("취준생")
-                .postion("백엔드")
+                .position("백엔드")
                 .link("test@gi.com")
                 .info("안녕하세요")
                 .build();
@@ -345,7 +345,7 @@ class ProfileControllerTest {
                 .role(Role.GUEST)
                 .imageFilename(null)
                 .career("취준생")
-                .postion("백엔드")
+                .position("백엔드")
                 .link("test@gi.com")
                 .info("안녕하세요")
                 .build();

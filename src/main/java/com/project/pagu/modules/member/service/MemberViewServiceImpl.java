@@ -69,7 +69,7 @@ public class MemberViewServiceImpl implements MemberViewService {
                 .link(findMember.getLink())
                 .info(findMember.getInfo())
                 .career(findMember.getCareer())
-                .position(findMember.getPostion())
+                .position(findMember.getPosition())
                 .build();
     }
 
