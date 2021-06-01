@@ -46,38 +46,42 @@ public class ProfileController {
         webDataBinder.addValidators(profileValidation);
     }
 
-    @GetMapping("/profile")
+    /**
+     * 프로필 페이지로 이동한다.
+     * 로그인이 되어있지 않을 경우 로그인페이지로 이동한다.
+     */
+    @GetMapping("/members/profile")
     public String profile(@CurrentMember Member member, Model model) {
+        if (member == null) {
+            return "redirect:/login";
+        }
         model.addAttribute(memberViewService.convertToProfileViewDtoBy(member.getNickname()));
-        return "profile";
+        return "members/profile";
     }
 
-    @PostMapping("/members/update")
+    /**
+     * 프로필 수정데이터를 전송받아 수정한다.
+     */
+    @PostMapping("/members/profile")
     public String updateMember(@CurrentMember Member member, @Valid ProfileDto profileDto,
             BindingResult result) {
 
         if (result.hasErrors()) {
-            return "profile";
+            return "members/profile";
         }
 
         memberSaveService.update(member.getMemberId(), profileDto);
-        return "redirect:/profile";
+        return "redirect:/members/profile";
     }
 
-    @GetMapping("/profileThumbnails/{type}/{email}/{filename}")
-    public void profileThumbnails(@PathVariable String type,
-            @PathVariable String email,
-            @PathVariable String filename,
-            HttpServletResponse response) throws Exception {
-        fileManager.profileThumbnails(response, filename, type, email);
-    }
-
+    /**
+     * 다른회원의 프로필 페이지로 이동한다.
+     * 본인일 경우 본인의 프로필 페이지로 이동한다.
+     */
     @GetMapping("/profile/{nickname}")
-    public String getProfile(@CurrentMember Member member, @PathVariable String nickname,
-            Model model) {
+    public String getProfile(@CurrentMember Member member, @PathVariable String nickname, Model model) {
         ProfileDto profileViewDto = memberViewService.convertToProfileViewDtoBy(nickname);
 
-        //자기 자신을 조회하면 프로필 관리로 이동
         MemberId currentMemberId = member.getMemberId();
         MemberId findMemberId = MemberId.of(profileViewDto.getEmail(), member.getMemberType());
         if (currentMemberId.equals(findMemberId)) {
@@ -88,24 +92,28 @@ public class ProfileController {
         return "/profile/detail";
     }
 
-    @GetMapping("/members/password-check/{name}")
-    public String passwordForm(@CurrentMember Member member, @PathVariable String name,
-            Model model) {
+    /**
+     * 본인 확인을 위해 비밀번호 확인 페이지로 이동한다.
+     */
+    @GetMapping("/members/password-check/{viewName}")
+    public String passwordForm(@CurrentMember Member member, @PathVariable String viewName, Model model) {
         //todo : 구글 계정일 경우 회원탈퇴
 //        if (member.getMemberType().equals(MemberType.GOOGLE)) {
 //            memberService.deleteMember(member);
 //            return "redirect:/members/delete-success";
 //        }
         model.addAttribute(new SignUpDto());
-        model.addAttribute("view", name);
+        model.addAttribute("view", viewName);
         return "members/password-check";
     }
 
+    /**
+     * 비밀번호 확인 후 비밀번호 변경 또는 회원탈퇴 페이지로 이동한다.
+     */
     @PostMapping("/members/password-check/{name}")
     public String checkPassword(@CurrentMember Member member, Model model,
             @PathVariable String name, SignUpDto dto, BindingResult result) {
-        if (profileValidation
-                .isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
+        if (profileValidation.isCurrentMemberPassword(dto.getPassword(), member.getPassword(), result)) {
             model.addAttribute("view", name);
             return "members/password-check";
         }
@@ -118,19 +126,25 @@ public class ProfileController {
             memberSaveService.deleteMember(MemberId.of(member.getEmail(), member.getMemberType()));
             return "redirect:/members/delete-success";
         }
-        return "/error";
+        return "error";
 
     }
 
+    /**
+     * 비밀번호 변경 페이지로 이동한다.
+     */
     @GetMapping("/members/change-password")
     public String changePassword(Model model) {
         model.addAttribute(new PasswordSaveDto());
         return "members/change-password";
     }
 
+    /**
+     * 비밀번호 데이터를 받아 비밀번호를 수정한다.
+     * 실패시 비밀번호 변경 페이지로 이동한다.
+     */
     @PostMapping("/members/change-password")
-    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto,
-            BindingResult result) {
+    public String submitPassword(@CurrentMember Member member, @Valid PasswordSaveDto dto, BindingResult result) {
         profileValidation.isNotEqualToPassword(dto.getPassword(), dto.getPasswordCheck(), result);
 
         if (result.hasErrors()) {
@@ -144,11 +158,17 @@ public class ProfileController {
         return "redirect:/members/password-success";
     }
 
+    /**
+     * 회원탈퇴 성공페이지로 이동한다.
+     */
     @GetMapping("/members/delete-success")
     public String deleteSuccess() {
         return "members/delete-success";
     }
 
+    /**
+     * 프로필에서 게시물 관리 페이지로 이동한다.
+     */
     @GetMapping("/profile/boards")
     public String profileBoards(@CurrentMember Member member,
             @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
@@ -156,8 +176,18 @@ public class ProfileController {
 
         model.addAttribute("boards", boardViewService.getPagedBoardListByMemberId(member, pageable));
 
-        return "/profile/boards";
+        return "profile/boards";
+    }
 
+    /**
+     * 프로필의 썸네일 이미지를 가져온다.
+     */
+    @GetMapping("/profileThumbnails/{type}/{email}/{filename}")
+    public void profileThumbnails(@PathVariable String type,
+            @PathVariable String email,
+            @PathVariable String filename,
+            HttpServletResponse response) throws Exception {
+        fileManager.profileThumbnails(response, filename, type, email);
     }
 
 }
