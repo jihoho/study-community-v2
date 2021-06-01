@@ -31,41 +31,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 @Controller
 public class MainController {
-
-    private static final String authorizationRequestBaseUri = "oauth2/authorization";
-    private final Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
-    private final ClientRegistrationRepository clientRegistrationRepository;
-    private final OauthSignUpValidation oauthSignUpValidation;
     private final BoardViewService boardViewService;
-
-    @InitBinder("oauthMemberSaveDto")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(oauthSignUpValidation);
-    }
 
     @GetMapping("/")
     public String mainPage(Model model) {
         model.addAttribute("boardList", boardViewService.getLatestBoard(10));
         return "main";
-    }
-
-    @SuppressWarnings("unchecked")
-    @GetMapping("/auth-login")
-    public String getLoginPage(Model model) throws Exception {
-        Iterable<ClientRegistration> clientRegistrations = null;
-        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
-                .as(Iterable.class);
-        if (type != ResolvableType.NONE &&
-                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
-            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
-        }
-        assert clientRegistrations != null;
-        clientRegistrations.forEach(registration ->
-                oauth2AuthenticationUrls.put(registration.getClientName(),
-                        authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
-        model.addAttribute("urls", oauth2AuthenticationUrls);
-
-        return "auth/oauth-login";
     }
 
     @GetMapping("/authority")
