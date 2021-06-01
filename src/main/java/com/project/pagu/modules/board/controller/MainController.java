@@ -33,9 +33,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MainController {
 
     private static final String authorizationRequestBaseUri = "oauth2/authorization";
-    Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
+    private final Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final MemberSaveService memberSaveService;
     private final OauthSignUpValidation oauthSignUpValidation;
     private final BoardViewService boardViewService;
 
@@ -47,31 +46,11 @@ public class MainController {
     @GetMapping("/")
     public String mainPage(Model model) {
         model.addAttribute("boardList", boardViewService.getLatestBoard(10));
-        return "main-body";
-    }
-
-    @GetMapping("/sign-up-google")
-    public String signUpGoogle(Model model) {
-        model.addAttribute(new OauthSaveDto());
-        return "sign-up-google";
-    }
-
-    @PostMapping("/sign-up-google")
-    public String submitSignUpGoogle(@CurrentMember Member member,
-            @Valid OauthSaveDto oAuthSaveDto,
-            BindingResult result) {
-        if (result.hasErrors()) {
-            return "sign-up-google";
-        }
-
-        oAuthSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
-
-        memberSaveService.saveMember(oAuthSaveDto);
-        return "redirect:/";
+        return "main";
     }
 
     @SuppressWarnings("unchecked")
-    @GetMapping("auth-login")
+    @GetMapping("/auth-login")
     public String getLoginPage(Model model) throws Exception {
         Iterable<ClientRegistration> clientRegistrations = null;
         ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)

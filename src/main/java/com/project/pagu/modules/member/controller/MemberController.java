@@ -1,8 +1,10 @@
 package com.project.pagu.modules.member.controller;
 
+import com.project.pagu.common.annotation.CurrentMember;
+import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
 import com.project.pagu.modules.member.domain.MemberType;
-import com.project.pagu.modules.member.model.PasswordSaveDto;
+import com.project.pagu.modules.member.model.OauthSaveDto;
 import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.service.MemberSaveService;
 import com.project.pagu.common.manager.SignUpManager;
@@ -68,6 +70,27 @@ public class MemberController {
     public String signUp(Model model, SignUpDto signUpDto) {
         model.addAttribute(signUpDto);
         return "members/sign-up";
+    }
+
+    /**
+     * 구글 가입 페이지로 이동한다.
+     */
+    @GetMapping("/members/sign-up/google")
+    public String signUpGoogle(Model model) {
+        model.addAttribute(new OauthSaveDto());
+        return "members/sign-up/google";
+    }
+
+    @PostMapping("/members/sign-up/google")
+    public String submitSignUpGoogle(@CurrentMember Member member, @Valid OauthSaveDto oAuthSaveDto,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            return "members/sign-up/google";
+        }
+
+        oAuthSaveDto.updateEmailAndImage(member.getEmail(), member.getOauthImageUrl());
+        memberSaveService.saveMember(oAuthSaveDto);
+        return "redirect:/";
     }
 
     /**

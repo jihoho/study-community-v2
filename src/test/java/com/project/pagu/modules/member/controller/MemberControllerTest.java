@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.domain.Role;
+import com.project.pagu.modules.member.mockMember.WithMember;
+import com.project.pagu.modules.member.model.OauthSaveDto;
 import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -141,6 +143,64 @@ class MemberControllerTest {
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("members/sign-up/email-check"));
+    }
+
+    @Test
+    @DisplayName("구글 가입 페이지로 이동한다.")
+    void sign_up_google() throws Exception {
+        mockMvc.perform(get("/members/sign-up/google"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("oauthSaveDto"))
+                .andExpect(view().name("members/sign-up/google"));
+    }
+
+    @Test
+    @WithMember
+    @DisplayName("구글 계정 가입에 성공한다.")
+    void sign_up_google_success() throws Exception {
+        Member member = Member.builder()
+                .email("google@gmail.com")
+                .memberType(MemberType.GOOGLE)
+                .role(Role.GUEST)
+                .build();
+        memberRepository.save(member);
+
+        OauthSaveDto oauthSaveDto = new OauthSaveDto();
+        oauthSaveDto.setNickname("google");
+
+        MultiValueMap<String, String> params = convert(objectMapper, oauthSaveDto);
+
+        mockMvc.perform(post("/members/sign-up/google")
+                .with(csrf())
+                .params(params))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    @WithMember
+    @DisplayName("구글 계정 가입에 실패한다.")
+    void sign_up_google_fail() throws Exception {
+        Member member = Member.builder()
+                .email("google@gmail.com")
+                .memberType(MemberType.GOOGLE)
+                .role(Role.GUEST)
+                .build();
+        memberRepository.save(member);
+
+        OauthSaveDto oauthSaveDto = new OauthSaveDto();
+        oauthSaveDto.setNickname("NooooooooooooooName");
+
+        MultiValueMap<String, String> params = convert(objectMapper, oauthSaveDto);
+
+        mockMvc.perform(post("/members/sign-up/google")
+                .with(csrf())
+                .params(params))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("members/sign-up/google"));
     }
 
     @Test

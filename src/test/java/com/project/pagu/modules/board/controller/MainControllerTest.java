@@ -32,7 +32,7 @@ class MainControllerTest {
     void move_main_page() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("main-body"))
+                .andExpect(view().name("main"))
                 .andExpect(content().string(containsString("PAGU")))
                 .andExpect(content().string(containsString("스터디 에티켓")))
                 .andExpect(content().string(containsString("최근 모집 공고")))

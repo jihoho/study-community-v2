@@ -5,6 +5,7 @@ import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.board.service.BoardViewService;
 import com.project.pagu.modules.member.domain.Member;
 import com.project.pagu.modules.member.domain.MemberId;
+import com.project.pagu.modules.member.domain.MemberType;
 import com.project.pagu.modules.member.model.SignUpDto;
 import com.project.pagu.modules.member.model.PasswordSaveDto;
 import com.project.pagu.modules.member.model.ProfileDto;
@@ -55,6 +56,11 @@ public class ProfileController {
         if (member == null) {
             return "redirect:/login";
         }
+
+        if (member.getMemberType().equals(MemberType.GOOGLE)) {
+            member = memberViewService.findById(member.getMemberId());
+        }
+
         model.addAttribute(memberViewService.convertToProfileViewDtoBy(member.getNickname()));
         return "members/profile";
     }

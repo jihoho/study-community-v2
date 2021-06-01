@@ -3,25 +3,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:include="fragments :: head"></head>
 
-<link href="/static/css/profile.css" rel="stylesheet" type="text/css" media="screen" />
-<style>
-    <!-- 헤더 대체되서 스타일 안읽힘 -- >
-    a .nav-link.active {
-        color: #70ab6b;
-        text-decoration: none;
-        background-color: transparent;
-    }
+<link href="/css/profile.css" rel="stylesheet" type="text/css" media="screen" />
+<!--<style>-->
+<!--    &lt;!&ndash; 헤더 대체되서 스타일 안읽힘 &#45;&#45; >-->
+<!--    a .nav-link.active {-->
+<!--        color: #70ab6b;-->
+<!--        text-decoration: none;-->
+<!--        background-color: transparent;-->
+<!--    }-->
 
-    .nav-pills .nav-link.active {
-        color: #fff;
-        background-color: #70ab6b;
-    }
+<!--    .nav-pills .nav-link.active {-->
+<!--        color: #fff;-->
+<!--        background-color: #70ab6b;-->
+<!--    }-->
 
-    .tab-content > .active {
-        display: block;
-        margin-right: -146px;
-    }
-</style>
+<!--    .tab-content > .active {-->
+<!--        display: block;-->
+<!--        margin-right: -146px;-->
+<!--    }-->
+<!--</style>-->
 <body>
 <div th:replace="fragments :: pagu-nav"></div>
 <section>
@@ -133,10 +133,10 @@
 
                     <div id="secession"  aria-labelledby="application-tab">
                         <div class="mb-2 mt-5">
-                            <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='change-password')}">비밀번호 변경하기</a>
+                            <a class="btn btn-primary" th:href="@{/profile/password-check/{name}(name='change-password')}">비밀번호 변경하기</a>
                         </div>
                         <div>
-                            <a class="btn btn-primary" th:href="@{/members/password-check/{name}(name='secession')}">탈퇴하기</a>
+                            <a class="btn btn-primary" th:href="@{/profile/password-check/{name}(name='secession')}">탈퇴하기</a>
                         </div>
                     </div>
                 </div>
@@ -153,6 +153,6 @@
         </div>
     </div>
 </section>
-<script src="/static/js/profile.js"></script>
+<script src="/js/profile.js"></script>
 </body>
 </html>
