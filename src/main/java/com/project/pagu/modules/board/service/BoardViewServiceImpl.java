@@ -42,7 +42,6 @@ public class BoardViewServiceImpl implements BoardViewService {
         return boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
     }
 
-
     @Override
     public BoardViewDto getBoardDetailDto(Long id) {
         Board board = findById(id);
@@ -58,69 +57,56 @@ public class BoardViewServiceImpl implements BoardViewService {
 
     @Override
     public PageImpl<PagedBoardViewDto> getPagedBoardList(Pageable pageable) {
-        Page<Board> boardPage = boardRepository.findAll(pageable);
-        PageImpl<PagedBoardViewDto> boardPageDto = convertBoardPageToBoardPageDto(boardPage,
-                pageable);
-        return boardPageDto;
+        return convertBoardPageToBoardPageDto(boardRepository.findAll(pageable), pageable);
     }
 
-    @Override
-    public PageImpl<PagedBoardViewDto> getPagedBoardListByMemberId(Member member,
-            Pageable pageable) {
-
-        Page<Board> boardPage = boardRepository.findByMember(member, pageable);
-        return convertBoardPageToBoardPageDto(boardPage, pageable);
-    }
-
-    @Override
-    public PageImpl<LatestBoardViewDto> getLatestBoard(int size) {
-        Pageable pageable = PageRequest
-                .of(0, size, Sort.by("modifiedDate").descending());
-        Page<Board> latestBoard = boardRepository.findAll(pageable);
-        return convertLatestBoardToLatestBoardDto(latestBoard, pageable);
-    }
-
-    @Override
-    public PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword,
-            Pageable pageable) {
-
-        Page<Board> boardPage;
-        switch (searchType) {
-            case "TITLE":
-                boardPage = boardRepository.findByTitleContaining(keyword, pageable);
-                break;
-            case "TAG":
-                boardPage = boardRepository.findBySubject(keyword, pageable);
-                break;
-            case "STATUS":
-                boardPage = boardRepository.findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        return convertBoardPageToBoardPageDto(boardPage, pageable);
-    }
-
-    /**
-     * Mapper로 변환 예정
-     */
     private PageImpl<PagedBoardViewDto> convertBoardPageToBoardPageDto(Page<Board> boardPage, Pageable pageable) {
         List<PagedBoardViewDto> pagedBoardViewDtos = new ArrayList<>();
         for (Board board : boardPage) {
             pagedBoardViewDtos.add(PagedBoardViewDto.creatBoardPageDto(board));
         }
-        return new PageImpl<>(pagedBoardViewDtos, pageable,
-                boardPage.getTotalElements());
+        return new PageImpl<>(pagedBoardViewDtos, pageable, boardPage.getTotalElements());
     }
 
-    private PageImpl<LatestBoardViewDto> convertLatestBoardToLatestBoardDto(Page<Board> latestBoard,
-            Pageable pageable) {
+    @Override
+    public PageImpl<PagedBoardViewDto> getPagedBoardListByMemberId(Member member, Pageable pageable) {
+        return convertBoardPageToBoardPageDto(boardRepository.findByMember(member, pageable), pageable);
+    }
 
+    @Override
+    public PageImpl<LatestBoardViewDto> getLatestBoard(int size) {
+        Pageable pageable = PageRequest.of(0, size, Sort.by("modifiedDate").descending());
+        Page<Board> latestBoard = boardRepository.findAll(pageable);
+        return convertLatestBoardToLatestBoardDto(latestBoard, pageable);
+    }
+
+    private PageImpl<LatestBoardViewDto> convertLatestBoardToLatestBoardDto(Page<Board> latestBoard, Pageable pageable) {
         List<LatestBoardViewDto> latestBoardViewDtos = new ArrayList<>();
         for (Board board : latestBoard) {
             latestBoardViewDtos.add(LatestBoardViewDto.createLatestBoardDto(board));
         }
         return new PageImpl<>(latestBoardViewDtos, pageable, latestBoard.getTotalElements());
 
+    }
+
+    @Override
+    public PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword, Pageable pageable) {
+        return convertBoardPageToBoardPageDto(getBoardPage(searchType, keyword, pageable), pageable);
+    }
+
+    private Page<Board> getBoardPage(String searchType, String keyword, Pageable pageable) {
+        if (searchType.equals("TITLE")) {
+            return boardRepository.findByTitleContaining(keyword, pageable);
+        }
+
+        if (searchType.equals("TAG")) {
+            return boardRepository.findBySubject(keyword, pageable);
+        }
+
+        if (searchType.equals("STATUS")) {
+            return boardRepository.findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
+        }
+
+        throw new IllegalArgumentException();
     }
 }
