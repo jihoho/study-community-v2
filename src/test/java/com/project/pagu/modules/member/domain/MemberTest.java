@@ -25,7 +25,7 @@ class MemberTest {
         String oauthImageUrl = "https://image.png";
         Role role = Role.GUEST;
         String expectedProfileImageUrl1 =
-                "/profileThumbnails/" + memberType.getKey() + "/" + email + "/" + imageFilename;
+                "/profile/thumbnails/" + memberType.getKey() + "/" + email + "/" + imageFilename;
         String expectedProfileImageUrl2 = oauthImageUrl;
         // when
         String actualUrl1 = Member.builder()

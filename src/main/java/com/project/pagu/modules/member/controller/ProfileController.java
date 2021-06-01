@@ -188,7 +188,7 @@ public class ProfileController {
     /**
      * 프로필의 썸네일 이미지를 가져온다.
      */
-    @GetMapping("/profileThumbnails/{type}/{email}/{filename}")
+    @GetMapping("/profile/thumbnails/{type}/{email}/{filename}")
     public void profileThumbnails(@PathVariable String type,
             @PathVariable String email,
             @PathVariable String filename,

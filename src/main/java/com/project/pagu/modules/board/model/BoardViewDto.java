@@ -100,9 +100,7 @@ public class BoardViewDto {
 
     private void addImageUrls(Long boardId, List<BoardImage> boardImages) {
         for (BoardImage boardImage : boardImages) {
-            this.imageUrls.add(FileUtil
-                    .createImageUrl("boardImageThumbnails", String.valueOf(boardId),
-                            boardImage.getFilename()));
+            this.imageUrls.add(FileUtil.createImageUrl(String.valueOf(boardId), boardImage.getFilename()));
         }
     }
 

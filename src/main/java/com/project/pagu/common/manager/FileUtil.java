@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtil {
 
+    private static final String IMAGE_URL = "/profile/thumbnails";
+
     public static String createFileName() {
         return UUID.randomUUID().toString() + System.nanoTime();
     }
@@ -26,7 +28,7 @@ public class FileUtil {
     }
 
     public static String createImageUrl(String... paths) {
-        return Arrays.stream(paths).map(path -> "/" + path)
+        return IMAGE_URL + Arrays.stream(paths).map(path -> "/" + path)
                 .collect(Collectors.joining());
     }
 }

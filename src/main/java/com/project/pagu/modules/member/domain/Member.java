@@ -50,7 +50,6 @@ public class Member extends BaseTimeEntity {
 
     private String link;
 
-    @Lob
     private String info;
 
     private String career;
@@ -70,10 +69,8 @@ public class Member extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Member(String email, MemberType memberType, String nickname, String password,
-            String imageFilename, String oauthImageUrl, String link, String info, String career,
-            String position,
-            Role role) {
+    public Member(String email, MemberType memberType, String nickname, String password, String imageFilename,
+            String oauthImageUrl, String link, String info, String career, String position, Role role) {
         this.email = email;
         this.memberType = memberType;
         this.nickname = nickname;
@@ -85,10 +82,12 @@ public class Member extends BaseTimeEntity {
         this.career = career;
         this.position = position;
         this.role = role;
+        choiceImageUrl(email, imageFilename, oauthImageUrl, memberType.getKey());
+    }
 
-        if (imageFilename != null && !imageFilename.equals("")) {
-            this.profileImageUrl = FileUtil
-                    .createImageUrl("profileThumbnails", memberType.getKey(), email, imageFilename);
+    private void choiceImageUrl(String email, String imageFilename, String oauthImageUrl, String key) {
+        if (imageFilename != null && !imageFilename.isBlank()) {
+            this.profileImageUrl = FileUtil.createImageUrl(key, email, imageFilename);
         } else {
             this.profileImageUrl = oauthImageUrl;
         }
@@ -106,18 +105,12 @@ public class Member extends BaseTimeEntity {
         this.nickname = dto.getChangeNickname();
         this.oauthImageUrl = dto.getOauthImageUrl();
         this.imageFilename = dto.getImageFilename();
-        if (imageFilename != null && !imageFilename.equals("")) {
-            profileImageUrl = FileUtil
-                    .createImageUrl("profileThumbnails", dto.getMemberType(), dto.getEmail(),
-                            imageFilename);
-        } else {
-            profileImageUrl = oauthImageUrl;
-        }
         this.link = dto.getLink();
         this.info = dto.getInfo();
         this.career = dto.getCareer();
         this.position = dto.getPosition();
         this.role = Role.USER;
+        choiceImageUrl(dto.getEmail(), imageFilename, oauthImageUrl, dto.getMemberType());
     }
 
     public void addBoard(Board board){

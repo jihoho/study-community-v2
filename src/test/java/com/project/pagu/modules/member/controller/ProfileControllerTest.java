@@ -314,8 +314,9 @@ class ProfileControllerTest {
 
     @Test
     @DisplayName("프로필 썸네일을 요청한다.")
+    @WithMember
     void profile_thumbnails() throws Exception {
-        mockMvc.perform(get("/profileThumbnails/{type}/{email}/{filename}",
+        mockMvc.perform(get("/profile/thumbnails/{type}/{email}/{filename}",
                 "NORMAL", "test@email.com", "file"))
                 .andDo(print())
                 .andExpect(status().isOk());
