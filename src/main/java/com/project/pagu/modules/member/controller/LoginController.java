@@ -28,11 +28,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private static final String authorizationRequestBaseUri = "oauth2/authorization";
-    private final Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
-
-    private final ClientRegistrationRepository clientRegistrationRepository;
-
     @GetMapping("/login")
     public String login(HttpServletRequest request, Principal principal) {
         if (principal != null) {
@@ -48,22 +43,27 @@ public class LoginController {
         return "login";
     }
 
-    @SuppressWarnings("unchecked")
-    @GetMapping("/auth-login")
-    public String getLoginPage(Model model) throws Exception {
-        Iterable<ClientRegistration> clientRegistrations = null;
-        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
-                .as(Iterable.class);
-        if (type != ResolvableType.NONE &&
-                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
-            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
-        }
-        assert clientRegistrations != null;
-        clientRegistrations.forEach(registration ->
-                oauth2AuthenticationUrls.put(registration.getClientName(), authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
-        model.addAttribute("urls", oauth2AuthenticationUrls);
+    /** 다른 소셜로그인 추가시 커스텀 로그인 페이지 */
+//    private static final String authorizationRequestBaseUri = "oauth2/authorization";
+//    private final Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
+//    private final ClientRegistrationRepository clientRegistrationRepository;
 
-        return "auth/oauth-login";
-    }
+//    @SuppressWarnings("unchecked")
+//    @GetMapping("/auth-login")
+//    public String getLoginPage(Model model) throws Exception {
+//        Iterable<ClientRegistration> clientRegistrations = null;
+//        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
+//                .as(Iterable.class);
+//        if (type != ResolvableType.NONE &&
+//                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
+//            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
+//        }
+//        assert clientRegistrations != null;
+//        clientRegistrations.forEach(registration ->
+//                oauth2AuthenticationUrls.put(registration.getClientName(), authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+//        model.addAttribute("urls", oauth2AuthenticationUrls);
+//
+//        return "auth/oauth-login";
+//    }
 
 }
