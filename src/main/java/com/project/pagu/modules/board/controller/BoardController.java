@@ -1,5 +1,7 @@
 package com.project.pagu.modules.board.controller;
 
+import static org.springframework.data.domain.Sort.Direction.*;
+
 import com.project.pagu.common.annotation.CurrentMember;
 import com.project.pagu.common.manager.FileManager;
 import com.project.pagu.modules.board.model.BoardSaveDto;
@@ -31,24 +33,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class BoardController {
 
+    private static final String SORT = "modifiedDate";
+    private static final String DEFAULT_TYPE = "TITLE";
+
     private final BoardSaveService boardSaveService;
     private final BoardViewService boardViewService;
     private final FileManager fileManager;
 
     @GetMapping("/boards")
-    public String boards(
-            @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
-            Model model) {
-
+    public String boards(@PageableDefault(sort = SORT, direction = DESC) final Pageable pageable, Model model) {
         model.addAttribute("boardList", boardViewService.getPagedBoardList(pageable));
-        model.addAttribute("stype", "TITLE");
+        model.addAttribute("searchType", DEFAULT_TYPE);
         return "boards/board-list";
-
     }
 
     @PostMapping("/boards")
-    public String createBoard(@CurrentMember Member member,
-            @Valid BoardSaveDto boardSaveDto,
+    public String createBoard(@CurrentMember Member member, @Valid BoardSaveDto boardSaveDto,
             BindingResult result) {
 
         if (result.hasErrors()) {
@@ -102,15 +102,15 @@ public class BoardController {
     }
 
     @GetMapping("/boards/search")
-    public String search(@RequestParam(value = "stype") String searchType,
-            @RequestParam(value = "keyword") String keyword,
-            @PageableDefault(sort = "modifiedDate", direction = Direction.DESC) final Pageable pageable,
-            Model model) throws Exception {
+    public String search(@RequestParam String searchType,
+            @RequestParam String keyword,
+            @PageableDefault(sort = SORT, direction = DESC) final Pageable pageable,
+            Model model) {
 
         model.addAttribute("boardList",
                 boardViewService.getSearchBoards(searchType, keyword, pageable));
-        model.addAttribute("stype", searchType);
-        model.addAttribute("keyword", keyword);
+        model.addAttribute(searchType);
+        model.addAttribute(keyword);
         return "boards/board-list";
     }
 }

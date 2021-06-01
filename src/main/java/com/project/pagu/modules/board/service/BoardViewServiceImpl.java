@@ -82,20 +82,21 @@ public class BoardViewServiceImpl implements BoardViewService {
 
     @Override
     public PageImpl<PagedBoardViewDto> getSearchBoards(String searchType, String keyword,
-            Pageable pageable) throws Exception {
+            Pageable pageable) {
 
         Page<Board> boardPage;
-        if (searchType.equals("TITLE")) {
-            boardPage = boardRepository
-                    .findByTitleContaining(keyword, pageable);
-        }else if (searchType.equals("TAG")){
-            boardPage = boardRepository
-                    .findBySubject(keyword, pageable);
-        }else if(searchType.equals("STATUS")){
-            boardPage = boardRepository
-                    .findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
-        }else{
-            throw new Exception();
+        switch (searchType) {
+            case "TITLE":
+                boardPage = boardRepository.findByTitleContaining(keyword, pageable);
+                break;
+            case "TAG":
+                boardPage = boardRepository.findBySubject(keyword, pageable);
+                break;
+            case "STATUS":
+                boardPage = boardRepository.findByStatusContaining(StudyStatus.valueOf(keyword), pageable);
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
         return convertBoardPageToBoardPageDto(boardPage, pageable);
     }
