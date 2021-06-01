@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private static final String HOME = "/";
-    private static final String SIGN_UP = "/sign-up-google";
+    private static final String SIGN_UP = "/members/sign-up/google";
 
     private final MemberSaveService memberSaveService;
     private final MemberViewService memberViewService;
