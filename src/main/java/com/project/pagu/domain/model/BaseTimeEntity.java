@@ -1,4 +1,4 @@
-package com.project.pagu.global.domain;
+package com.project.pagu.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;
