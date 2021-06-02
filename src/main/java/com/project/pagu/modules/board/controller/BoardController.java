@@ -40,6 +40,9 @@ public class BoardController {
     private final BoardViewService boardViewService;
     private final FileManager fileManager;
 
+    /**
+     * 전체 게시물을 페이징 처리하여 조회한다.
+     */
     @GetMapping("/boards")
     public String boards(@PageableDefault(sort = SORT, direction = DESC) final Pageable pageable, Model model) {
         model.addAttribute("boardList", boardViewService.getPagedBoardList(pageable));
@@ -47,9 +50,20 @@ public class BoardController {
         return "boards/board-list";
     }
 
-    @PostMapping("/boards")
-    public String createBoard(@CurrentMember Member member, @Valid BoardSaveDto boardSaveDto,
-            BindingResult result) {
+    /**
+     * 게시물 등록 페이지로 이동한다.
+     */
+    @GetMapping("/boards/board-form")
+    public String boardsFrom(Model model) {
+        model.addAttribute(new BoardSaveDto());
+        return "boards/board-form";
+    }
+
+    /**
+     * 게시물 등록 데이터를 받아 게시물을 저장한다.
+     */
+    @PostMapping("/boards/board-form")
+    public String createBoard(@CurrentMember Member member, @Valid BoardSaveDto boardSaveDto, BindingResult result) {
 
         if (result.hasErrors()) {
             return "boards/board-form";
@@ -59,12 +73,9 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping("/boards/board-form")
-    public String boardsFrom(Model model, BoardSaveDto boardSaveDto) {
-        model.addAttribute(boardSaveDto);
-        return "boards/board-form";
-    }
-
+    /**
+     * 게시물 단건 조회한다.
+     */
     @GetMapping("/boards/{id}")
     public String getBoard(@CurrentMember Member member, @PathVariable Long id, Model model) {
         model.addAttribute("board", boardViewService.getBoardDetailDto(id));
@@ -95,12 +106,6 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping("/boardImageThumbnails/{id}/{filename}")
-    public void boardImageThumbnails(@PathVariable String id, @PathVariable String filename,
-            HttpServletResponse response) throws Exception {
-        fileManager.boardThumbnails(response, filename, id);
-    }
-
     @GetMapping("/boards/search")
     public String search(@RequestParam String searchType,
             @RequestParam String keyword,
@@ -112,5 +117,11 @@ public class BoardController {
         model.addAttribute(searchType);
         model.addAttribute(keyword);
         return "boards/board-list";
+    }
+
+    @GetMapping("/boards/thumbnails/{id}/{filename}")
+    public void boardImageThumbnails(@PathVariable String id, @PathVariable String filename,
+            HttpServletResponse response) throws Exception {
+        fileManager.boardThumbnails(response, filename, id);
     }
 }

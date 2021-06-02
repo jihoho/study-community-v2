@@ -1,7 +1,10 @@
 package com.project.pagu.modules.board.controller;
 
+import static com.project.pagu.util.MultiValueMapConverter.convert;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -9,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.pagu.modules.board.model.BoardSaveDto;
 import com.project.pagu.modules.board.model.BoardScheduleDto;
 import com.project.pagu.modules.board.repository.BoardRepository;
@@ -19,6 +23,7 @@ import com.project.pagu.modules.member.domain.Role;
 import com.project.pagu.modules.member.mockMember.WithMember;
 import com.project.pagu.modules.member.repository.MemberRepository;
 import com.project.pagu.modules.member.service.MemberSaveService;
+import com.project.pagu.util.MultiValueMapConverter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +36,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Created by IntelliJ IDEA
@@ -52,6 +58,9 @@ class BoardControllerTest {
     private MemberSaveService memberSaveService;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -66,8 +75,8 @@ class BoardControllerTest {
         memberRepository.deleteAll();
     }
 
-    @DisplayName("게시물 전체 페이지로 이동한다.")
     @Test
+    @DisplayName("게시물 전체 페이지로 이동한다.")
     void move_main_page() throws Exception {
         mockMvc.perform(get("/boards"))
                 .andExpect(status().isOk())
@@ -84,8 +93,8 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시물 등록 페이지로 이동한다.")
     @Test
+    @DisplayName("게시물 등록 페이지로 이동한다.")
     @WithMember
     void boards_form() throws Exception {
         mockMvc.perform(get("/boards/board-form"))
@@ -103,8 +112,8 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시물 등록 페이지 접근 시 USER 꿘한이 아닐 꼉우 login 페이지로 리다이렉트")
     @Test
+    @DisplayName("게시물 등록 페이지 접근 시 USER 권한이 아닐 경우 login 페이지로 리다이렉트")
     void unauthorize_boards_form() throws Exception {
         mockMvc.perform(get("/boards/board-form"))
                 .andExpect(status().is3xxRedirection())
@@ -112,10 +121,29 @@ class BoardControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("게시물 정상적으로 등록한다.")
+    @WithMember
+    void submit_board() throws Exception {
+        BoardSaveDto boardSaveDto = givenBoardDto();
+        BoardScheduleDto boardScheduleDto = givenBoardScheduleDto();
 
+        MultiValueMap<String, String> params = convert(objectMapper, boardSaveDto);
+//        MultiValueMap<String, String> paa = convert(objectMapper, boardScheduleDto);
+
+        mockMvc.perform(post("/boards/board-form")
+                .with(csrf())
+//                .params(paa))
+                .params(params))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+
+    @Test
     @DisplayName("게시물 상세 페이지로 이동한다.")
     @WithMember
-    @Test
     void get_board() throws Exception {
         //given
         Member member = memberRepository.save(givenMember(Role.USER));
@@ -177,24 +205,27 @@ class BoardControllerTest {
     }
 
     private BoardSaveDto givenBoardDto() {
-        BoardScheduleDto scheduleDto = new BoardScheduleDto();
-        scheduleDto.setDayKey(0);
-        scheduleDto.setStartTime(LocalTime.of(10, 30));
-        scheduleDto.setEndTime(LocalTime.of(13, 30));
-
         BoardSaveDto dto = new BoardSaveDto();
         dto.setTitle("스프링 스터디 모집합니다.");
         dto.setSubjects("Backend");
         dto.setTechStacks("Java");
         dto.setGoal("스프링링의 기본 원리를 이해한다.");
         dto.setPlace("강남역");
-        dto.setBoardSchedules(List.of(scheduleDto));
-        dto.setRecruitmentStartAt(LocalDate.now());
-        dto.setRecruitmentEndAt(LocalDate.now().plusDays(30));
-        dto.setTermsStartAt(LocalDate.now().plusDays(31));
-        dto.setTermsEndAt(LocalDate.now().plusDays(60));
+//        dto.setBoardSchedules(List.of(scheduleDto));
+//        dto.setRecruitmentStartAt(LocalDate.now());
+//        dto.setRecruitmentEndAt(LocalDate.now().plusDays(30));
+//        dto.setTermsStartAt(LocalDate.now().plusDays(31));
+//        dto.setTermsEndAt(LocalDate.now().plusDays(60));
         dto.setEtc("기타 사항");
         return dto;
+    }
+
+    private BoardScheduleDto givenBoardScheduleDto() {
+        BoardScheduleDto scheduleDto = new BoardScheduleDto();
+        scheduleDto.setDayKey(0);
+        scheduleDto.setStartTime(LocalTime.of(10, 30));
+        scheduleDto.setEndTime(LocalTime.of(13, 30));
+        return scheduleDto;
     }
 
 }
