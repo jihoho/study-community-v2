@@ -4,10 +4,10 @@ import static javax.persistence.FetchType.LAZY;
 
 import com.project.pagu.domain.member.domain.Member;
 import com.project.pagu.domain.comment.domain.Comment;
+import com.project.pagu.domain.model.BaseTimeEntity;
 import com.project.pagu.domain.model.BoardSubject;
 import com.project.pagu.domain.model.BoardTechStack;
 import com.project.pagu.domain.model.StudyStatus;
-import com.project.pagu.global.domain.BaseTimeEntity;
 import com.project.pagu.domain.board.dto.BoardSaveDto;
 import com.project.pagu.domain.board.dto.BoardScheduleDto;
 import java.time.LocalDate;

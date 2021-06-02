@@ -2,11 +2,11 @@ package com.project.pagu.domain.member.domain;
 
 import com.project.pagu.domain.board.domain.Board;
 import com.project.pagu.domain.comment.domain.Comment;
+import com.project.pagu.domain.model.BaseTimeEntity;
 import com.project.pagu.domain.model.MemberId;
 import com.project.pagu.domain.model.MemberType;
 import com.project.pagu.domain.model.Role;
 import com.project.pagu.global.util.FileUtil;
-import com.project.pagu.global.domain.BaseTimeEntity;
 import com.project.pagu.domain.member.dto.ProfileDto;
 import java.util.ArrayList;
 import java.util.List;

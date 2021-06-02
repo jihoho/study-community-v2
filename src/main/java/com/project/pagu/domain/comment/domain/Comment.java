@@ -4,7 +4,7 @@ import static javax.persistence.FetchType.LAZY;
 
 import com.project.pagu.domain.member.domain.Member;
 import com.project.pagu.domain.board.domain.Board;
-import com.project.pagu.global.domain.BaseTimeEntity;
+import com.project.pagu.domain.model.BaseTimeEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
