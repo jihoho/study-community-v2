@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<!-- 페이지 이동 -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-7 col-lg-10 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <a class="card-title text-center" href="">
+                        <h1 class="logo">PAGU</h1>
+                    </a>
+                    <div class="mt-4">
+                        <span>가입하신 </span>
+                        <span th:text="${signUpDto.email}"></span>
+                        <span>로 인증번호를 전송하였습니다.</span>
+                    </div>
+                    <div class="form-signin">
+                        <form th:action="@{/members/sign-up/email-check}" method="post" th:object="${signUpDto}">
+                            <!-- 인증번호 입력-->
+                            <div class="form-label-group mt-5">
+                                <input type="text" id="inputEmailCheck" class="form-control" th:field="*{authKeyInput}" placeholder="인증번호 입력해주세요." required autofocus />
+                                <label for="inputEmailCheck">인증번호를 입력해주세요</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('authKeyInput')}" th:errors="*{authKeyInput}"></small>
+                            </div>
+                            <button class="btn btn-lg btn-sign-in btn-block mt-5" type="submit">
+                                가입 완료
+                            </button>
+                        </form>
+                        <hr class="my-4" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

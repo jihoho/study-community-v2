@@ -1,14 +1,14 @@
 $(document).ready(function () {
-  var stype = $("#stype").val();
+  var searchType = $("#searchType").val();
   var keyword = $("#keyword-input").val();
-  console.log("stype: " + stype + ", keyword: " + keyword);
-  if (stype == "TITLE") {
+  console.log("searchType: " + searchType + ", keyword: " + keyword);
+  if (searchType == "TITLE") {
     $("#search-dropdown-menu").text("제목");
     changeInputElement("input");
-  } else if (stype == "TAG") {
+  } else if (searchType == "TAG") {
     $("#search-dropdown-menu").text("주제+기술");
     changeInputElement("input");
-  } else if (stype == "STATUS") {
+  } else if (searchType == "STATUS") {
     $("#search-dropdown-menu").text("상태");
     changeInputElement("radio");
     if (keyword == "FINISH") {
@@ -26,7 +26,7 @@ $(document).ready(function () {
  * 검색 타입 변경
  */
 function changeSearchType(type) {
-  $("#stype").val(type);
+  $("#searchType").val(type);
   if (type == "TITLE") {
     $("#search-dropdown-menu").text("제목");
     changeInputElement("input");
